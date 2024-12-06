@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backend.Context;
 
@@ -10,9 +11,11 @@ using backend.Context;
 namespace backend.Migrations
 {
     [DbContext(typeof(MasterContext))]
-    partial class MasterContextModelSnapshot : ModelSnapshot
+    [Migration("20241206170315_ChangedInitializing")]
+    partial class ChangedInitializing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");

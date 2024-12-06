@@ -12,8 +12,8 @@ builder.Services.AddControllers();
 
 
 builder.Services.AddDbContext<MasterContext>(options => options.UseSqlite("Data Source=social-media.db"));
-// builder.Services.AddScoped<ITripService, TripService>();
-// builder.Services.AddScoped<ITripRepository, TripRepository>();
+// builder.Services.AddScoped<, >();
+// builder.Services.AddScoped<, >();
 builder.Services.AddAuthorization();
 var app = builder.Build();
 SampleData.Initialize(app.Services);

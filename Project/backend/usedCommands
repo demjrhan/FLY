@@ -8,8 +8,11 @@ dotnet add package Microsoft.AspNetCore.Cors
 dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
 dotnet add package AutoMapper
 dotnet add package FluentValidation
+dotnet add package Microsoft.AspNetCore.App
+dotnet add package Swashbuckle.AspNetCore
 
 
+dotnet run
 
 -- Database
 

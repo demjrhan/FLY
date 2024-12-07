@@ -1,8 +1,6 @@
-﻿using backend.Context;
-using backend.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using backend.Models;
 
-namespace backend.Database;
+namespace backend.Context;
 
 public class SampleData
 {
@@ -12,7 +10,6 @@ public class SampleData
         {
             var context = scope.ServiceProvider.GetRequiredService<MasterContext>();
 
-            // Seed Users
             if (!context.Users.Any())
             {
                 var userData = new List<User>
@@ -32,7 +29,6 @@ public class SampleData
                 context.SaveChanges();
             }
 
-            // Seed Posts
             if (!context.Posts.Any())
             {
                 var postData = new List<Post>
@@ -52,7 +48,6 @@ public class SampleData
                 context.SaveChanges();
             }
 
-            // Seed Likes
             if (!context.Likes.Any())
             {
                 var likeData = new List<Like>

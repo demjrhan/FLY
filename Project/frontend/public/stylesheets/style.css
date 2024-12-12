@@ -8,7 +8,7 @@ body {
 
 .container {
   max-width: 600px;
-  margin: 20px auto;
+  margin: auto;
   padding: 10px;
   background-color: #fff;
   border-radius: 8px;
@@ -57,6 +57,30 @@ body {
   border-radius: 10px;
   object-fit: cover;
   display: block;
+}
+
+.header {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: 150px;
+  height: 150px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 8px; /* Slightly rounded corners */
+}
+
+.user-info {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  line-height: 1.5;
 }
 
 
@@ -115,11 +139,11 @@ body {
   }
   100% {
     opacity: 0;
-    transform: translateY(-100px); /* Move upwards */
+    transform: translateY(-100px);
   }
 }
 
 .emoji {
-  width: 40px; /* Adjust as needed */
+  width: 40px;
   height: 40px;
 }

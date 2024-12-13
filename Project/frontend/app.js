@@ -17,8 +17,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.get('/', function(req, res) {
-  res.render('main');
+  res.render('Admin/adminMain');
 })
+
+/*app.get('/', function(req, res) {
+  res.render('User/userMain');
+})*/
+/*
+app.get('/', function(req, res) {
+  res.render('Auth/login');
+})*/
+
+app.get('/edit/:id', function (req, res) {
+  const postId = req.params.id;
+  res.render('edit', { postId });
+});
+
 
 app.use(function(req, res, next) {
   next(createError(404));
@@ -32,7 +46,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('Error/error');
 });
 
 module.exports = app;

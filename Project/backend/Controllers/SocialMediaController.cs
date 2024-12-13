@@ -17,6 +17,32 @@ public class SocialMediaController : ControllerBase
         _context = context;
     }
 
+    
+    [HttpGet("/api/getPostsUser")]
+    public IActionResult GetPostsUser()
+    {
+        var posts = new[]
+        {
+            new { id = 1, owner = "Demirhan Yalcin", nickname = "demirhanylcn", imageUrl = "/images/photos/sample_3.jpg", description = "Having fun with my friends!", likes = 450 },
+            new { id = 2, owner = "Demirhan Yalcin", nickname = "demirhanylcn", imageUrl = "/images/photos/sample_4.jpg", description = "What a beautiful city!", likes = 300 }
+        };
+
+        return Ok(posts);
+    }
+    
+    [HttpGet("/api/getPostsAdmin")]
+    public IActionResult GetPostsAdmin()
+    {
+        var posts = new[]
+        {
+            new { id = 1, ownerid = 1, owner = "Demirhan Yalcin", nickname = "demirhanylcn", email = "demirhanylcn@icloud.com", password = "securePass123", imageUrl = "/images/photos/sample_3.jpg", description = "Having fun with my friends!", likes = 450 },
+            new { id = 2, ownerid = 1, owner = "Demirhan Yalcin", nickname = "demirhanylcn", email = "demirhanylcn@icloud.com", password = "securePass123", imageUrl = "/images/photos/sample_4.jpg", description = "What a beautiful city!", likes = 300 }
+
+        };
+
+        return Ok(posts);
+    }
+    
     [HttpGet("users")]
     public async Task<List<UserWithPostAndLikesDto>> GetUsersWithPostsAndLikesAsync()
     {

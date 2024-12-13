@@ -1,149 +1,220 @@
 
 body {
-  font-family: "Gill Sans Ultra Bold", sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f3f3f3;
+    font-family: Bahnschrift, serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('/images/photos/background-dark.jpg') !important;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
 }
 
 .container {
-  max-width: 600px;
-  margin: auto;
-  padding: 10px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 15px 15px 25px rgba(255, 255, 255, 0.4),
+    -15px 15px 25px rgba(255, 255, 255, 0.4);
 }
 
+
 .post {
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+
+.button {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 10px;
+
+}
+
+.delete-button {
+    border-radius: 10px;
+    background-color: powderblue;
+    border: 1px solid #ddd;
+}
+
+.delete-button:hover {
+    background-color: #dddddd;
+}
+
+.edit-button {
+    border-radius: 10px;
+    background-color: lightblue;
+    border: 1px solid #ddd;
+}
+
+.edit-button:hover {
+    background-color: #dddddd;
+}
+
+.ban-button {
+    border-radius: 10px;
+    background-color: cadetblue;
+    border: 1px solid #ddd;
+}
+
+.ban-button:hover {
+    background-color: #dddddd;
+}
+
+.warn-button {
+    border-radius: 10px;
+    background-color: mediumslateblue;
+    border: 1px solid #ddd;
+}
+
+.warn-button:hover {
+    background-color: #dddddd;
 }
 
 .post-header {
-  padding: 10px;
-  font-weight: bold;
-  background-color: #f9f9f9;
-  border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: center;
+    padding-left: 20px;
+    padding-top: 10px;
+    font-weight: bold;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
-.post-description{
-  padding: 10px 10px 25px;
-  font-weight: bold;
-  background-color: #f9f9f9;
-  border-bottom: 1px solid #ddd;
+
+.post-description {
+    padding: 10px 10px 25px;
+    background-color: #f9f9f9;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
 }
+
 .tag {
-  padding-left: 10px;
-  color: #007bff;
-  font-weight: bold;
-  margin-right: 5px;
+
+    padding-left: 10px;
+    color: #007bff;
+    font-weight: bold;
+    margin-right: 5px;
+
+
 }
 
 .owner {
-  color: #333;
+    color: black;
 }
 
 .post-image {
-  padding: 20px 20px 5px;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px 20px 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
 }
 
 .post-image img {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  object-fit: cover;
-  display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+    display: block;
 }
 
-.header {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  width: 150px;
-  height: 150px;
-  padding: 10px;
-  background-color: #f5f5f5;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  border-radius: 8px; /* Slightly rounded corners */
-}
+
 
 .user-info {
-  font-size: 14px;
-  font-weight: bold;
-  color: #333;
-  line-height: 1.5;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-left: 10px;
+    font-size: 16px;
+    font-weight: lighter;
+    font-style: italic;
 }
 
 
+.user-info .password {
+
+}
+
+.user-info .email {
+
+}
 
 .post-actions {
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd ;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .likes {
-  font-size: 14px;
-  font-weight: bold;
-  color: #555;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+
 }
 
 .reactions {
-  display: flex;
-  gap: 5px;
+    display: flex;
+    gap: 5px;
 }
 
 .reaction {
-  border: none;
-  background: none;
-  font-size: 16px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+    border: none;
+    background: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
 }
+
 .reaction img {
-  width: 20px;
-  height: 20px;
-  display: inline-block;
-  vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .reaction:hover {
-  transform: scale(1.2);
+    transform: scale(1.5);
 }
 
 #floating-reaction-container {
-  position: relative;
-  height: 0;
-  overflow: visible;
+    position: relative;
+    height: 0;
+    overflow: visible;
 }
 
 .floating-reaction {
-  animation: float-up 1s ease forwards;
-  z-index: 10;
+    animation: float-up 1s ease forwards;
+    z-index: 10;
 }
 
 @keyframes float-up {
-  0% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-100px);
-  }
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-100px);
+    }
 }
 
 .emoji {
-  width: 40px;
-  height: 40px;
+    width: 40px;
+    height: 40px;
 }
+

@@ -78,55 +78,43 @@ function renderPostsAdmin(posts) {
     });
 }
 
-function renderSinglePostByIdAdmin(post) {
-    const container = document.querySelector('.container');
+function editPost(post) {
+    document.addEventListener('input', (event) => {
+        const textarea = event.target.closest('.post-edit-description textarea');
+        if (textarea) {
+            const lines = textarea.value.split('\n');
+            if (lines.length > 2) {
+                textarea.value = lines.slice(0, 2).join('\n');
+            }
+        }
+    });
+
+
+    const container = document.querySelector('.small-container');
     container.innerHTML = '';
 
     const postElement = document.createElement('div');
     postElement.className = 'post';
     postElement.dataset.postId = post.id;
 
+
     postElement.innerHTML = `
-      <div class="button">
-        <button class="delete-button" onclick="deletePostRequest(${post.id})">Delete</button>
-        <button class="edit-button" onclick="editPostRequest(${post.id})">Edit</button>
-        <button class="warn-button" onclick="warnUser(${post.ownerId})">Warn</button>
-        <button class="ban-button" onclick="banUser(${post.ownerId})">Ban</button>
-      </div>
       <div class="post-header">
         <span class="owner">${post.owner}</span>
       </div>
       <div class="post-image">
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
-      <div class="post-description">
-        <span class="description"><span class="tag">@${post.nickname}</span> ${post.description}</span>
-      </div>
-      <div class="post-actions">
-        <span class="likes">${post.likes} likes</span>
-        <div class="reactions">
-          <button class="reaction" onclick="animateReaction('smiling', event)">
-            <img src="/images/emojis/smiling.png" alt="Smiling" class="emoji">
-          </button>
-          <button class="reaction" onclick="animateReaction('lovely', event)">
-            <img src="/images/emojis/lovely.png" alt="Lovely" class="emoji">
-          </button>
-        </div>
+      <div class="post-edit-description">
+        <span class="description">
+          <span class="post-edit-tag">@${post.nickname}</span>
+        </span>
+        <textarea class="post-edit-description" rows="2">${post.description}</textarea>
       </div>
     `;
-
-    const additionalInfo = document.createElement('div');
-    additionalInfo.className = 'additional-info';
-    additionalInfo.innerHTML = `
-      <div class="user-info">
-          <span class="email">Email: ${post.email}</span>
-          <span class="password">Password: ${post.password}</span>
-      </div>
-    `;
-
-    container.appendChild(additionalInfo);
     container.appendChild(postElement);
 }
+
 
 
 async function fetchPostsAdmin() {

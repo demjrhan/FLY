@@ -6,8 +6,18 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
-<div class="container"></div>
 
+<div class="small-background">
+    <div class="small-container">
+        <h1>Are you sure you want to edit this post?</h1>
+        <form action="/">
+            <button type="submit">Yes</button>
+            <button type="submit">No</button>
+        </form>
+    </div>
+</div>
+
+<div class="container"></div>
 <script>
     const postElement = document.getElementById('post-data');
     const postId = postElement?.dataset?.postId;

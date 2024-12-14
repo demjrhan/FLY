@@ -38,8 +38,8 @@ function renderPostsAdmin(posts) {
       <div class ="button">
         <button class="delete-button" onclick="deletePostRequest(${post.id})">Delete</button>
         <button class="edit-button" onclick="editPostRequest(${post.id})">Edit</button>
-        <button class="warn-button" onclick="warnUser(${post.id})">Warn</button>
-        <button class="ban-button" onclick="banUser(${post.id})">Ban</button>
+        <button class="warn-button" onclick="warnUser(${post.ownerId})">Warn</button>
+        <button class="ban-button" onclick="banUser(${post.ownerId})">Ban</button>
 
       </div>
       <div class="post-header">

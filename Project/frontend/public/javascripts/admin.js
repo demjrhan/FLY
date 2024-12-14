@@ -36,10 +36,11 @@ function renderPostsAdmin(posts) {
 
         postElement.innerHTML = `
       <div class ="button">
-        <button class="delete-button" onclick="deletePost(${post.id}">Delete</button>
-        <button class="edit-button" onclick="editPost(${post.id}">Edit</button>
-        <button class="ban-button" onclick="banUser(${post.ownerid}">Ban</button>
-        <button class="warn-button" onclick="warnUser(${post.ownerid}">Warn</button>
+        <button class="delete-button" onclick="deletePostRequest(${post.id})">Delete</button>
+        <button class="edit-button" onclick="editPostRequest(${post.id})">Edit</button>
+        <button class="warn-button" onclick="warnUser(${post.id})">Warn</button>
+        <button class="ban-button" onclick="banUser(${post.id})">Ban</button>
+
       </div>
       <div class="post-header">
         <span class="owner">${post.owner}</span>
@@ -91,4 +92,17 @@ async function fetchPostsAdmin() {
         return [];
     }
 
+}
+
+function deletePostRequest(postId) {
+    window.location.href = `/deletePostRequest/${postId}`;
+}
+function editPostRequest(postId) {
+    window.location.href = `/editPostRequest/${postId}`;
+}
+function banUser(ownerId) {
+    window.location.href = `/banUser/${ownerId}`;
+}
+function warnUser(ownerId) {
+    window.location.href = `/warnUser/${ownerId}`;
 }

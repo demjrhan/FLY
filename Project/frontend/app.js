@@ -20,33 +20,54 @@ app.get('/', function(req, res) {
   res.render('Admin/adminMain');
 })
 
-/*app.get('/', function(req, res) {
-  res.render('User/userMain');
-})*/
-/*
-app.get('/', function(req, res) {
-  res.render('Auth/login');
-})*/
+app.get('/deletePostRequest/:postId', function (req,res) {
+  const postId = req.params.postId;
+  res.render('Post/deletePostRequest', {postId})
+})
 
-app.get('/edit/:id', function (req, res) {
-  const postId = req.params.id;
-  res.render('edit', { postId });
-});
+app.get('/editPostRequest/:postId', function (req,res) {
+  const postId = req.params.postId;
+  res.render('Post/editPostRequest', {postId})
+})
+app.get('/banUser/:ownerId', function (req,res) {
+  const ownerId = req.params.postId;
+  res.render('Admin/banUser', {ownerId})
+})
+app.get('/warnUser/:ownerId', function (req,res) {
+  const ownerId = req.params.postId;
+  res.render('Admin/warnUser', {ownerId})
+})
 
 
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+
+  /*app.get('/', function(req, res) {
+    res.render('User/userMain');
+  })*/
+  /*
+  app.get('/', function(req, res) {
+    res.render('Auth/login');
+  })*/
+
+  app.get('/edit/:id', function (req, res) {
+    const postId = req.params.id;
+    res.render('edit', {postId});
+  });
 
 
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  app.use(function (req, res, next) {
+    next(createError(404));
+  });
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('Error/error');
-});
 
-module.exports = app;
+  app.use(function (err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // render the error page
+    res.status(err.status || 500);
+    res.render('Error/error');
+  });
+
+  module.exports = app;
+

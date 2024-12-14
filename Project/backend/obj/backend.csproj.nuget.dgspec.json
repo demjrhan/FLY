@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\demir\\Documents\\codes\\TIN_PRO\\Project\\backend\\backend.csproj": {}
+    "/Users/demjrhan/Documents/TIN_PRO/Project/backend/backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\demir\\Documents\\codes\\TIN_PRO\\Project\\backend\\backend.csproj": {
+    "/Users/demjrhan/Documents/TIN_PRO/Project/backend/backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\demir\\Documents\\codes\\TIN_PRO\\Project\\backend\\backend.csproj",
+        "projectUniqueName": "/Users/demjrhan/Documents/TIN_PRO/Project/backend/backend.csproj",
         "projectName": "backend",
-        "projectPath": "C:\\Users\\demir\\Documents\\codes\\TIN_PRO\\Project\\backend\\backend.csproj",
-        "packagesPath": "C:\\Users\\demir\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\demir\\Documents\\codes\\TIN_PRO\\Project\\backend\\obj\\",
+        "projectPath": "/Users/demjrhan/Documents/TIN_PRO/Project/backend/backend.csproj",
+        "packagesPath": "/Users/demjrhan/.nuget/packages/",
+        "outputPath": "/Users/demjrhan/Documents/TIN_PRO/Project/backend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\demir\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/demjrhan/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -94,7 +94,7 @@
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[7.1.0, )"
+              "version": "[7.2.0, )"
             }
           },
           "imports": [
@@ -116,7 +116,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,6 +1,6 @@
 
 body {
-    font-family: Bahnschrift, serif;
+    font-family: Bahnschrift;
     margin: 0;
     padding: 0;
     background-image: url('/images/photos/background-dark.jpg') !important;
@@ -20,6 +20,30 @@ body {
     -15px 15px 25px rgba(255, 255, 255, 0.4);
 }
 
+.small-background {
+    display: flex;
+    font-family: Bahnschrift;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-image: url('/images/photos/background-dark.jpg') !important;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.small-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow:
+            15px 15px 25px rgba(255, 255, 255, 0.4),  /* Bottom-right */
+            -15px 15px 25px rgba(255, 255, 255, 0.4), /* Bottom-left */
+            15px -15px 25px rgba(255, 255, 255, 0.4), /* Top-right */
+            -15px -15px 25px rgba(255, 255, 255, 0.4);/* Top-left */
+}
 
 .post {
     margin-bottom: 20px;
@@ -90,7 +114,7 @@ body {
 }
 
 .post-description {
-    padding: 10px 10px 25px;
+    padding: 10px 35px 15px;
     background-color: #f9f9f9;
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
@@ -112,7 +136,9 @@ body {
 }
 
 .post-image {
-    padding: 20px 20px 5px;
+    display: flex;
+    justify-content: center;
+    padding: 10px 20px 5px;
     background-color: #f9f9f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-left: 1px solid #ddd;
@@ -120,8 +146,8 @@ body {
 }
 
 .post-image img {
-    width: 100%;
-    height: auto;
+    height: 500px;
+    width: 500px;
     border-radius: 10px;
     object-fit: cover;
     display: block;
@@ -217,4 +243,3 @@ body {
     width: 40px;
     height: 40px;
 }
-

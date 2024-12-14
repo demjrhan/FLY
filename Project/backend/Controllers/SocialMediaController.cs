@@ -35,8 +35,8 @@ public class SocialMediaController : ControllerBase
     {
         var posts = new[]
         {
-            new { id = 1, ownerid = 1, owner = "Demirhan Yalcin", nickname = "demirhanylcn", email = "demirhanylcn@icloud.com", password = "securePass123", imageUrl = "/images/photos/sample_3.jpg", description = "Having fun with my friends!", likes = 450 },
-            new { id = 2, ownerid = 1, owner = "Demirhan Yalcin", nickname = "demirhanylcn", email = "demirhanylcn@icloud.com", password = "securePass123", imageUrl = "/images/photos/sample_4.jpg", description = "What a beautiful city!", likes = 300 }
+            new { id = 1, ownerId = 1, owner = "Demirhan Yalcin", nickname = "demirhanylcn", email = "demirhanylcn@icloud.com", password = "securePass123", imageUrl = "/images/photos/sample_3.jpg", description = "Having fun with my friends!", likes = 450 },
+            new { id = 2, ownerId = 1, owner = "Demirhan Yalcin", nickname = "demirhanylcn", email = "demirhanylcn@icloud.com", password = "securePass123", imageUrl = "/images/photos/sample_4.jpg", description = "What a beautiful city!", likes = 300 }
 
         };
 

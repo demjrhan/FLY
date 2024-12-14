@@ -78,11 +78,72 @@ function renderPostsAdmin(posts) {
     });
 }
 
+function renderSinglePostByIdAdmin(post) {
+    const container = document.querySelector('.container');
+    container.innerHTML = '';
+
+    const postElement = document.createElement('div');
+    postElement.className = 'post';
+    postElement.dataset.postId = post.id;
+
+    postElement.innerHTML = `
+      <div class="button">
+        <button class="delete-button" onclick="deletePostRequest(${post.id})">Delete</button>
+        <button class="edit-button" onclick="editPostRequest(${post.id})">Edit</button>
+        <button class="warn-button" onclick="warnUser(${post.ownerId})">Warn</button>
+        <button class="ban-button" onclick="banUser(${post.ownerId})">Ban</button>
+      </div>
+      <div class="post-header">
+        <span class="owner">${post.owner}</span>
+      </div>
+      <div class="post-image">
+        <img src="${post.imageUrl}" alt="Post Image">
+      </div>
+      <div class="post-description">
+        <span class="description"><span class="tag">@${post.nickname}</span> ${post.description}</span>
+      </div>
+      <div class="post-actions">
+        <span class="likes">${post.likes} likes</span>
+        <div class="reactions">
+          <button class="reaction" onclick="animateReaction('smiling', event)">
+            <img src="/images/emojis/smiling.png" alt="Smiling" class="emoji">
+          </button>
+          <button class="reaction" onclick="animateReaction('lovely', event)">
+            <img src="/images/emojis/lovely.png" alt="Lovely" class="emoji">
+          </button>
+        </div>
+      </div>
+    `;
+
+    const additionalInfo = document.createElement('div');
+    additionalInfo.className = 'additional-info';
+    additionalInfo.innerHTML = `
+      <div class="user-info">
+          <span class="email">Email: ${post.email}</span>
+          <span class="password">Password: ${post.password}</span>
+      </div>
+    `;
+
+    container.appendChild(additionalInfo);
+    container.appendChild(postElement);
+}
 
 
 async function fetchPostsAdmin() {
     try {
-        const response = await fetch('http://localhost:5000/api/getPostsAdmin'); // C# backend URL
+        const response = await fetch('http://localhost:5000/api/getPostsAdmin');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        return [];
+    }
+
+}async function fetchPostByIdAdmin(postId) {
+    try {
+        const response = await fetch(`http://localhost:5000/api/getPostAdmin/${postId}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -100,6 +161,7 @@ function deletePostRequest(postId) {
 function editPostRequest(postId) {
     window.location.href = `/editPostRequest/${postId}`;
 }
+
 function banUser(ownerId) {
     window.location.href = `/banUser/${ownerId}`;
 }

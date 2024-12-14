@@ -42,6 +42,27 @@ public class SocialMediaController : ControllerBase
 
         return Ok(posts);
     }
+
+    [HttpGet("/api/getPostAdmin/{postId}")]
+    public IActionResult GetPostByIdAdmin(int postId)
+    {
+        var posts = new[]
+        {
+         new { id = 1, ownerId = 1, owner = "Demirhan Yalcin", nickname = "demirhanylcn", email = "demirhanylcn@icloud.com", password = "securePass123", imageUrl = "/images/photos/sample_3.jpg", description = "Having fun with my friends!", likes = 450 },
+         new { id = 2, ownerId = 1, owner = "Demirhan Yalcin", nickname = "demirhanylcn", email = "demirhanylcn@icloud.com", password = "securePass123", imageUrl = "/images/photos/sample_4.jpg", description = "What a beautiful city!", likes = 300 }
+
+        };
+
+        var post = posts.FirstOrDefault(p => p.id == postId);
+
+        if (post == null)
+        {
+            return NotFound(new { message = "Post not found" });
+        }
+
+        return Ok(post);
+    }
+
     
     [HttpGet("users")]
     public async Task<List<UserWithPostAndLikesDto>> GetUsersWithPostsAndLikesAsync()

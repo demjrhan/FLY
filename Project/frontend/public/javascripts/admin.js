@@ -99,6 +99,10 @@ function editPost(post) {
 
 
     postElement.innerHTML = `
+      <div class ="button">
+        <button class="main-page-button" onclick="goMainPage(${post.id})">Return</button>
+        <button class="save-button" onclick="">Save</button>
+      </div>
       <div class="post-header">
         <span class="owner">${post.owner}</span>
       </div>
@@ -143,6 +147,10 @@ async function fetchPostsAdmin() {
 
 }
 
+
+function goMainPage(){
+    window.location.href = '/';
+}
 function deletePostRequest(postId) {
     window.location.href = `/deletePostRequest/${postId}`;
 }

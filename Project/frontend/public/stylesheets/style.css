@@ -105,6 +105,25 @@ body {
     background-color: #dddddd;
 }
 
+.main-page-button {
+    border-radius: 10px;
+    background-color: cadetblue;
+    border: 1px solid #ddd;
+}
+.main-page-button:hover {
+    background-color: #dddddd;
+}
+
+.save-button {
+    border-radius: 10px;
+    background-color: mediumslateblue;
+    border: 1px solid #ddd;
+}
+
+.save-button:hover {
+    background-color: #dddddd;
+}
+
 .post-header {
     display: flex;
     justify-content: center;
@@ -208,13 +227,6 @@ body {
 }
 
 
-.user-info .password {
-
-}
-
-.user-info .email {
-
-}
 
 .post-actions {
     padding: 10px;

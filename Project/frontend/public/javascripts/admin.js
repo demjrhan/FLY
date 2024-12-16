@@ -119,7 +119,36 @@ function editPost(post) {
     container.appendChild(postElement);
 }
 
+function deletePost(post) {
+    const container = document.querySelector('.small-container');
+    container.innerHTML = '';
 
+    const postElement = document.createElement('div');
+    postElement.className = 'post';
+    postElement.dataset.postId = post.id;
+
+
+    postElement.innerHTML = `
+      <div class ="button">
+        <button class="main-page-button" onclick="goMainPage(${post.id})">Return</button>
+        <button class="delete-button" onclick="">Delete</button>
+      </div>
+      <div class="post-header">
+        <span class="owner">${post.owner}</span>
+      </div>
+      <div class="post-image">
+        <img src="${post.imageUrl}" alt="Post Image">
+      </div>
+      <div class="post-description">
+        <span class="description"><span class="tag">@${post.nickname}</span> ${post.description}</span>
+      </div>
+      <div class="post-actions">
+        <span class="likes">${post.likes} likes</span>
+      </div>
+    `;
+    container.appendChild(postElement)
+
+}
 
 async function fetchPostsAdmin() {
     try {

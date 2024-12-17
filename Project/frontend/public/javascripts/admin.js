@@ -102,6 +102,7 @@ function editPost(post) {
 
     postElement.innerHTML = `
       <div class ="button">
+        <button class="delete-image-button" onclick="deleteImage()">Delete Image</button>
         <button class="main-page-button" onclick="goMainPage(${post.id})">Return</button>
         <button class="save-button" onclick="">Save</button>
       </div>
@@ -164,9 +165,10 @@ async function fetchPostsAdmin() {
         return [];
     }
 
-}async function fetchPostByIdAdmin(postId) {
+}
+async function fetchPostByPostIdAdmin(postId) {
     try {
-        const response = await fetch(`http://localhost:5000/api/getPostAdmin/${postId}`);
+        const response = await fetch(`http://localhost:5000/api/getPostByPostIdAdmin/${postId}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -200,17 +202,22 @@ function seeLikeDetails(event) {
         likeDetailsBox.className = 'like-details-box';
         likeDetailsBox.innerHTML = `
             <h4>Like Details</h4>
-            <p>No like data to display yet!</p>
-        `;
+            <p>No like data to display yet!</p>`;
 
         postElement.parentNode.insertBefore(likeDetailsBox, postElement.nextSibling);
     }
 }
 
 
+function deleteImage() {
+    const postImage = document.querySelector('.post-image img');
+    if (postImage) {
+        postImage.src = '/images/photos/empty.jpg';
+    }
+}
+
 function banUser(ownerId) {
-    window.location.href = `/banUser/${ownerId}`;
 }
 function warnUser(ownerId) {
-    window.location.href = `/warnUser/${ownerId}`;
 }
+

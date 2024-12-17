@@ -14,7 +14,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const postId = '<%= postId %>';
-                const post = await fetchPostByIdAdmin(postId);
+                const post = await fetchPostByPostIdAdmin(postId);
                 if (post) {
                     deletePost(post);
                 } else {

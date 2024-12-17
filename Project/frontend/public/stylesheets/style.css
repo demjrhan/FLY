@@ -61,7 +61,7 @@ body {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    padding: 10px;
+    padding: 5px 10px 10px;
 
 }
 
@@ -141,6 +141,14 @@ body {
     background-color: #dddddd;
 }
 
+.delete-image-button {
+    border-radius: 10px;
+    background-color: lightskyblue;
+    border: 1px solid #ddd;
+}
+.delete-image-button:hover{
+    background-color: #dddddd;
+}
 .post-header {
     display: flex;
     justify-content: center;

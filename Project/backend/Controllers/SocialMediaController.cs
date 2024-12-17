@@ -43,8 +43,8 @@ public class SocialMediaController : ControllerBase
         return Ok(posts);
     }
 
-    [HttpGet("/api/getPostAdmin/{postId}")]
-    public IActionResult GetPostByIdAdmin(int postId)
+    [HttpGet("/api/getPostByPostIdAdmin/{postId}")]
+    public IActionResult GetPostByPostIdIdAdmin(int postId)
     {
         var posts = new[]
         {
@@ -62,6 +62,7 @@ public class SocialMediaController : ControllerBase
 
         return Ok(post);
     }
+
 
     
     [HttpGet("users")]

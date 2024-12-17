@@ -30,14 +30,6 @@ app.get('/editPostRequest/:postId', function (req,res) {
   res.render('Post/editPostRequest', {postId});
 });
 
-app.get('/banUser/:ownerId', function (req,res) {
-  const ownerId = req.params.postId;
-  res.render('Admin/banUser', {ownerId});
-});
-app.get('/warnUser/:ownerId', function (req,res) {
-  const ownerId = req.params.postId;
-  res.render('Admin/warnUser', {ownerId});
-});
 
 
 

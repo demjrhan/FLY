@@ -18,7 +18,7 @@ function animateReaction(type, event) {
 
     const postElement = event.currentTarget.closest('.post');
     if (postElement) {
-        const likeCountElement = postElement.querySelector('.likes');
+        const likeCountElement = postElement.querySelector('.like-count');
         const currentLikes = parseInt(likeCountElement.textContent.split(' ')[0]);
         likeCountElement.textContent = `${currentLikes + 1} likes`;
     }
@@ -40,7 +40,6 @@ function renderPostsAdmin(posts) {
         <button class="edit-button" onclick="editPostRequest(${post.id})">Edit</button>
         <button class="warn-button" onclick="warnUser(${post.ownerId})">Warn</button>
         <button class="ban-button" onclick="banUser(${post.ownerId})">Ban</button>
-
       </div>
       <div class="post-header">
         <span class="owner">${post.owner}</span>
@@ -52,7 +51,10 @@ function renderPostsAdmin(posts) {
         <span class="description"><span class="tag">@${post.nickname}</span> ${post.description}</span>
       </div>
       <div class="post-actions">
-        <span class="likes">${post.likes} likes</span>
+        <div class="likes">
+        <span class="like-count">${post.likes} likes</span>
+        <button class="like-button" onclick="seeLikeDetails(event)">Like Details</button>
+        </div>
         <div class="reactions">
           <button class="reaction" onclick="animateReaction('smiling', event)">
             <img src="/images/emojis/smiling.png" alt="Smiling" class="emoji">
@@ -186,6 +188,25 @@ function deletePostRequest(postId) {
 function editPostRequest(postId) {
     window.location.href = `/editPostRequest/${postId}`;
 }
+function seeLikeDetails(event) {
+    const postElement = event.target.closest('.post');
+
+    let likeDetailsBox = postElement.nextElementSibling;
+    if (likeDetailsBox && likeDetailsBox.classList.contains('like-details-box')) {
+        likeDetailsBox.style.display =
+            likeDetailsBox.style.display === 'none' ? 'block' : 'none';
+    } else {
+        likeDetailsBox = document.createElement('div');
+        likeDetailsBox.className = 'like-details-box';
+        likeDetailsBox.innerHTML = `
+            <h4>Like Details</h4>
+            <p>No like data to display yet!</p>
+        `;
+
+        postElement.parentNode.insertBefore(likeDetailsBox, postElement.nextSibling);
+    }
+}
+
 
 function banUser(ownerId) {
     window.location.href = `/banUser/${ownerId}`;

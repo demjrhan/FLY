@@ -65,6 +65,13 @@ body {
 
 }
 
+.likes {
+    display:flex;
+    justify-content: flex-start;
+    gap: 15px;
+    padding-left: 15px;
+}
+
 .delete-button {
     border-radius: 10px;
     background-color: powderblue;
@@ -121,6 +128,16 @@ body {
 }
 
 .save-button:hover {
+    background-color: #dddddd;
+}
+
+.like-button {
+    border-radius: 10px;
+    background-color: skyblue;
+    border: 1px solid #ddd;
+
+}
+.like-button:hover{
     background-color: #dddddd;
 }
 
@@ -240,10 +257,11 @@ body {
     border-bottom-right-radius: 10px;
 }
 
-.likes {
+.like-count {
     font-size: 14px;
     font-weight: bold;
     color: #555;
+    align-self: center;
 
 }
 
@@ -296,4 +314,14 @@ body {
 .emoji {
     width: 40px;
     height: 40px;
+}
+
+
+.like-details-box {
+    margin: 25px 0;
+    padding: 15px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

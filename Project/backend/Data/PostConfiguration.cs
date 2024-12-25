@@ -14,6 +14,10 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
             .HasMaxLength(100) 
             .IsRequired();
 
+        p.Property(e => e.ImageUrl)
+            .HasMaxLength(50)
+            .IsRequired();
+        
         p.Property(e => e.CreatedAt)
             .HasDefaultValueSql("GETDATE()");
         

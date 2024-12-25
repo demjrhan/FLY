@@ -38,17 +38,17 @@ function renderPostsAdmin(posts) {
       <div class ="button">
         <button class="delete-button" onclick="deletePostRequest(${post.id})">Delete</button>
         <button class="edit-button" onclick="editPostRequest(${post.id})">Edit</button>
-        <button class="warn-button" onclick="warnUser(${post.ownerId})">Warn</button>
-        <button class="ban-button" onclick="banUser(${post.ownerId})">Ban</button>
+        <button class="warn-button" onclick="warnUser(${post.owner.id})">Warn</button>
+        <button class="ban-button" onclick="banUser(${post.owner.id})">Ban</button>
       </div>
       <div class="post-header">
-        <span class="owner">${post.owner}</span>
+            <span class="owner">${post.owner.name} ${post.owner.surname}</span>
       </div>
       <div class="post-image">
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
       <div class="post-description">
-        <span class="description"><span class="tag">@${post.nickname}</span> ${post.description}</span>
+        <span class="description"><span class="tag">@${post.owner.nickname}</span> ${post.description}</span>
       </div>
       <div class="post-actions">
         <div class="likes">
@@ -70,8 +70,8 @@ function renderPostsAdmin(posts) {
         additionalInfo.className = 'additional-info';
         additionalInfo.innerHTML = `
         <div class="user-info">
-            <span class="email">Email: ${post.email}</span>
-            <span class="password">Password: ${post.password}</span>
+            <span class="email">Email: ${post.owner.email}</span>
+            <span class="password">Password: ${post.owner.password}</span>
         </div>
         `;
 
@@ -136,15 +136,15 @@ function deletePost(post) {
         <button class="main-page-button" onclick="goMainPage(${post.id})">Return</button>
         <button class="delete-button" onclick="">Delete</button>
       </div>
-      <div class="post-header">
-        <span class="owner">${post.owner}</span>
-      </div>
+     <div class="post-header">
+        <span class="owner">${post.owner.name} ${post.owner.surname}</span>
+    </div>
       <div class="post-image">
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
       <div class="post-description">
-        <span class="description"><span class="tag">@${post.nickname}</span> ${post.description}</span>
-      </div>
+        <span class="description"><span class="tag">@${post.owner.nickname}</span> ${post.description}</span>
+    </div>
       <div class="post-actions">
         <span class="likes">${post.likes} likes</span>
       </div>
@@ -185,10 +185,10 @@ function goMainPage(){
     window.location.href = '/';
 }
 function deletePostRequest(postId) {
-    window.location.href = `/deletePostRequest/${postId}`;
+    window.location.href = `/deletePostRequestAdmin/${postId}`;
 }
 function editPostRequest(postId) {
-    window.location.href = `/editPostRequest/${postId}`;
+    window.location.href = `/editPostRequestAdmin/${postId}`;
 }
 function seeLikeDetails(event) {
     const postElement = event.target.closest('.post');

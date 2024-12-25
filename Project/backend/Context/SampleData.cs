@@ -14,16 +14,66 @@ public class SampleData
             {
                 var userData = new List<User>
                 {
-                    new User { Name = "John", Surname = "Doe", BirthDate = DateTime.Parse("1985-07-15"), Password = "Password123!", CreatedAt = DateTime.Now },
-                    new User { Name = "Jane", Surname = "Smith", BirthDate = DateTime.Parse("1990-03-22"), Password = "SecurePass1@", CreatedAt = DateTime.Now },
-                    new User { Name = "Alice", Surname = "Johnson", BirthDate = DateTime.Parse("1978-11-05"), Password = "MyP@ssword2", CreatedAt = DateTime.Now },
-                    new User { Name = "Bob", Surname = "Ros", BirthDate = DateTime.Parse("2000-12-25"), Password = "Pass2024#", CreatedAt = DateTime.Now },
-                    new User { Name = "Charlie", Surname = "Davis", BirthDate = DateTime.Parse("1995-05-16"), Password = "Hello123!", CreatedAt = DateTime.Now },
-                    new User { Name = "Emily", Surname = "Wilson", BirthDate = DateTime.Parse("1983-09-09"), Password = "Qwerty1$", CreatedAt = DateTime.Now },
-                    new User { Name = "David", Surname = "Garcia", BirthDate = DateTime.Parse("1988-04-18"), Password = "Wqea1@2024", CreatedAt = DateTime.Now },
-                    new User { Name = "Sophia", Surname = "Martinez", BirthDate = DateTime.Parse("1999-08-13"), Password = "Password2#", CreatedAt = DateTime.Now },
-                    new User { Name = "Daniel", Surname = "Clark", BirthDate = DateTime.Parse("1992-06-30"), Password = "123Secure@", CreatedAt = DateTime.Now },
-                    new User { Name = "Emma", Surname = "Harris", BirthDate = DateTime.Parse("1975-10-10"), Password = "Pass987#", CreatedAt = DateTime.Now }
+                    new User
+                    {
+                        Name = "John", Surname = "Doe", BirthDate = DateTime.Parse("1985-07-15"),
+                        Email = "john.doe@example.com", Password = "Password123!", CreatedAt = DateTime.Now,
+                        WarnCount = 0, isBanned = false, Nickname = "JohnDoe"
+                    },
+                    new User
+                    {
+                        Name = "Jane", Surname = "Smith", BirthDate = DateTime.Parse("1990-03-22"),
+                        Email = "jane.smith@example.com", Password = "SecurePass1@", CreatedAt = DateTime.Now,
+                        WarnCount = 0, isBanned = false, Nickname = "JaneSmith"
+                    },
+                    new User
+                    {
+                        Name = "Alice", Surname = "Johnson", BirthDate = DateTime.Parse("1978-11-05"),
+                        Email = "alice.johnson@example.com", Password = "MyP@ssword2", CreatedAt = DateTime.Now,
+                        WarnCount = 0, isBanned = false, Nickname = "AliceJohnson"
+                    },
+                    new User
+                    {
+                        Name = "Bob", Surname = "Ros", BirthDate = DateTime.Parse("2000-12-25"),
+                        Email = "bob.ros@example.com", Password = "Pass2024#", CreatedAt = DateTime.Now, WarnCount = 0,
+                        isBanned = false, Nickname = "BobRos"
+                    },
+                    new User
+                    {
+                        Name = "Charlie", Surname = "Davis", BirthDate = DateTime.Parse("1995-05-16"),
+                        Email = "charlie.davis@example.com", Password = "Hello123!", CreatedAt = DateTime.Now,
+                        WarnCount = 0, isBanned = false, Nickname = "CharlieDavis"
+                    },
+                    new User
+                    {
+                        Name = "Emily", Surname = "Wilson", BirthDate = DateTime.Parse("1983-09-09"),
+                        Email = "emily.wilson@example.com", Password = "Qwerty1$", CreatedAt = DateTime.Now,
+                        WarnCount = 0, isBanned = false, Nickname = "EmilyWilson"
+                    },
+                    new User
+                    {
+                        Name = "David", Surname = "Garcia", BirthDate = DateTime.Parse("1988-04-18"),
+                        Email = "david.garcia@example.com", Password = "Wqea1@2024", CreatedAt = DateTime.Now,
+                        WarnCount = 0, isBanned = false, Nickname = "DavidGarcia"
+                    },
+                    new User
+                    {
+                        Name = "Sophia", Surname = "Martinez", BirthDate = DateTime.Parse("1999-08-13"),
+                        Email = "sophia.martinez@example.com", Password = "Password2#", CreatedAt = DateTime.Now,
+                        WarnCount = 3, isBanned = true, Nickname = "SophiaMartinez"
+                    },
+                    new User
+                    {
+                        Name = "Daniel", Surname = "Clark", BirthDate = DateTime.Parse("1992-06-30"),
+                        Email = "daniel.clark@example.com", Password = "123Secure@", CreatedAt = DateTime.Now,
+                        WarnCount = 0, isBanned = false, Nickname = "DanielClark"
+                    },
+                    new User
+                    {
+                        Name = "Emma", Surname = "Harris", BirthDate = DateTime.Parse("1975-10-10"),
+                        Email = "emma.harris@example.com", Password = "Pass987#", CreatedAt = DateTime.Now,
+                        WarnCount = 0, isBanned = false, Nickname = "EmmaHarris"
+                    }
                 };
                 context.Users.AddRange(userData);
                 context.SaveChanges();
@@ -33,16 +83,66 @@ public class SampleData
             {
                 var postData = new List<Post>
                 {
-                    new Post { UserId = 1, Description = "Exploring the beauty of nature.", CreatedAt = DateTime.Parse("2024-01-01") },
-                    new Post { UserId = 2, Description = "Excited to share my new project!", CreatedAt = DateTime.Parse("2024-01-02") },
-                    new Post { UserId = 3, Description = "Life is all about the little moments.", CreatedAt = DateTime.Parse("2024-01-03") },
-                    new Post { UserId = 4, Description = "Just finished reading an amazing book.", CreatedAt = DateTime.Parse("2024-01-04") },
-                    new Post { UserId = 5, Description = "Anyone up for a weekend hike?", CreatedAt = DateTime.Parse("2024-01-05") },
-                    new Post { UserId = 1, Description = "Throwback to my last vacation!", CreatedAt = DateTime.Parse("2024-01-06") },
-                    new Post { UserId = 3, Description = "Learning new skills is so rewarding.", CreatedAt = DateTime.Parse("2024-01-07") },
-                    new Post { UserId = 4, Description = "Cooking my favorite dish today.", CreatedAt = DateTime.Parse("2024-01-08") },
-                    new Post { UserId = 2, Description = "Here's a photo from my latest adventure.", CreatedAt = DateTime.Parse("2024-01-09") },
-                    new Post { UserId = 5, Description = "Grateful for another wonderful day.", CreatedAt = DateTime.Parse("2024-01-10") }
+                    new Post
+                    {
+                        UserId = 1, Description = "Exploring the beauty of nature.",
+                        CreatedAt = DateTime.Parse("2024-01-01"),
+                        ImageUrl = "/images/photos/sample_1.jpg"
+                    },
+                    new Post
+                    {
+                        UserId = 2, Description = "Excited to share my new project!",
+                        CreatedAt = DateTime.Parse("2024-01-02"),
+                        ImageUrl = "/images/photos/sample_2.jpg"
+                    },
+                    new Post
+                    {
+                        UserId = 3, Description = "Life is all about the little moments.",
+                        CreatedAt = DateTime.Parse("2024-01-03"),
+                        ImageUrl = "/images/photos/sample_3.jpg"
+                    },
+                    new Post
+                    {
+                        UserId = 4, Description = "Just finished reading an amazing book.",
+                        CreatedAt = DateTime.Parse("2024-01-04"),
+                        ImageUrl = "/images/photos/sample_4.jpg"
+                    },
+                    new Post
+                    {
+                        UserId = 5, Description = "Anyone up for a weekend hike?",
+                        CreatedAt = DateTime.Parse("2024-01-05"),
+                        ImageUrl = "/images/photos/sample_1.jpg"
+                    },
+                    new Post
+                    {
+                        UserId = 1, Description = "Throwback to my last vacation!",
+                        CreatedAt = DateTime.Parse("2024-01-06"),
+                        ImageUrl = "/images/photos/sample_2.jpg"
+                    },
+                    new Post
+                    {
+                        UserId = 3, Description = "Learning new skills is so rewarding.",
+                        CreatedAt = DateTime.Parse("2024-01-07"),
+                        ImageUrl = "/images/photos/sample_3.jpg"
+                    },
+                    new Post
+                    {
+                        UserId = 4, Description = "Cooking my favorite dish today.",
+                        CreatedAt = DateTime.Parse("2024-01-08"),
+                        ImageUrl = "/images/photos/sample_4.jpg"
+                    },
+                    new Post
+                    {
+                        UserId = 2, Description = "Here's a photo from my latest adventure.",
+                        CreatedAt = DateTime.Parse("2024-01-09"),
+                        ImageUrl = "/images/photos/sample_1.jpg"
+                    },
+                    new Post
+                    {
+                        UserId = 5, Description = "Grateful for another wonderful day.",
+                        CreatedAt = DateTime.Parse("2024-01-10"),
+                        ImageUrl = "/images/photos/sample_2.jpg"
+                    }
                 };
                 context.Posts.AddRange(postData);
                 context.SaveChanges();

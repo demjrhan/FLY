@@ -20,14 +20,14 @@ app.get('/', function(req, res) {
   res.render('Admin/adminMain');
 });
 
-app.get('/deletePostRequest/:postId', function (req,res) {
+app.get('/deletePostRequestAdmin/:postId', function (req,res) {
   const postId = req.params.postId;
-  res.render('Post/deletePostRequest', {postId})
+  res.render('Post/deletePostRequestAdmin', {postId})
 });
 
-app.get('/editPostRequest/:postId', function (req,res) {
+app.get('/editPostRequestAdmin/:postId', function (req,res) {
   const postId = req.params.postId;
-  res.render('Post/editPostRequest', {postId});
+  res.render('Post/editPostRequestAdmin', {postId});
 });
 
 

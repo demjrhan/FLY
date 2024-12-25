@@ -18,42 +18,58 @@ public class SocialMediaController : ControllerBase
     }
 
     
-    [HttpGet("/api/getPostsUser")]
-    public IActionResult GetPostsUser()
-    {
-        var posts = new[]
-        {
-            new { id = 1, owner = "Demirhan Yalcin", nickname = "demirhanylcn", imageUrl = "/images/photos/sample_3.jpg", description = "Having fun with my friends!", likes = 450 },
-            new { id = 2, owner = "Demirhan Yalcin", nickname = "demirhanylcn", imageUrl = "/images/photos/sample_4.jpg", description = "What a beautiful city!", likes = 300 }
-        };
 
-        return Ok(posts);
-    }
-    
     [HttpGet("/api/getPostsAdmin")]
-    public IActionResult GetPostsAdmin()
+    public async Task<IActionResult> GetPostsAdminAsync()
     {
-        var posts = new[]
-        {
-            new { id = 1, ownerId = 1, owner = "Demirhan Yalcin", nickname = "demirhanylcn", email = "demirhanylcn@icloud.com", password = "securePass123", imageUrl = "/images/photos/sample_3.jpg", description = "Having fun with my friends!", likes = 450 },
-            new { id = 2, ownerId = 1, owner = "Demirhan Yalcin", nickname = "demirhanylcn", email = "demirhanylcn@icloud.com", password = "securePass123", imageUrl = "/images/photos/sample_4.jpg", description = "What a beautiful city!", likes = 300 }
-
-        };
+        var posts = await _context.Posts
+            .Include(p => p.User) 
+            .Select(post => new PostDTO
+            {
+                Id = post.Id,
+                Owner = new UserDTO
+                {
+                    Id = post.User.Id,
+                    Name = post.User.Name,
+                    Surname = post.User.Surname,
+                    Nickname = post.User.Nickname, 
+                    Email = post.User.Email,
+                    Password = post.User.Password
+                },
+                ImageUrl = post.ImageUrl,
+                Description = post.Description,
+                Likes = post.Likes.Count 
+            })
+            .ToListAsync();
 
         return Ok(posts);
     }
+
 
     [HttpGet("/api/getPostByPostIdAdmin/{postId}")]
-    public IActionResult GetPostByPostIdIdAdmin(int postId)
+    public async Task<IActionResult> GetPostByPostIdIdAdmin(int postId)
     {
-        var posts = new[]
-        {
-         new { id = 1, ownerId = 1, owner = "Demirhan Yalcin", nickname = "demirhanylcn", email = "demirhanylcn@icloud.com", password = "securePass123", imageUrl = "/images/photos/sample_3.jpg", description = "Having fun with my friends!", likes = 450 },
-         new { id = 2, ownerId = 1, owner = "Demirhan Yalcin", nickname = "demirhanylcn", email = "demirhanylcn@icloud.com", password = "securePass123", imageUrl = "/images/photos/sample_4.jpg", description = "What a beautiful city!", likes = 300 }
+        var posts = await _context.Posts
+            .Include(p => p.User) 
+            .Select(post => new PostDTO
+            {
+                Id = post.Id,
+                Owner = new UserDTO
+                {
+                    Id = post.User.Id,
+                    Name = post.User.Name,
+                    Surname = post.User.Surname,
+                    Nickname = post.User.Nickname, 
+                    Email = post.User.Email,
+                    Password = post.User.Password
+                },
+                ImageUrl = post.ImageUrl,
+                Description = post.Description,
+                Likes = post.Likes.Count 
+            })
+            .ToListAsync();
 
-        };
-
-        var post = posts.FirstOrDefault(p => p.id == postId);
+        var post = posts.FirstOrDefault(p => p.Id == postId);
 
         if (post == null)
         {
@@ -61,41 +77,6 @@ public class SocialMediaController : ControllerBase
         }
 
         return Ok(post);
-    }
-
-
-    
-    [HttpGet("users")]
-    public async Task<List<UserWithPostAndLikesDto>> GetUsersWithPostsAndLikesAsync()
-    {
-       
-        var usersWithPostsAndLikes = await _context.Users
-            .Include(u => u.Posts)
-            .ThenInclude(p => p.Likes) 
-            .ToListAsync();
-        
-        var userDtos = usersWithPostsAndLikes.Select(user => new UserWithPostAndLikesDto
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Surname = user.Surname,
-            BirthDate = user.BirthDate,
-            Password = user.Password, 
-            PostWithLikes = user.Posts.Select(post => new PostWithLikesDto
-            {
-                Id = post.Id,
-                Description = post.Description,
-                CreatedAt = post.CreatedAt,
-                LikeWithoutUnnecessaryInfo = post.Likes.Select(like => new LikeWithoutUnnecessaryInfoDto
-                {
-                    ReactionType = like.ReactionType,
-                    UserId = like.UserId
-                }).ToList()
-            }).ToList()
-        }).ToList();
-
-
-        return userDtos;
     }
 
 }

@@ -19,7 +19,15 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired(); 
         
         u.Property(e => e.BirthDate)
-            .IsRequired(); 
+            .IsRequired();
+
+        u.Property(e => e.Email)
+            .HasMaxLength(50)
+            .IsRequired();
+
+        u.Property(e => e.Nickname)
+            .HasMaxLength(50)
+            .IsRequired();
         
         u.Property(e => e.Password)
             .HasMaxLength(50)

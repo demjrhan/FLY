@@ -103,18 +103,18 @@ function editPost(post) {
     postElement.innerHTML = `
       <div class ="button">
         <button class="delete-image-button" onclick="deleteImage()">Delete Image</button>
-        <button class="main-page-button" onclick="goMainPage(${post.id})">Return</button>
-        <button class="save-button" onclick="">Save</button>
+        <button class="main-page-button" onclick="goMainPage()">Return</button>
+        <button class="save-button" onclick="editPostFromServer(${post.id})">Save</button>
       </div>
       <div class="post-header">
-        <span class="owner">${post.owner}</span>
+        <span class="owner">${post.owner.name} ${post.owner.surname}</span>
       </div>
       <div class="post-image">
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
       <div class="post-edit-description">
         <span class="description">
-          <span class="post-edit-tag">@${post.nickname}</span>
+          <span class="post-edit-tag">@${post.owner.nickname}</span>
         </span>
         <textarea class="post-edit-description" rows="2">${post.description}</textarea>
       </div>
@@ -134,7 +134,7 @@ function deletePost(post) {
     postElement.innerHTML = `
       <div class ="button">
         <button class="main-page-button" onclick="goMainPage(${post.id})">Return</button>
-        <button class="delete-button" onclick="">Delete</button>
+        <button class="delete-button" onclick="deletePostFromServer(${post.id})">Delete</button>
       </div>
      <div class="post-header">
         <span class="owner">${post.owner.name} ${post.owner.surname}</span>
@@ -182,14 +182,61 @@ async function fetchPostByPostIdAdmin(postId) {
 
 
 function goMainPage(){
-    window.location.href = '/';
+    window.location.href = `/`;
 }
 function deletePostRequest(postId) {
     window.location.href = `/deletePostRequestAdmin/${postId}`;
 }
+async function deletePostFromServer(postId) {
+    try {
+        const response = await fetch(`http://localhost:5000/api/DeletePostById/${postId}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        alert('Post deleted successfully');
+        window.location.href ='/';
+    } catch (error) {
+        console.error('Error deleting post:', error);
+        alert(`Failed to delete post: ${error.message}`);
+    }
+}
+
+
 function editPostRequest(postId) {
     window.location.href = `/editPostRequestAdmin/${postId}`;
 }
+
+async function editPostFromServer(postId) {
+
+    const textarea = document.querySelector(`.post[data-post-id="${postId}"] textarea`);
+    const description = textarea.value.trim();
+    try {
+        const response = await fetch(`http://localhost:5000/api/EditPost/${postId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(description)
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
+        }
+
+        alert('Post updated successfully');
+        goMainPage();
+    } catch (error) {
+        console.error('Error updating post:', error);
+        alert(`Failed to update post: ${error.message}`);
+    }
+
+}
+
 function seeLikeDetails(event) {
     const postElement = event.target.closest('.post');
 

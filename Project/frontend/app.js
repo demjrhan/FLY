@@ -20,6 +20,11 @@ app.get('/', function(req, res) {
   res.render('Admin/adminMain');
 });
 
+
+app.get('/warnUserRequestAdmin/:postId', function (req,res) {
+  const postId = req.params.postId;
+  res.render('Post/warnUserRequestAdmin', {postId})
+});
 app.get('/deletePostRequestAdmin/:postId', function (req,res) {
   const postId = req.params.postId;
   res.render('Post/deletePostRequestAdmin', {postId})

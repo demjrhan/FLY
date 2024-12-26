@@ -25,7 +25,8 @@ namespace backend.Migrations
                     Password = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "GETDATE()"),
                     WarnCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    isBanned = table.Column<bool>(type: "INTEGER", nullable: false)
+                    isBanned = table.Column<bool>(type: "INTEGER", nullable: false),
+                    isAdmin = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -116,6 +116,21 @@ public class SocialMediaController : ControllerBase
         return Ok(new { message = "Post updated successfully", post });
     }
 
+    [HttpPut("/api/WarnUser/{userId}")]
+    public async Task<IActionResult> WarnUserAsync(int userId)
+    {
+        var user = await _context.Users.FindAsync(userId);
+
+        if (user == null)
+        {
+            return NotFound(new { message = "User not found" });
+        }
+
+        user.WarnCount += 1;
+        await _context.SaveChangesAsync();
+        return Ok(new { message = "User warned successfully", user });
+    }
+
 
 
 }

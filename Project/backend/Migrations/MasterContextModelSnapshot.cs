@@ -118,6 +118,9 @@ namespace backend.Migrations
                     b.Property<int>("WarnCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("isAdmin")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("isBanned")
                         .HasColumnType("INTEGER");
 

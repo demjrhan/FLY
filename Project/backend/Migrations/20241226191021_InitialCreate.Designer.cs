@@ -11,7 +11,7 @@ using backend.Context;
 namespace backend.Migrations
 {
     [DbContext(typeof(MasterContext))]
-    [Migration("20241226170054_InitialCreate")]
+    [Migration("20241226191021_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -119,6 +119,9 @@ namespace backend.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("WarnCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("isAdmin")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("isBanned")

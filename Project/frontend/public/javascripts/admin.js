@@ -38,7 +38,7 @@ function renderPostsAdmin(posts) {
       <div class ="button">
         <button class="delete-button" onclick="deletePostRequest(${post.id})">Delete</button>
         <button class="edit-button" onclick="editPostRequest(${post.id})">Edit</button>
-        <button class="warn-button" onclick="warnUser(${post.owner.id})">Warn</button>
+        <button class="warn-button" onclick="warnUserRequest(${post.id})">Warn</button>
         <button class="ban-button" onclick="banUser(${post.owner.id})">Ban</button>
       </div>
       <div class="post-header">
@@ -78,6 +78,28 @@ function renderPostsAdmin(posts) {
         container.appendChild(additionalInfo);
         container.appendChild(postElement);
     });
+}
+async function warnUser(userId) {
+
+    try {
+        const response = await fetch(`http://localhost:5000/api/WarnUser/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
+        }
+
+        alert('User warned successfully');
+    } catch (error) {
+        console.error('Error warning user:', error);
+        alert(`Failed to warning user: ${error.message}`);
+    }
+
 }
 
 function editPost(post) {
@@ -189,6 +211,9 @@ function goMainPage() {
 function deletePostRequest(postId) {
     window.location.href = `/deletePostRequestAdmin/${postId}`;
 }
+function warnUserRequest(postId) {
+    window.location.href = `/warnUserRequestAdmin/${postId}`;
+}
 
 async function deletePostFromServer(postId) {
     try {
@@ -272,6 +297,4 @@ function deleteImage() {
 function banUser(ownerId) {
 }
 
-function warnUser(ownerId) {
-}
 

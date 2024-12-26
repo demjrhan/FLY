@@ -95,11 +95,11 @@ public class SocialMediaController : ControllerBase
     }
 
     [HttpPut("/api/EditPost/{postId}")]
-    public async Task<IActionResult> EditPostAsync(int postId, [FromBody] string description)
+    public async Task<IActionResult> EditPostAsync(int postId, [FromBody] EditPostDTO editPostDto)
     {
-        if (string.IsNullOrWhiteSpace(description))
+        if (string.IsNullOrWhiteSpace(editPostDto.Description) || string.IsNullOrWhiteSpace(editPostDto.ImageUrl))
         {
-            return BadRequest(new { message = "Description cannot be empty." });
+            return BadRequest(new { message = "Description or ImageUrl cannot be empty." });
         }
 
         var post = await _context.Posts.FindAsync(postId);
@@ -109,7 +109,8 @@ public class SocialMediaController : ControllerBase
             return NotFound(new { message = "Post not found" });
         }
 
-        post.Description = description;
+        post.Description = editPostDto.Description;
+        post.ImageUrl = editPostDto.ImageUrl;
         await _context.SaveChangesAsync();
 
         return Ok(new { message = "Post updated successfully", post });

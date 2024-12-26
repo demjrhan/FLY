@@ -102,7 +102,7 @@ function editPost(post) {
 
     postElement.innerHTML = `
       <div class ="button">
-        <button class="delete-image-button" onclick="deleteImage()">Delete Image</button>
+        <button class="delete-image-button" onclick="deleteImage(${post.id})">Delete Image</button>
         <button class="main-page-button" onclick="goMainPage()">Return</button>
         <button class="save-button" onclick="editPostFromServer(${post.id})">Save</button>
       </div>
@@ -212,7 +212,10 @@ function editPostRequest(postId) {
 
 async function editPostFromServer(postId) {
 
-    const textarea = document.querySelector(`.post[data-post-id="${postId}"] textarea`);
+    const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
+    const textarea = postElement.querySelector('textarea');
+    const imageUrl = postElement.querySelector('.post-image img').src;
+
     const description = textarea.value.trim();
     try {
         const response = await fetch(`http://localhost:5000/api/EditPost/${postId}`, {
@@ -220,7 +223,7 @@ async function editPostFromServer(postId) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(description)
+            body: JSON.stringify({ description, imageUrl })
         });
 
         if (!response.ok) {

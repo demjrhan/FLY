@@ -32,6 +32,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         u.Property(e => e.Password)
             .HasMaxLength(50)
             .IsRequired();
+
+        u.Property(e => e.isAdmin)
+            .IsRequired();
         
         u.Property(e => e.CreatedAt)
             .HasDefaultValueSql("GETDATE()"); 

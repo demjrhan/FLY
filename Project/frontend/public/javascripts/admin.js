@@ -1,6 +1,6 @@
 function animateReaction(type, event) {
     const reactionElement = document.createElement('div');
-    const { clientX, clientY } = event;
+    const {clientX, clientY} = event;
     const scrollX = window.scrollX;
     const scrollY = window.scrollY;
 
@@ -166,6 +166,7 @@ async function fetchPostsAdmin() {
     }
 
 }
+
 async function fetchPostByPostIdAdmin(postId) {
     try {
         const response = await fetch(`http://localhost:5000/api/getPostByPostIdAdmin/${postId}`);
@@ -181,12 +182,14 @@ async function fetchPostByPostIdAdmin(postId) {
 }
 
 
-function goMainPage(){
+function goMainPage() {
     window.location.href = `/`;
 }
+
 function deletePostRequest(postId) {
     window.location.href = `/deletePostRequestAdmin/${postId}`;
 }
+
 async function deletePostFromServer(postId) {
     try {
         const response = await fetch(`http://localhost:5000/api/DeletePostById/${postId}`, {
@@ -198,7 +201,7 @@ async function deletePostFromServer(postId) {
         }
 
         alert('Post deleted successfully');
-        window.location.href ='/';
+        goMainPage()
     } catch (error) {
         console.error('Error deleting post:', error);
         alert(`Failed to delete post: ${error.message}`);
@@ -223,7 +226,7 @@ async function editPostFromServer(postId) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ description, imageUrl })
+            body: JSON.stringify({description, imageUrl})
         });
 
         if (!response.ok) {
@@ -268,6 +271,7 @@ function deleteImage() {
 
 function banUser(ownerId) {
 }
+
 function warnUser(ownerId) {
 }
 

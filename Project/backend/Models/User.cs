@@ -16,6 +16,7 @@ public class User
     
     public int WarnCount { get; set; }
     public bool isBanned { get; set; }
+    public bool isAdmin { get; set; }
 
     public ICollection<Post> Posts { get; set; }
     public ICollection<Like> Likes { get; set; }

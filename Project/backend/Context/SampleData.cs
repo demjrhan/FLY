@@ -18,61 +18,61 @@ public class SampleData
                     {
                         Name = "John", Surname = "Doe", BirthDate = DateTime.Parse("1985-07-15"),
                         Email = "john.doe@example.com", Password = "Password123!", CreatedAt = DateTime.Now,
-                        WarnCount = 0, isBanned = false, Nickname = "JohnDoe"
+                        WarnCount = 0, isBanned = false, Nickname = "JohnDoe", isAdmin = false
                     },
                     new User
                     {
                         Name = "Jane", Surname = "Smith", BirthDate = DateTime.Parse("1990-03-22"),
                         Email = "jane.smith@example.com", Password = "SecurePass1@", CreatedAt = DateTime.Now,
-                        WarnCount = 0, isBanned = false, Nickname = "JaneSmith"
+                        WarnCount = 0, isBanned = false, Nickname = "JaneSmith", isAdmin = false
                     },
                     new User
                     {
                         Name = "Alice", Surname = "Johnson", BirthDate = DateTime.Parse("1978-11-05"),
                         Email = "alice.johnson@example.com", Password = "MyP@ssword2", CreatedAt = DateTime.Now,
-                        WarnCount = 0, isBanned = false, Nickname = "AliceJohnson"
+                        WarnCount = 0, isBanned = false, Nickname = "AliceJohnson", isAdmin = false
                     },
                     new User
                     {
                         Name = "Bob", Surname = "Ros", BirthDate = DateTime.Parse("2000-12-25"),
                         Email = "bob.ros@example.com", Password = "Pass2024#", CreatedAt = DateTime.Now, WarnCount = 0,
-                        isBanned = false, Nickname = "BobRos"
+                        isBanned = false, Nickname = "BobRos", isAdmin = false
                     },
                     new User
                     {
                         Name = "Charlie", Surname = "Davis", BirthDate = DateTime.Parse("1995-05-16"),
                         Email = "charlie.davis@example.com", Password = "Hello123!", CreatedAt = DateTime.Now,
-                        WarnCount = 0, isBanned = false, Nickname = "CharlieDavis"
+                        WarnCount = 0, isBanned = false, Nickname = "CharlieDavis", isAdmin = false
                     },
                     new User
                     {
                         Name = "Emily", Surname = "Wilson", BirthDate = DateTime.Parse("1983-09-09"),
                         Email = "emily.wilson@example.com", Password = "Qwerty1$", CreatedAt = DateTime.Now,
-                        WarnCount = 0, isBanned = false, Nickname = "EmilyWilson"
+                        WarnCount = 0, isBanned = false, Nickname = "EmilyWilson", isAdmin = false
                     },
                     new User
                     {
                         Name = "David", Surname = "Garcia", BirthDate = DateTime.Parse("1988-04-18"),
                         Email = "david.garcia@example.com", Password = "Wqea1@2024", CreatedAt = DateTime.Now,
-                        WarnCount = 0, isBanned = false, Nickname = "DavidGarcia"
+                        WarnCount = 0, isBanned = false, Nickname = "DavidGarcia", isAdmin = false
                     },
                     new User
                     {
                         Name = "Sophia", Surname = "Martinez", BirthDate = DateTime.Parse("1999-08-13"),
                         Email = "sophia.martinez@example.com", Password = "Password2#", CreatedAt = DateTime.Now,
-                        WarnCount = 3, isBanned = true, Nickname = "SophiaMartinez"
+                        WarnCount = 3, isBanned = true, Nickname = "SophiaMartinez", isAdmin = false
                     },
                     new User
                     {
                         Name = "Daniel", Surname = "Clark", BirthDate = DateTime.Parse("1992-06-30"),
                         Email = "daniel.clark@example.com", Password = "123Secure@", CreatedAt = DateTime.Now,
-                        WarnCount = 0, isBanned = false, Nickname = "DanielClark"
+                        WarnCount = 0, isBanned = false, Nickname = "DanielClark", isAdmin = false
                     },
                     new User
                     {
                         Name = "Emma", Surname = "Harris", BirthDate = DateTime.Parse("1975-10-10"),
                         Email = "emma.harris@example.com", Password = "Pass987#", CreatedAt = DateTime.Now,
-                        WarnCount = 0, isBanned = false, Nickname = "EmmaHarris"
+                        WarnCount = 0, isBanned = false, Nickname = "EmmaHarris", isAdmin = false
                     }
                 };
                 context.Users.AddRange(userData);

@@ -52,8 +52,7 @@ function renderPostsAdmin(posts) {
       </div>
       <div class="post-actions">
         <div class="likes">
-        <span class="like-count">${post.likes} likes</span>
-        <button class="like-button" onclick="seeLikeDetails(event)">Like Details</button>
+        <span class="like-count" onclick="seeLikeDetails(event)">${post.likes} likes</span>
         </div>
         <div class="reactions">
           <button class="reaction" onclick="animateReaction('smiling', event)">
@@ -79,12 +78,12 @@ function renderPostsAdmin(posts) {
         container.appendChild(postElement);
     });
 }
-async function warnUser(userId) {
+
+async function warnUserFromServer(userId,postId) {
 
     try {
         const response = await fetch(`http://localhost:5000/api/WarnUser/${userId}`, {
-            method: 'PUT',
-            headers: {
+            method: 'PUT', headers: {
                 'Content-Type': 'application/json'
             }
         });
@@ -94,12 +93,42 @@ async function warnUser(userId) {
             throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
         }
 
-        alert('User warned successfully');
+        await deletePostFromServer(postId)
     } catch (error) {
         console.error('Error warning user:', error);
         alert(`Failed to warning user: ${error.message}`);
     }
 
+}
+
+async function warnUser(post) {
+    const container = document.querySelector('.small-container');
+    container.innerHTML = '';
+
+    const postElement = document.createElement('div');
+    postElement.className = 'post';
+    postElement.dataset.postId = post.id;
+
+
+    postElement.innerHTML = `
+      <div class ="button">
+        <button class="main-page-button" onclick="goMainPage(${post.id})">Return</button>
+        <button class="delete-button" onclick="warnUserFromServer(${post.owner.id},${post.id})">Warn</button>
+      </div>
+     <div class="post-header">
+        <span class="owner">${post.owner.name} ${post.owner.surname}</span>
+    </div>
+      <div class="post-image">
+        <img src="${post.imageUrl}" alt="Post Image">
+      </div>
+      <div class="post-description">
+        <span class="description"><span class="tag">@${post.owner.nickname}</span> ${post.description}</span>
+    </div>
+      <div class="post-actions">
+        <span class="likes">${post.likes} likes</span>
+      </div>
+    `;
+    container.appendChild(postElement)
 }
 
 function editPost(post) {
@@ -211,6 +240,7 @@ function goMainPage() {
 function deletePostRequest(postId) {
     window.location.href = `/deletePostRequestAdmin/${postId}`;
 }
+
 function warnUserRequest(postId) {
     window.location.href = `/warnUserRequestAdmin/${postId}`;
 }
@@ -224,8 +254,6 @@ async function deletePostFromServer(postId) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-
-        alert('Post deleted successfully');
         goMainPage()
     } catch (error) {
         console.error('Error deleting post:', error);
@@ -247,11 +275,9 @@ async function editPostFromServer(postId) {
     const description = textarea.value.trim();
     try {
         const response = await fetch(`http://localhost:5000/api/EditPost/${postId}`, {
-            method: 'PUT',
-            headers: {
+            method: 'PUT', headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({description, imageUrl})
+            }, body: JSON.stringify({description, imageUrl})
         });
 
         if (!response.ok) {
@@ -268,20 +294,32 @@ async function editPostFromServer(postId) {
 
 }
 
-function seeLikeDetails(event) {
+
+async function seeLikeDetails(event) {
     const postElement = event.target.closest('.post');
 
     let likeDetailsBox = postElement.nextElementSibling;
     if (likeDetailsBox && likeDetailsBox.classList.contains('like-details-box')) {
-        likeDetailsBox.style.display =
-            likeDetailsBox.style.display === 'none' ? 'block' : 'none';
+        likeDetailsBox.style.display = likeDetailsBox.style.display === 'none' ? 'block' : 'none';
     } else {
+        const postId = 5;
+        const response = await fetch(`http://localhost:5000/api/GetLikeDetails/${postId}`);
+        const likeDetails = await response.json();
+
+        const likeDetailsHTML = `
+            <div class="like-details-box">
+        ${likeDetails.map(like => `
+            <div class="like-item">
+                <p><strong>Nickname:</strong> ${like.nickname}</p>
+                <p><strong>Reaction:</strong> ${like.reactionType}</p>
+            </div>
+        `).join('')}
+    </div>
+`;
+
         likeDetailsBox = document.createElement('div');
         likeDetailsBox.className = 'like-details-box';
-        likeDetailsBox.innerHTML = `
-            <h4>Like Details</h4>
-            <p>No like data to display yet!</p>`;
-
+        likeDetailsBox.innerHTML = likeDetailsHTML;
         postElement.parentNode.insertBefore(likeDetailsBox, postElement.nextSibling);
     }
 }

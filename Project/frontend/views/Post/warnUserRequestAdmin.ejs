@@ -16,8 +16,7 @@
                 const postId = '<%= postId %>';
                 const post = await fetchPostByPostIdAdmin(postId);
                 if (post) {
-                    await warnUser(post.owner.id);
-                    await deletePostFromServer(postId);
+                    await warnUser(post);
                 } else {
                     console.error('No posts available to render.');
                 }

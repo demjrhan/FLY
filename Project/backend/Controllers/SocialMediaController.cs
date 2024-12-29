@@ -127,10 +127,31 @@ public class SocialMediaController : ControllerBase
         }
 
         user.WarnCount += 1;
+        //CHECK IF USER HAS 3 WARN COUNTS
         await _context.SaveChangesAsync();
         return Ok(new { message = "User warned successfully", user });
     }
 
+    [HttpGet("/api/GetLikeDetails/{postId}")]
+    public async Task<IActionResult> GetLikeDetails(int postId)
+    {
+        var post = await _context.Posts.FindAsync(postId);
+        
+        if (post == null)
+        {
+            return NotFound(new { message = "Post not found" });
+        }
+        var likeDataList = await _context.Likes
+            .Include(like => like.User)
+            .Where(like => like.PostId == postId)
+            .Select(like => new LikeDataDTO
+            {
+                Nickname = like.User.Nickname,
+                ReactionType = like.ReactionType,
+            })
+            .ToListAsync();
 
+        return Ok(likeDataList);
 
+    }
 }

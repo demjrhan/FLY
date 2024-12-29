@@ -11697,19 +11697,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/demjrhan/.nuget/packages/": {}
+    "C:\\Users\\demir\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/demjrhan/Documents/TIN_PRO/Project/backend/backend.csproj",
+      "projectUniqueName": "C:\\Users\\demir\\Documents\\codes\\TIN_PRO\\Project\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "/Users/demjrhan/Documents/TIN_PRO/Project/backend/backend.csproj",
-      "packagesPath": "/Users/demjrhan/.nuget/packages/",
-      "outputPath": "/Users/demjrhan/Documents/TIN_PRO/Project/backend/obj/",
+      "projectPath": "C:\\Users\\demir\\Documents\\codes\\TIN_PRO\\Project\\backend\\backend.csproj",
+      "packagesPath": "C:\\Users\\demir\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\demir\\Documents\\codes\\TIN_PRO\\Project\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/demjrhan/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\demir\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -11811,7 +11811,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

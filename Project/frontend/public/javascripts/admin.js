@@ -302,7 +302,7 @@ async function seeLikeDetails(event) {
     if (likeDetailsBox && likeDetailsBox.classList.contains('like-details-box')) {
         likeDetailsBox.style.display = likeDetailsBox.style.display === 'none' ? 'block' : 'none';
     } else {
-        const postId = 5;
+        const postId = postElement.dataset.postId;
         const response = await fetch(`http://localhost:5000/api/GetLikeDetails/${postId}`);
         const likeDetails = await response.json();
 

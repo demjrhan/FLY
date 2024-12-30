@@ -206,7 +206,7 @@ function deletePost(post) {
 
 async function fetchPostsAdmin() {
     try {
-        const response = await fetch('http://localhost:5000/api/getPostsAdmin');
+        const response = await fetch('http://localhost:5000/api/getAllPostsAdmin');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

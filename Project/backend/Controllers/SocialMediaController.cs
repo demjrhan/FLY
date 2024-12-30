@@ -18,12 +18,12 @@ public class SocialMediaController : ControllerBase
     }
 
 
-    [HttpGet("/api/getPostsAdmin")]
-    public async Task<IActionResult> GetPostsAdminAsync()
+    [HttpGet("/api/getAllPostsAdmin")]
+    public async Task<IActionResult> GetAllPostsAdminAsync()
     {
         var posts = await _context.Posts
             .Include(p => p.User)
-            .Select(post => new PostDTO
+            .Select(post => new GetPostDTO
             {
                 Id = post.Id,
                 Owner = new UserDTO
@@ -44,13 +44,27 @@ public class SocialMediaController : ControllerBase
         return Ok(posts);
     }
 
+    [HttpGet("/api/getAllUsersAdmin")]
+    public async Task<IActionResult> GetAllUsersAdmin()
+    {
+        var users = await _context.Users.Select(user => new UserDTO
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Name = user.Name,
+            Surname = user.Surname,
+            Nickname = user.Nickname,
+            Password = user.Password
+        }).ToListAsync();
 
+        return Ok(users);
+    }
     [HttpGet("/api/getPostByPostIdAdmin/{postId}")]
-    public async Task<IActionResult> GetPostByPostIdIdAdmin(int postId)
+    public async Task<IActionResult> GetPostByPostIdAdmin(int postId)
     {
         var posts = await _context.Posts
             .Include(p => p.User)
-            .Select(post => new PostDTO
+            .Select(post => new GetPostDTO
             {
                 Id = post.Id,
                 Owner = new UserDTO
@@ -154,4 +168,115 @@ public class SocialMediaController : ControllerBase
         return Ok(likeDataList);
 
     }
+    
+    
+    [HttpPost("/api/RegisterUser")]
+    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDTO registerUser)
+    {
+        var user = new User
+        {
+            Name = registerUser.Name,
+            Surname = registerUser.Surname,
+            Nickname = registerUser.Nickname,
+            BirthDate = registerUser.BirthDate,
+            Email = registerUser.Email,
+            Password = registerUser.Password,
+            CreatedAt = DateTime.UtcNow,
+            WarnCount = 0,
+            isBanned = false,
+            isAdmin = false,
+            Posts = new List<Post>(),
+            Likes = new List<Like>()
+        };
+        
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+        return Ok(new { Message = "User registered successfully", User = registerUser });
+    }
+
+
+    [HttpGet("/api/GetUserPosts/{userId}")]
+    public async Task<IActionResult> GetUserPosts(int userId)
+    {
+        var posts = await _context.Posts
+            .Include(post => post.User)
+            .ThenInclude(user => user.Likes)
+            .Where(post => post.User.Id == userId)
+            .Select(post => new GetPostDTO
+        {
+            Id = post.Id,
+            Owner = new UserDTO
+            {
+                Id = post.User.Id,
+                Name = post.User.Name,
+                Surname = post.User.Surname,
+                Nickname = post.User.Nickname,
+                Email = post.User.Email,
+                Password = post.User.Password
+            },
+            ImageUrl = post.ImageUrl,
+            Description = post.Description,
+            Likes = post.Likes.Count
+        }).ToListAsync();
+
+        return Ok(posts);
+    }
+    
+    [HttpGet("/api/GetPostsLikedByUser/{userId}")]
+    public async Task<IActionResult> GetPostsLikedByUser(int userId)
+    {
+        var posts = await _context.Likes
+            .Include(like => like.Post)
+            .ThenInclude(post => post.User)
+            .Where(like => like.User.Id == userId) 
+            .Select(like => new GetPostDTO
+            {
+                Id = like.Post.Id,
+                Owner = new UserDTO
+                {
+                    Id = like.Post.User.Id,
+                    Name = like.Post.User.Name,
+                    Surname = like.Post.User.Surname,
+                    Nickname = like.Post.User.Nickname,
+                    Email = like.Post.User.Email,
+                    Password = like.Post.User.Password
+                },
+                ImageUrl = like.Post.ImageUrl,
+                Description = like.Post.Description,
+                Likes = like.Post.Likes.Count
+            }).ToListAsync();
+
+        return Ok(posts);
+    }
+    
+    [HttpPost("/api/AddPost")]
+    public async Task<IActionResult> AddPost([FromBody] AddPostDTO addPostDto)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == addPostDto.UserId);
+        if (user == null)
+        {
+            return BadRequest("User not found.");
+        }
+        var lastPost = await _context.Posts
+            .OrderByDescending(post => post.Id)
+            .FirstOrDefaultAsync();
+
+        var lastId = lastPost?.Id ?? 0;
+        lastId += 1;
+        var post = new Post
+        {
+            Id = lastId,
+            CreatedAt = DateTime.UtcNow,
+            Description = addPostDto.Description,
+            UserId = addPostDto.UserId,
+            ImageUrl = addPostDto.ImageUrl,
+            Likes = new List<Like>(),
+            User = user
+        };
+        await _context.Posts.AddAsync(post);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Post created successfully." });
+    }
+
 }

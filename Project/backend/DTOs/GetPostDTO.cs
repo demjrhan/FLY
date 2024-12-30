@@ -1,6 +1,6 @@
 namespace backend.DTOs;
 
-public class PostDTO
+public class GetPostDTO
 {
     public int Id { get; set; }
     public UserDTO Owner { get; set; } 

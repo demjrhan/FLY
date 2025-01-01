@@ -27,6 +27,21 @@ function animateReaction(type, event) {
 
 async function renderPostsAdmin(posts) {
 
+    const navigation = document.createElement('div');
+    navigation.className = 'navigation-container';
+
+    navigation.innerHTML = `
+        <nav>
+            <ul>
+                <li><a href="#" onclick="">Profile</a></li>
+                <li><a href="#" onclick="">Add Photo</a></li>
+            </ul>
+        </nav>
+    `;
+
+    const navigationController = document.querySelector('body'); // Adjust selector if needed
+    navigationController.prepend(navigation);
+
     const container = document.querySelector('.container');
     container.innerHTML = '';
 
@@ -40,7 +55,7 @@ async function renderPostsAdmin(posts) {
         <button class="delete-button" onclick="deletePostRequest(${post.id})">Delete</button>
         <button class="edit-button" onclick="editPostRequest(${post.id})">Edit</button>
         <button class="warn-button" onclick="warnUserRequest(${post.id})">Warn</button>
-        <button class="ban-button" onclick="banUser(${post.owner.id})">Ban</button>
+        <button class="ban-button" onclick="banUserRequest(${post.owner.id})">Ban</button>
       </div>
       <div class="post-header">
             <span class="owner" onclick="fetchUserPostsRequest(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
@@ -49,7 +64,7 @@ async function renderPostsAdmin(posts) {
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
       <div class="post-description">
-        <span class="description"><span class="tag">@${post.owner.nickname}</span> ${post.description}</span>
+        <span class="tag">@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
       </div>
       <div class="post-actions">
         <div class="likes">
@@ -80,6 +95,76 @@ async function renderPostsAdmin(posts) {
     });
 }
 
+function banUserRequest(userId) {
+    window.location.href = `/banUserRequestAdmin/${userId}`;
+}
+
+
+async function banUserFromServer(userId){
+
+    try {
+        const response = await fetch(`http://localhost:5000/api/BanUser/${userId}`, {
+            method: 'DELETE', headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
+        }
+        goMainPage()
+    } catch (error) {
+        console.error('Error warning user:', error);
+    }
+
+}
+
+
+async function renderBanPanelAdmin(posts,userId){
+    const navigation = document.createElement('div');
+    navigation.className = 'navigation-container';
+
+    navigation.innerHTML = `
+        <nav>
+            <ul>
+                <li><a href="#" onclick="banUserFromServer(${userId})">Ban</a></li>
+                <li><a href="#" onclick="fetchUserPostsRequest(${userId})">Cancel</a></li>
+            </ul>
+        </nav>
+    `;
+
+    const navigationController = document.querySelector('body');
+    navigationController.prepend(navigation);
+
+    const container = document.querySelector('.container');
+    container.innerHTML = '';
+
+    posts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.className = 'post';
+        postElement.dataset.postId = post.id;
+
+        postElement.innerHTML = `
+      <div class="post-header">
+            <span class="owner" onclick="fetchUserPostsRequest(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
+      </div>
+      <div class="post-image">
+        <img src="${post.imageUrl}" alt="Post Image">
+      </div>
+      <div class="post-description">
+        <span class="description"><span class="tag">@${post.owner.nickname}</span> ${post.description}</span>
+      </div>
+      <div class="post-actions">
+        <div class="likes">
+        <span class="like-count" onclick="seeLikeDetails(event)">${post.likes} likes</span>
+        </div>
+      </div>
+    `;
+
+        container.appendChild(postElement);
+    });
+}
 
 async function warnUserFromServer(userId,postId) {
 
@@ -362,8 +447,6 @@ function deleteImage() {
     }
 }
 
-function banUser(ownerId) {
-}
 
 
 function isValidResponse(response) {

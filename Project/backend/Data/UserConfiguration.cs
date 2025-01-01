@@ -39,7 +39,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         u.Property(e => e.CreatedAt)
             .HasDefaultValueSql("GETDATE()"); 
 
-        // Relationships
         u.HasMany(e => e.Posts).WithOne(e => e.User).HasForeignKey(e => e.UserId);
         u.HasMany(e => e.Likes).WithOne(e => e.User).HasForeignKey(e => e.UserId);
     }

@@ -64,6 +64,7 @@ body {
 }
 
 .likes {
+    font-weight: bold;
     display: flex;
     justify-content: flex-start;
     gap: 15px;
@@ -185,7 +186,7 @@ body {
     transition: all 2s ease;}
 
 .post-description {
-    padding: 10px 15px 15px;
+    padding: 10px 25px 15px;
     background-color: #f9f9f9;
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
@@ -205,7 +206,7 @@ body {
 }
 
 .post-edit-tag {
-    padding-left: 10px;
+    padding-left: 5px;
     padding-bottom: 20px;
     color: #007bff;
     font-weight: bold;
@@ -215,7 +216,6 @@ body {
 }
 
 .tag {
-    padding-left: 10px;
     padding-bottom: 3px;
     color: #007bff;
     font-weight: bold;
@@ -388,3 +388,47 @@ body {
     border-bottom: none;
     margin-bottom: -5px;
 }
+
+.navigation-container {
+    position: fixed; /* Fixes it to the viewport */
+    bottom: 10px; /* Positions it slightly above the bottom */
+    left: 50%; /* Centers horizontally */
+    transform: translateX(-50%); /* Adjusts for centering */
+    background: linear-gradient(
+            to right,
+            #8B2635, /* Cherry Wine */
+            #65001A
+    );    padding: 10px 20px; /* Adds padding for better appearance */
+    border-radius: 20px; /* Rounds the edges for a modern look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+    display: flex; /* Creates a horizontal layout */
+    justify-content: space-between; /* Spreads items evenly */
+    gap: 20px; /* Adds space between navigation items */
+    z-index: 1000; /* Ensures it stays above other elements */
+}
+
+.navigation-container nav ul {
+    list-style: none; /* Removes bullet points */
+    display: flex; /* Aligns items horizontally */
+    gap: 15px; /* Adds space between navigation items */
+    margin: 0;
+    padding: 0;
+}
+
+.navigation-container nav ul li a {
+    text-decoration: none; /* Removes underline */
+    color: white; /* Text color */
+    font-family: Bahnschrift, ui-serif;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px 10px; /* Adds spacing around text */
+    border-radius: 10px; /* Rounds the edges */
+    transition: color 0.3s ease; /* Smooth hover effect for text color */
+}
+
+
+.navigation-container nav ul li a:hover {
+    opacity: 0.5;
+}
+
+

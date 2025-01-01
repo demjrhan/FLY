@@ -59,6 +59,7 @@ public class SocialMediaController : ControllerBase
 
         return Ok(users);
     }
+
     [HttpGet("/api/getPostByPostIdAdmin/{postId}")]
     public async Task<IActionResult> GetPostByPostIdAdmin(int postId)
     {
@@ -141,8 +142,11 @@ public class SocialMediaController : ControllerBase
         }
 
         user.WarnCount += 1;
-        //CHECK IF USER HAS 3 WARN COUNTS
         await _context.SaveChangesAsync();
+        if (user.WarnCount >= 3)
+        {
+            return await BanUser(user.Id, "Because user have 3 or more warns, user banned from system.");
+        } 
         return Ok(new { message = "User warned successfully", user });
     }
 
@@ -150,11 +154,12 @@ public class SocialMediaController : ControllerBase
     public async Task<IActionResult> GetLikeDetails(int postId)
     {
         var post = await _context.Posts.FindAsync(postId);
-        
+
         if (post == null)
         {
             return NotFound(new { message = "Post not found" });
         }
+
         var likeDataList = await _context.Likes
             .Include(like => like.User)
             .Where(like => like.PostId == postId)
@@ -166,10 +171,9 @@ public class SocialMediaController : ControllerBase
             .ToListAsync();
 
         return Ok(likeDataList);
-
     }
-    
-    
+
+
     [HttpPost("/api/RegisterUser")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDTO registerUser)
     {
@@ -188,11 +192,69 @@ public class SocialMediaController : ControllerBase
             Posts = new List<Post>(),
             Likes = new List<Like>()
         };
-        
+
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
         return Ok(new { Message = "User registered successfully", User = registerUser });
     }
+
+    [HttpDelete("/api/BanUser/{userId}")]
+    public async Task<IActionResult> BanUser(int userId, string? message)
+    {
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null)
+        {
+            return BadRequest(new { message = "User is not found in the system." });
+        }
+        var posts = await _context.Posts
+            .Where(p => p.UserId == userId)
+            .Include(p => p.Likes)
+            .ToListAsync();
+
+        // Delete all posts and their likes
+        foreach (var post in posts)
+        {
+            _context.Likes.RemoveRange(post.Likes); // Remove likes of the post
+            _context.Posts.Remove(post);           // Remove the post itself
+        }
+        
+
+        // Remove the user
+        _context.Users.Remove(user);
+
+        // Save all changes in one transaction
+        await _context.SaveChangesAsync();
+
+        // Return success message
+        return Ok(new
+        {
+            message = message ?? "User banned and all related data deleted successfully."
+        });
+    }
+
+    [HttpDelete("/api/DeleteUsersAllPosts/{userId}")]
+    public async Task<IActionResult> DeleteUsersAllPosts(int userId)
+    {
+        var userExists = await _context.Users.AnyAsync(u => u.Id == userId);
+        if (!userExists)
+        {
+            return NotFound(new { message = "User not found." });
+        }
+
+        var posts = _context.Posts.Where(post => post.User.Id == userId);
+        if (!posts.Any())
+        {
+            return NotFound(new { message = "No posts found for the user." });
+        }
+
+        _context.Posts.RemoveRange(posts); 
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "User posts deleted successfully." });
+    }
+
 
 
     [HttpGet("/api/GetUserPosts/{userId}")]
@@ -203,32 +265,32 @@ public class SocialMediaController : ControllerBase
             .ThenInclude(user => user.Likes)
             .Where(post => post.User.Id == userId)
             .Select(post => new GetPostDTO
-        {
-            Id = post.Id,
-            Owner = new UserDTO
             {
-                Id = post.User.Id,
-                Name = post.User.Name,
-                Surname = post.User.Surname,
-                Nickname = post.User.Nickname,
-                Email = post.User.Email,
-                Password = post.User.Password
-            },
-            ImageUrl = post.ImageUrl,
-            Description = post.Description,
-            Likes = post.Likes.Count
-        }).ToListAsync();
+                Id = post.Id,
+                Owner = new UserDTO
+                {
+                    Id = post.User.Id,
+                    Name = post.User.Name,
+                    Surname = post.User.Surname,
+                    Nickname = post.User.Nickname,
+                    Email = post.User.Email,
+                    Password = post.User.Password
+                },
+                ImageUrl = post.ImageUrl,
+                Description = post.Description,
+                Likes = post.Likes.Count
+            }).ToListAsync();
 
         return Ok(posts);
     }
-    
+
     [HttpGet("/api/GetPostsLikedByUser/{userId}")]
     public async Task<IActionResult> GetPostsLikedByUser(int userId)
     {
         var posts = await _context.Likes
             .Include(like => like.Post)
             .ThenInclude(post => post.User)
-            .Where(like => like.User.Id == userId) 
+            .Where(like => like.User.Id == userId)
             .Select(like => new GetPostDTO
             {
                 Id = like.Post.Id,
@@ -248,7 +310,7 @@ public class SocialMediaController : ControllerBase
 
         return Ok(posts);
     }
-    
+
     [HttpPost("/api/AddPost")]
     public async Task<IActionResult> AddPost([FromBody] AddPostDTO addPostDto)
     {
@@ -257,6 +319,7 @@ public class SocialMediaController : ControllerBase
         {
             return BadRequest("User not found.");
         }
+
         var lastPost = await _context.Posts
             .OrderByDescending(post => post.Id)
             .FirstOrDefaultAsync();
@@ -278,5 +341,4 @@ public class SocialMediaController : ControllerBase
 
         return Ok(new { message = "Post created successfully." });
     }
-
 }

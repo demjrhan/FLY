@@ -23,16 +23,16 @@ app.get('/', function(req, res) {
 
 app.get('/warnUserRequestAdmin/:postId', function (req,res) {
   const postId = req.params.postId;
-  res.render('Post/warnUserRequestAdmin', {postId})
+  res.render('Admin/warnUserRequestAdmin', {postId})
 });
 app.get('/deletePostRequestAdmin/:postId', function (req,res) {
   const postId = req.params.postId;
-  res.render('Post/deletePostRequestAdmin', {postId})
+  res.render('Admin/deletePostRequestAdmin', {postId})
 });
 
 app.get('/editPostRequestAdmin/:postId', function (req,res) {
   const postId = req.params.postId;
-  res.render('Post/editPostRequestAdmin', {postId});
+  res.render('Admin/editPostRequestAdmin', {postId});
 });
 
 

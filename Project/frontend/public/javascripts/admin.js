@@ -299,23 +299,34 @@ async function seeLikeDetails(event) {
     const postElement = event.target.closest('.post');
 
     let likeDetailsBox = postElement.nextElementSibling;
-    if (likeDetailsBox && likeDetailsBox.classList.contains('like-details-box')) {
+    if (likeDetailsBox && likeDetailsBox.classList.contains('like-details-box') || likeDetailsBox && likeDetailsBox.classList.contains('like-details-box-empty') ) {
         likeDetailsBox.style.display = likeDetailsBox.style.display === 'none' ? 'block' : 'none';
     } else {
         const postId = postElement.dataset.postId;
         const response = await fetch(`http://localhost:5000/api/GetLikeDetails/${postId}`);
         const likeDetails = await response.json();
 
-        const likeDetailsHTML = `
+        let likeDetailsHTML;
+
+        if(isValidResponse(likeDetails)){
+            likeDetailsHTML = `
             <div class="like-details-box">
-        ${likeDetails.map(like => `
-            <div class="like-item">
-                <p><strong>Nickname:</strong> ${like.nickname}</p>
-                <p><strong>Reaction:</strong> ${like.reactionType}</p>
+                ${likeDetails.map(like => `
+                    <div class="like-item">
+                        <p><strong>Nickname:</strong> ${like.nickname}</p>
+                        <p><strong>Reaction:</strong> ${like.reactionType}</p>
+                    </div>
+                `).join('')}
             </div>
-        `).join('')}
-    </div>
-`;
+        `;
+        } else {
+            likeDetailsHTML = `
+            <div class="like-details-box-empty">
+                        <p><strong>There is nothing to see here :<</p>
+            </div>
+        `;
+        }
+
 
         likeDetailsBox = document.createElement('div');
         likeDetailsBox.className = 'like-details-box';
@@ -336,3 +347,6 @@ function banUser(ownerId) {
 }
 
 
+function isValidResponse(response) {
+    return response && response.length > 0;
+}

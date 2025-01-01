@@ -196,6 +196,7 @@ body {
 
 .tag {
     padding-left: 10px;
+    padding-bottom: 3px;
     color: #007bff;
     font-weight: bold;
     margin-right: 5px;
@@ -348,9 +349,12 @@ body {
     margin: 25px 0;
     padding: 15px;
     border: 1px solid #ddd;
-    background-color: #f9f9f9;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.like-details-box-empty {
+    display: flex;
+    justify-content: center;
 }
 
 

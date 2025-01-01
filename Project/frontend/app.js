@@ -32,7 +32,12 @@ app.get('/deletePostRequestAdmin/:postId', function (req,res) {
 
 app.get('/editPostRequestAdmin/:postId', function (req,res) {
   const postId = req.params.postId;
-  res.render('Admin/editPostRequestAdmin', {postId});
+    res.render('Admin/editPostRequestAdmin', {postId});
+  });
+
+app.get('/viewUserProfileAdmin/:userId', function (req,res) {
+  const userId = req.params.userId;
+  res.render('Admin/viewUserProfileAdmin', {userId});
 });
 
 

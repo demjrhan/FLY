@@ -152,6 +152,18 @@ body {
 }
 
 .post-header {
+    font-size: 16px;
+    font-weight: bold;
+    background: linear-gradient(
+            to right,
+            #4a4a4a,
+            #000000
+    );
+    align-self: center;
+    cursor: pointer;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: all 2s ease;
     display: flex;
     justify-content: center;
     padding-left: 20px;
@@ -163,6 +175,14 @@ body {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
+.post-header:hover {
+    background: linear-gradient(
+            to right,
+            #a6296e, #6c5b7b
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: all 2s ease;}
 
 .post-description {
     padding: 10px 15px 15px;

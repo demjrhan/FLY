@@ -25,7 +25,8 @@ function animateReaction(type, event) {
 }
 
 
-function renderPostsAdmin(posts) {
+async function renderPostsAdmin(posts) {
+
     const container = document.querySelector('.container');
     container.innerHTML = '';
 
@@ -42,7 +43,7 @@ function renderPostsAdmin(posts) {
         <button class="ban-button" onclick="banUser(${post.owner.id})">Ban</button>
       </div>
       <div class="post-header">
-            <span class="owner">${post.owner.name} ${post.owner.surname}</span>
+            <span class="owner" onclick="fetchUserPostsRequest(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
       </div>
       <div class="post-image">
         <img src="${post.imageUrl}" alt="Post Image">
@@ -78,6 +79,7 @@ function renderPostsAdmin(posts) {
         container.appendChild(postElement);
     });
 }
+
 
 async function warnUserFromServer(userId,postId) {
 
@@ -155,7 +157,7 @@ function editPost(post) {
       <div class ="button">
         <button class="delete-image-button" onclick="deleteImage(${post.id})">Delete Image</button>
         <button class="main-page-button" onclick="goMainPage()">Return</button>
-        <button class="save-button" onclick="editPostFromServer(${post.id})">Save</button>
+        <button class="save-button" onclick="editPostFromServer(${post.id}, ${post.owner.id})">Save</button>
       </div>
       <div class="post-header">
         <span class="owner">${post.owner.name} ${post.owner.surname}</span>
@@ -185,7 +187,7 @@ function deletePost(post) {
     postElement.innerHTML = `
       <div class ="button">
         <button class="main-page-button" onclick="goMainPage(${post.id})">Return</button>
-        <button class="delete-button" onclick="deletePostFromServer(${post.id})">Delete</button>
+        <button class="delete-button" onclick="deletePostFromServer(${post.id}, ${post.owner.id})">Delete</button>
       </div>
      <div class="post-header">
         <span class="owner">${post.owner.name} ${post.owner.surname}</span>
@@ -218,6 +220,23 @@ async function fetchPostsAdmin() {
 
 }
 
+function fetchUserPostsRequest(userId) {
+    window.location.href = `/viewUserProfileAdmin/${userId}`;
+}
+
+async function fetchUserPostsAdmin(userId) {
+    try {
+        const response = await fetch(`http://localhost:5000/api/GetUserPosts/${userId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        return [];
+    }
+}
+
 async function fetchPostByPostIdAdmin(postId) {
     try {
         const response = await fetch(`http://localhost:5000/api/getPostByPostIdAdmin/${postId}`);
@@ -245,7 +264,7 @@ function warnUserRequest(postId) {
     window.location.href = `/warnUserRequestAdmin/${postId}`;
 }
 
-async function deletePostFromServer(postId) {
+async function deletePostFromServer(postId,userId) {
     try {
         const response = await fetch(`http://localhost:5000/api/DeletePostById/${postId}`, {
             method: 'DELETE'
@@ -254,7 +273,7 @@ async function deletePostFromServer(postId) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        goMainPage()
+            fetchUserPostsRequest(userId)
     } catch (error) {
         console.error('Error deleting post:', error);
         alert(`Failed to delete post: ${error.message}`);
@@ -266,7 +285,7 @@ function editPostRequest(postId) {
     window.location.href = `/editPostRequestAdmin/${postId}`;
 }
 
-async function editPostFromServer(postId) {
+async function editPostFromServer(postId,userId) {
 
     const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
     const textarea = postElement.querySelector('textarea');
@@ -286,7 +305,7 @@ async function editPostFromServer(postId) {
         }
 
         alert('Post updated successfully');
-        goMainPage();
+        fetchUserPostsRequest(userId);
     } catch (error) {
         console.error('Error updating post:', error);
         alert(`Failed to update post: ${error.message}`);

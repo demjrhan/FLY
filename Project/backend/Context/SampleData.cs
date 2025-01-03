@@ -87,61 +87,61 @@ public class SampleData
                     {
                         UserId = 1, Description = "Exploring the beauty of nature.",
                         CreatedAt = DateTime.Parse("2024-01-01"),
-                        ImageUrl = "/images/photos/sample_1.jpg"
+                        ImageUrl = "/images/photos/sample_photo.png"
                     },
                     new Post
                     {
                         UserId = 2, Description = "Excited to share my new project!",
                         CreatedAt = DateTime.Parse("2024-01-02"),
-                        ImageUrl = "/images/photos/sample_2.jpg"
+                        ImageUrl = "/images/photos/sample_photo.png"
                     },
                     new Post
                     {
                         UserId = 3, Description = "Life is all about the little moments.",
                         CreatedAt = DateTime.Parse("2024-01-03"),
-                        ImageUrl = "/images/photos/sample_3.jpg"
+                        ImageUrl = "/images/photos/sample_photo.png"
                     },
                     new Post
                     {
                         UserId = 4, Description = "Just finished reading an amazing book.",
                         CreatedAt = DateTime.Parse("2024-01-04"),
-                        ImageUrl = "/images/photos/sample_4.jpg"
+                        ImageUrl = "/images/photos/sample_photo.png"
                     },
                     new Post
                     {
                         UserId = 5, Description = "Anyone up for a weekend hike?",
                         CreatedAt = DateTime.Parse("2024-01-05"),
-                        ImageUrl = "/images/photos/sample_1.jpg"
+                        ImageUrl = "/images/photos/sample_photo.png"
                     },
                     new Post
                     {
                         UserId = 1, Description = "Throwback to my last vacation!",
                         CreatedAt = DateTime.Parse("2024-01-06"),
-                        ImageUrl = "/images/photos/sample_2.jpg"
+                        ImageUrl = "/images/photos/sample_photo.png"
                     },
                     new Post
                     {
                         UserId = 3, Description = "Learning new skills is so rewarding.",
                         CreatedAt = DateTime.Parse("2024-01-07"),
-                        ImageUrl = "/images/photos/sample_3.jpg"
+                        ImageUrl = "/images/photos/sample_photo.png"
                     },
                     new Post
                     {
                         UserId = 4, Description = "Cooking my favorite dish today.",
                         CreatedAt = DateTime.Parse("2024-01-08"),
-                        ImageUrl = "/images/photos/sample_4.jpg"
+                        ImageUrl = "/images/photos/sample_photo.png"
                     },
                     new Post
                     {
                         UserId = 2, Description = "Here's a photo from my latest adventure.",
                         CreatedAt = DateTime.Parse("2024-01-09"),
-                        ImageUrl = "/images/photos/sample_1.jpg"
+                        ImageUrl = "/images/photos/sample_photo.png"
                     },
                     new Post
                     {
                         UserId = 5, Description = "Grateful for another wonderful day.",
                         CreatedAt = DateTime.Parse("2024-01-10"),
-                        ImageUrl = "/images/photos/sample_2.jpg"
+                        ImageUrl = "/images/photos/sample_photo.png"
                     }
                 };
                 context.Posts.AddRange(postData);

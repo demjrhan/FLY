@@ -23,7 +23,69 @@ function animateReaction(type, event) {
         likeCountElement.textContent = `${currentLikes + 1} likes`;
     }
 }
+function addPostAdminRequest() {
+    window.location.href = `/addPostAdminRequest`;
+}
 
+async function addPostToServer() {
+    const post = document.createElement('div');
+    post.className = 'post';
+    post.innerHTML = `
+            <div class="post-content">
+                <h2>Add New Post</h2>
+                <label for="description">Description:</label>
+                <textarea id="post-description" rows="3" placeholder="Enter post description"></textarea>
+                <label for="image-url">Image URL:</label>
+                <input type="text" id="image-url" placeholder="Enter image URL">
+                <label for="user-id">User ID:</label>
+                <input type="number" id="user-id" placeholder="Enter your user ID">
+                <div class="post-actions">
+                    <button id="submit-post">Submit</button>
+                    <button id="cancel-post">Cancel</button>
+                </div>
+            </div>
+        `;
+    document.body.appendChild(post);
+
+    document.getElementById('submit-post').addEventListener('click', async () => {
+        const description = document.getElementById('post-description').value.trim();
+        const imageUrl = document.getElementById('image-url').value.trim();
+        const userId = parseInt(document.getElementById('user-id').value.trim(), 10);
+
+
+
+        const postData = {
+            Description: description,
+            ImageUrl: imageUrl,
+            UserId: userId,
+        };
+
+        try {
+            const response = await fetch('http://localhost:5000/api/AddPost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(postData),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
+            }
+            goMainPage();
+
+        } catch (error) {
+            console.error('Error adding post:', error);
+            alert(`Failed to add post: ${error.message}`);
+        }
+    });
+
+    document.getElementById('cancel-post').addEventListener('click', async () => {
+        goMainPage();
+    })
+
+}
 
 async function renderPostsAdmin(posts) {
 
@@ -34,7 +96,7 @@ async function renderPostsAdmin(posts) {
         <nav>
             <ul>
                 <li><a href="#" onclick="">Profile</a></li>
-                <li><a href="#" onclick="">Add Photo</a></li>
+                <li><a href="#" onclick="addPostAdminRequest()">Add Photo</a></li>
             </ul>
         </nav>
     `;
@@ -98,8 +160,6 @@ async function renderPostsAdmin(posts) {
 function banUserRequest(userId) {
     window.location.href = `/banUserRequestAdmin/${userId}`;
 }
-
-
 async function banUserFromServer(userId){
 
     try {
@@ -119,8 +179,6 @@ async function banUserFromServer(userId){
     }
 
 }
-
-
 async function renderBanPanelAdmin(posts,userId){
     const navigation = document.createElement('div');
     navigation.className = 'navigation-container';

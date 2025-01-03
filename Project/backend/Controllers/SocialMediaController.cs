@@ -17,7 +17,7 @@ public class SocialMediaController : ControllerBase
         _context = context;
     }
 
-
+    
     [HttpGet("/api/getAllPostsAdmin")]
     public async Task<IActionResult> GetAllPostsAdminAsync()
     {
@@ -43,7 +43,32 @@ public class SocialMediaController : ControllerBase
 
         return Ok(posts);
     }
+    [HttpGet("/api/GetAllPostsGuest")]
+    public async Task<IActionResult> GetAllPostsGuestAsync()
+    {
+        var posts = await _context.Posts
+            .Include(p => p.User)
+            .Select(post => new GetPostDTO
+            {
+                Id = post.Id,
+                Owner = new UserDTO
+                {
+                    Id = post.User.Id,
+                    Name = post.User.Name,
+                    Surname = post.User.Surname,
+                    Nickname = post.User.Nickname,
+                    Email = "",
+                    Password = ""
+                    
+                },
+                ImageUrl = post.ImageUrl,
+                Description = post.Description,
+                Likes = post.Likes.Count
+            })
+            .ToListAsync();
 
+        return Ok(posts);
+    }
     [HttpGet("/api/getAllUsersAdmin")]
     public async Task<IActionResult> GetAllUsersAdmin()
     {
@@ -257,8 +282,8 @@ public class SocialMediaController : ControllerBase
 
 
 
-    [HttpGet("/api/GetUserPosts/{userId}")]
-    public async Task<IActionResult> GetUserPosts(int userId)
+    [HttpGet("/api/GetUserPostsAdmin/{userId}")]
+    public async Task<IActionResult> GetUserPostsAdmin(int userId)
     {
         var posts = await _context.Posts
             .Include(post => post.User)
@@ -275,6 +300,33 @@ public class SocialMediaController : ControllerBase
                     Nickname = post.User.Nickname,
                     Email = post.User.Email,
                     Password = post.User.Password
+                },
+                ImageUrl = post.ImageUrl,
+                Description = post.Description,
+                Likes = post.Likes.Count
+            }).ToListAsync();
+
+        return Ok(posts);
+    }
+    
+    [HttpGet("/api/GetUserPostsGuest/{userId}")]
+    public async Task<IActionResult> GetUserPostsGuest(int userId)
+    {
+        var posts = await _context.Posts
+            .Include(post => post.User)
+            .ThenInclude(user => user.Likes)
+            .Where(post => post.User.Id == userId)
+            .Select(post => new GetPostDTO
+            {
+                Id = post.Id,
+                Owner = new UserDTO
+                {
+                    Id = post.User.Id,
+                    Name = post.User.Name,
+                    Surname = post.User.Surname,
+                    Nickname = post.User.Nickname,
+                    Email = "",
+                    Password = ""
                 },
                 ImageUrl = post.ImageUrl,
                 Description = post.Description,

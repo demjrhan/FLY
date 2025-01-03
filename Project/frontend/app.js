@@ -17,10 +17,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.get('/', function(req, res) {
-  res.render('Admin/adminMain');
+  res.render('Auth/welcomePage.ejs');
 });
 
 
+app.get('/addPostAdminRequest', function (req,res) {
+  res.render('Admin/addPostAdminRequest')
+});
 app.get('/banUserRequestAdmin/:userId', function (req,res) {
   const userId = req.params.userId;
   res.render('Admin/banUserRequestAdmin', {userId})
@@ -48,6 +51,10 @@ app.get('/viewUserProfileAdmin/:userId', function (req,res) {
 
 
 
+app.get('/viewUserProfileGuest/:userId', function (req,res) {
+  const userId = req.params.userId;
+  res.render('Guest/userProfileGuest', {userId});
+});
 
   /*app.get('/', function(req, res) {
     res.render('User/userMain');

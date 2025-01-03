@@ -4,21 +4,23 @@
 }
 
 body {
+
     font-family: Bahnschrift, ui-serif;
     font-size: 16px;
     margin: 0;
     padding: 0;
+    background-size: cover;
     background: linear-gradient(
             to bottom,
             #f8b195, #f67280, #c06c84, #6c5b7b
-    );
-    background-size: cover;
+    ) no-repeat fixed center;
 
 }
 
 .container {
     max-width: 600px;
-    margin: auto;
+    margin: 50px auto;
+
     padding: 25px;
     background-color: #fff;
     border-radius: 15px;
@@ -155,36 +157,41 @@ body {
 .post-header {
     font-size: 16px;
     font-weight: bold;
-    background: linear-gradient(
-            to right,
-            #4a4a4a,
-            #000000
-    );
+    background-color: #f9f9f9; /* Default background color */
     align-self: center;
     cursor: pointer;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    transition: all 2s ease;
     display: flex;
     justify-content: center;
     padding-left: 20px;
     padding-top: 10px;
-    font-weight: bold;
     border-top: 1px solid #ddd;
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+    transition: background-color 2s ease; /* Smooth background transition */
 }
-.post-header:hover {
+
+.post-header span {
+    background: linear-gradient(
+            to right,
+            #4a4a4a,
+            #000000
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: all 2s ease; /* Smooth text transition */
+}
+
+.post-header:hover span {
     background: linear-gradient(
             to right,
             #a6296e, #6c5b7b
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    transition: all 2s ease;}
-
+    transition: all 2s ease;
+}
 .post-description {
     padding: 10px 25px 15px;
     background-color: #f9f9f9;
@@ -248,7 +255,6 @@ body {
     justify-content: center;
     padding: 10px 20px 5px;
     background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
 
@@ -431,4 +437,30 @@ body {
     opacity: 0.5;
 }
 
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 1000;
+    border-radius: 8px;
+    width: 300px;
+}
 
+.modal-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content label {
+    margin-top: 10px;
+}
+
+.modal-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}

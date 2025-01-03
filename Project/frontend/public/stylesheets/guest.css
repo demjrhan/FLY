@@ -212,3 +212,107 @@ main {
     margin: 0;
     color: #666;
 }
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Bahnschrift, ui-serif;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+    background: linear-gradient(to bottom, #f8b195, #f67280, #c06c84, #6c5b7b) no-repeat fixed center;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: black;
+    color: white;
+    padding: 10px 20px;
+}
+
+header .logo {
+    font-family: "Gill Sans Ultra Bold", sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+header .logo:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+header .buttons {
+    display: flex;
+    gap: 10px;
+}
+
+header .button {
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+header .button:hover {
+    transform: scale(1.05);
+    background-color: #e5e5e5;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 15px 15px 25px rgba(255, 255, 255, 0.4), -15px 15px 25px rgba(255, 255, 255, 0.4);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    font-weight: bold;
+    color: #333;
+}
+
+input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #6c5b7b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #f67280;
+    transform: scale(1.05);
+}

@@ -1,6 +1,9 @@
-﻿using backend.Context;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
+using backend.Context;
 using backend.DTOs;
 using backend.Models;
+using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,9 +14,11 @@ namespace backend.Controllers;
 public class SocialMediaController : ControllerBase
 {
     private readonly MasterContext _context;
+    private readonly UserService _userService;
 
-    public SocialMediaController(MasterContext context)
+    public SocialMediaController(MasterContext context, UserService userService)
     {
+        _userService = userService;
         _context = context;
     }
 
@@ -202,6 +207,13 @@ public class SocialMediaController : ControllerBase
     [HttpPost("/api/RegisterUser")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDTO registerUser)
     {
+        var validationErrors = _userService.ValidateRegisterUser(registerUser);
+
+        if (validationErrors.Count > 0)
+        {
+            return BadRequest(new { Message = "Validation failed", Errors = validationErrors });
+        }
+
         var user = new User
         {
             Name = registerUser.Name,
@@ -220,9 +232,33 @@ public class SocialMediaController : ControllerBase
 
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
+
         return Ok(new { Message = "User registered successfully", User = registerUser });
     }
 
+    [HttpPost("/api/LoginUser")]
+    public async Task<IActionResult> LoginUser([FromBody] LoginUserDTO loginUserDto)
+    {
+        var user = await _context.Users.Where(user => user.Nickname == loginUserDto.Nickname && user.Password == loginUserDto.Password)
+            .FirstOrDefaultAsync();
+        
+        
+        if (user == null)
+        {
+            return BadRequest(new { Message = "Either nickname or password is wrong." });
+        }
+        
+        return Ok(new UserDTO{
+            Id = user.Id,
+            Nickname = user.Nickname,
+            Name = user.Name,
+            Surname = user.Surname,
+            Email = user.Email,
+            Password = user.Password
+        });
+        
+    }
+    
     [HttpDelete("/api/BanUser/{userId}")]
     public async Task<IActionResult> BanUser(int userId, string? message)
     {

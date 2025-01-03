@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/guest.css">
+</head>
+<body>
+<header>
+    <div class="logo" onclick="mainPage()"> FLY</div>
+    <div class="buttons">
+        <button class="button" onclick="loginUserRequest()">Log In</button>
+    </div>
+</header>
+<div class="container">
+    <form id="register-form" onsubmit="registerUserToServer(event)">
+        <h2>Register</h2>
+        <div id="validation-error" style="color: red; margin-bottom: 10px;"></div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+
+        <label for="surname">Surname:</label>
+        <input type="text" id="surname" name="surname">
+
+        <label for="nickname">Nickname:</label>
+        <input type="text" id="nickname" name="nickname">
+
+        <label for="birthDate">Birth Date:</label>
+        <input type="date" id="birthDate" name="birthDate">
+
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email">
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+
+        <button type="submit" class="button">Register</button>
+    </form>
+</div>
+
+<script src="../javascripts/guest.js"></script>
+<script src="../javascripts/user.js"></script>
+</body>
+</html>

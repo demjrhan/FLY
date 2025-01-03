@@ -1,4 +1,5 @@
 using backend.Context;
+using backend.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<MasterContext>(options => options.UseSqlite("Data Source=social-media.db"));
-// builder.Services.AddScoped<, >();
+builder.Services.AddScoped<UserService>();
 // builder.Services.AddScoped<, >();
 var app = builder.Build();
 SampleData.Initialize(app.Services);

@@ -57,7 +57,13 @@ async function fetchPostsGuest() {
 
 }
 
+function loginUserRequest() {
+    window.location.href = `/loginUserRequest`;
+}
+function registerUserRequest() {
+    window.location.href = `/registerUserRequest`;
+}
+
 function mainPage(){
     window.location.href = `/`;
-
 }

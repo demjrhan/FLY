@@ -1,83 +1,135 @@
-function animateReaction(type, event) {
-    const reactionElement = document.createElement('div');
-    const { clientX, clientY } = event;
-    const scrollX = window.scrollX;
-    const scrollY = window.scrollY;
+async function registerUserToServer(event) {
+    event.preventDefault(); // Prevent the form from submitting
 
-    reactionElement.classList.add('floating-reaction');
-    reactionElement.style.position = 'absolute';
-    reactionElement.style.left = `${clientX + scrollX}px`;
-    reactionElement.style.top = `${clientY + scrollY}px`;
-    reactionElement.innerHTML = `<img src="/images/emojis/${type}.png" alt="${type}" class="emoji">`;
+    const form = document.getElementById("register-form");
+    clearErrorMessages(form);
 
-    document.body.appendChild(reactionElement);
+    const formData = {
+        name: document.getElementById("name").value.trim(),
+        surname: document.getElementById("surname").value.trim(),
+        nickname: document.getElementById("nickname").value.trim(),
+        birthDate: document.getElementById("birthDate").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        password: document.getElementById("password").value.trim(),
+    };
 
-    setTimeout(() => {
-        reactionElement.remove();
-    }, 1000);
+    const validationMessages = {
+        name: "Name is required.",
+        surname: "Surname is required.",
+        nickname: "Nickname is required.",
+        birthDate: "Birth Date is required.",
+        email: "Email is required.",
+        password: "Password is required.",
+    };
 
-    const postElement = event.currentTarget.closest('.post');
-    if (postElement) {
-        const likeCountElement = postElement.querySelector('.likes');
-        const currentLikes = parseInt(likeCountElement.textContent.split(' ')[0]);
-        likeCountElement.textContent = `${currentLikes + 1} likes`;
+    if (!validateFields(formData, validationMessages)) return;
+
+    await submitForm('/api/RegisterUser', formData, form);
+}
+
+async function loginUserToServer(event) {
+    event.preventDefault();
+
+    const form = document.getElementById("login-form");
+    clearErrorMessages(form);
+
+    const formData = {
+        nickname: document.getElementById("nickname").value.trim(),
+        password: document.getElementById("password").value.trim(),
+    };
+
+    const validationMessages = {
+        nickname: "Nickname is required.",
+        password: "Password is required.",
+    };
+
+    if (!validateFields(formData, validationMessages)) return;
+
+    await submitForm('/api/LoginUser', formData, form);
+}
+
+
+async function submitForm(endpoint, formData, form) {
+    try {
+        const response = await fetch(`http://localhost:5000${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            handleBackendErrors(result, form);
+        } else {
+            alert(result.message || "Operation successful!");
+            form.reset();
+        }
+    } catch (error) {
+        console.error("Error during form submission:", error);
+        alert("An unexpected error occurred. Please try again.");
     }
 }
 
 
+function handleBackendErrors(result, form) {
+    const generalErrorContainer = document.getElementById("validation-error");
+    if (result.errors) {
+        displayBackendErrors(result.errors);
+    } else {
+        generalErrorContainer.style.display = "block";
+        generalErrorContainer.textContent = result.message || "An error occurred.";
+    }
+}
 
-function renderPostsUser(posts) {
-    const container = document.querySelector('.container');
-    container.innerHTML = '';
+function clearErrorMessages(form) {
+    const errorMessages = form.querySelectorAll(".error-message");
+    errorMessages.forEach((msg) => msg.remove());
+}
 
-    posts.forEach(post => {
-        const postElement = document.createElement('div');
-        postElement.className = 'post';
-        postElement.dataset.postId = post.id;
 
-        postElement.innerHTML = `
-      <div class ="button">
-        <button class="delete-button" onclick="deletePost(${post.id}">Delete</button>
-        <button class="edit-button" onclick="editPost(${post.id}">Edit</button>
-      </div>
-      <div class="post-header">
-        <span class="owner">${post.owner}</span>
-      </div>
-      <div class="post-image">
-        <img src="${post.imageUrl}" alt="Post Image">
-      </div>
-      <div class="post-description">
-        <span class="description"><span class="tag">@${post.nickname}</span> ${post.description}</span>
-      </div>
-      <div class="post-actions">
-        <span class="likes">${post.likes} likes</span>
-        <div class="reactions">
-          <button class="reaction" onclick="animateReaction('smiling', event)">
-            <img src="/images/emojis/smiling.png" alt="Smiling" class="emoji">
-          </button>
-          <button class="reaction" onclick="animateReaction('lovely', event)">
-            <img src="/images/emojis/lovely.png" alt="Lovely" class="emoji">
-          </button>
-        </div>
-      </div>
-    `;
+function validateFields(formData, validationMessages) {
+    let isValid = true;
 
-        container.appendChild(postElement);
+    Object.keys(formData).forEach((field) => {
+        if (!formData[field]) {
+            isValid = false;
+            const input = document.getElementById(field);
+            const errorMessage = document.createElement("div");
+            errorMessage.className = "error-message";
+            errorMessage.style.color = "red";
+            errorMessage.style.fontSize = "12px";
+            errorMessage.textContent = validationMessages[field];
+            input.parentElement.insertBefore(errorMessage, input.nextSibling);
+        }
+    });
+
+    return isValid;
+}
+
+
+function displayBackendErrors(errors) {
+    Object.keys(errors).forEach((field) => {
+        const normalizedField = field.charAt(0).toLowerCase() + field.slice(1);
+        const input = document.getElementById(normalizedField);
+        if (input) {
+            const errorMessage = document.createElement("div");
+            errorMessage.className = "error-message";
+            errorMessage.style.color = "red";
+            errorMessage.style.fontSize = "12px";
+            errorMessage.textContent = errors[field];
+            input.parentElement.insertBefore(errorMessage, input.nextSibling);
+        }
     });
 }
 
 
+function mainPage() {
+    window.location.href = `/`;
+}
 
-async function fetchPostsUser() {
-    try {
-        const response = await fetch('http://localhost:5000/api/getPostsUser'); // C# backend URL
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return await response.json();
-    } catch (error) {
-        console.error('Error fetching posts:', error);
-        return [];
-    }
-
+function mainPageLoggedIn(userId) {
+    window.location.href = `/${userId}`;
 }

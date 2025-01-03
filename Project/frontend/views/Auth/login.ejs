@@ -3,37 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../public/stylesheets/style.css">
+    <link rel="stylesheet" href="/stylesheets/guest.css">
 </head>
 <body>
-
+<header>
+    <div class="logo" onclick="mainPage()"> FLY</div>
+    <div class="buttons">
+        <button class="button" onclick="registerUserRequest()">Register</button>
+    </div>
+</header>
 <div class="container">
-    <form>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" name="email" id="email" required>
-            <span id="email-error" class="error-message"></span>
-        </div>
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password">
-            <span id="password-error" class="error-message"></span>
-        </div>
+    <form id="login-form" onsubmit="loginUserToServer(event)">
+        <h2>Log In</h2>
+        <div id="validation-error" style="color: red; margin-bottom: 10px;"></div>
+
+        <label for="nickname">Nickname:</label>
+        <input type="text" id="nickname" name="nickname">
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+
+        <button type="submit" class="button">Log In</button>
     </form>
 </div>
 
-
-<script>
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-
-        } catch (error) {
-            console.error('Error fetching or rendering posts:', error);
-        }
-    });
-
-</script>
-<script src="../javascripts/scripts.js"></script>
-
+<script src="../javascripts/guest.js"></script>
+<script src="../javascripts/user.js"></script>
 </body>
 </html>

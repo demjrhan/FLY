@@ -57,13 +57,7 @@ body {
 }
 
 
-.button {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 5px 10px 10px;
 
-}
 
 .likes {
     font-weight: bold;
@@ -73,86 +67,6 @@ body {
     padding-left: 15px;
 }
 
-.delete-button {
-    border-radius: 10px;
-    background-color: powderblue;
-    border: 1px solid #ddd;
-}
-
-.delete-button:hover {
-    background-color: #dddddd;
-}
-
-.edit-button {
-    border-radius: 10px;
-    background-color: lightblue;
-    border: 1px solid #ddd;
-}
-
-.edit-button:hover {
-    background-color: #dddddd;
-}
-
-.ban-button {
-    border-radius: 10px;
-    background-color: cadetblue;
-    border: 1px solid #ddd;
-}
-
-.ban-button:hover {
-    background-color: #dddddd;
-}
-
-.warn-button {
-    border-radius: 10px;
-    background-color: mediumslateblue;
-    border: 1px solid #ddd;
-}
-
-.warn-button:hover {
-    background-color: #dddddd;
-}
-
-.main-page-button {
-    border-radius: 10px;
-    background-color: cadetblue;
-    border: 1px solid #ddd;
-}
-
-.main-page-button:hover {
-    background-color: #dddddd;
-}
-
-.save-button {
-    border-radius: 10px;
-    background-color: mediumslateblue;
-    border: 1px solid #ddd;
-}
-
-.save-button:hover {
-    background-color: #dddddd;
-}
-
-.like-button {
-    border-radius: 10px;
-    background-color: skyblue;
-    border: 1px solid #ddd;
-
-}
-
-.like-button:hover {
-    background-color: #dddddd;
-}
-
-.delete-image-button {
-    border-radius: 10px;
-    background-color: lightskyblue;
-    border: 1px solid #ddd;
-}
-
-.delete-image-button:hover {
-    background-color: #dddddd;
-}
 
 .post-header {
     font-size: 16px;
@@ -246,10 +160,6 @@ body {
 }
 
 
-.owner {
-    color: black;
-}
-
 .post-image {
     display: flex;
     justify-content: center;
@@ -292,31 +202,6 @@ body {
     border-bottom-right-radius: 10px;
 }
 
-.like-count {
-    font-size: 16px;
-    font-weight: bold;
-    background: linear-gradient(
-            to right,
-            #4a4a4a,
-            #000000
-    );
-    align-self: center;
-    cursor: pointer;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    transition: all 2s ease;
-
-}
-
-.like-count:hover {
-    background: linear-gradient(
-            to right,
-            #a6296e, #6c5b7b
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    transition: all 2s ease;
-}
 
 .reactions {
     display: flex;
@@ -370,31 +255,6 @@ body {
 }
 
 
-.like-details-box {
-
-    margin: 25px 0;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-}
-
-.like-details-box-empty {
-    display: flex;
-    justify-content: center;
-}
-
-
-.like-item {
-    margin-bottom: 15px;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-.like-item:last-child {
-    border-bottom: none;
-    margin-bottom: -5px;
-}
-
 .navigation-container {
     position: fixed; /* Fixes it to the viewport */
     bottom: 10px; /* Positions it slightly above the bottom */
@@ -437,30 +297,82 @@ body {
     opacity: 0.5;
 }
 
-.modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    z-index: 1000;
-    border-radius: 8px;
-    width: 300px;
-}
 
-.modal-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.modal-content label {
-    margin-top: 10px;
-}
-
-.modal-actions {
-    margin-top: 15px;
+header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    background: black;
+    color: white;
+    padding: 10px 20px;
+
+}
+
+header .logo {
+    font-family: "Gill Sans Ultra Bold", sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+header .logo:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+header .buttons {
+    display: flex;
+    gap: 10px;
+}
+
+header .button {
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+header .button:hover {
+    transform: scale(1.05);
+    background-color: #e5e5e5;
+}
+.profile-info {
+    background-color: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.profile-icon {
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.profile-icon img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.name {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.surname {
+    font-size: 1.2em;
+    font-weight: normal;
+    color: #555;
+    margin: 0;
 }

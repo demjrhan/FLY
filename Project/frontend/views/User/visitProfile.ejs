@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/user.css">
+    <link rel="stylesheet" href="/stylesheets/essentials.css">
+</head>
+<body>
+
+<header>
+    <div class="logo" onclick="mainPageLoggedIn(<%= loggedInUserId %>)"> FLY</div>
+</header>
+<div class="profile-container"></div>
+<div class="container"></div>
+<div class="navigation-container">
+    <nav>
+        <ul>
+            <li><a href="#" onclick="fetchUserPostsRequest(<%= loggedInUserId %>)">Profile</a></li>
+            <li><a href="#" onclick="">Add Photo</a></li>
+        </ul>
+    </nav>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const userId = '<%= userId %>';
+            const posts = await fetchUserPosts(userId);
+            const user = await fetchUser(userId);
+            if (Array.isArray(posts) && posts.length > 0) {
+                await renderUserProfile(user,posts);
+            } else {
+                console.error('No posts available to render.');
+            }
+        } catch (error) {
+            console.error('Error fetching or rendering posts:', error);
+        }
+    });
+
+</script>
+<script src="../javascripts/user.js"></script>
+
+</body>
+</html>

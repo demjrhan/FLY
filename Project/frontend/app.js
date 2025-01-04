@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session');
 
 var app = express();
 
@@ -16,8 +17,40 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+app.use(
+    session({
+        secret: 'default-random-key',
+        resave: false,
+        saveUninitialized: true,
+        cookie: {secure: false}, // Set `secure: true` if using HTTPS
+    })
+);
+
 app.get('/', function (req, res) {
-    res.render('Auth/welcomePage.ejs');
+    res.render('Auth/welcomePage');
+});
+
+app.get('/logInUser/:loggedInUserId', function (req, res) {
+    const loggedInUserId = req.params.loggedInUserId;
+    req.session.loggedInUserId = loggedInUserId;
+    res.render('User/userMain', {loggedInUserId});
+});
+
+app.get('/logOut', function (req, res) {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error logging out:', err);
+        } else {
+            console.log('Logging out successful');
+        }
+    });
+});
+
+app.get('/loginUserRequest', function (req, res) {
+    res.render('Auth/login');
+})
+app.get('/registerUserRequest', function (req, res) {
+    res.render('Auth/register');
 });
 
 app.get('/addPostAdminRequest', function (req, res) {
@@ -48,18 +81,25 @@ app.get('/viewUserProfileAdmin/:userId', function (req, res) {
     res.render('Admin/viewUserProfileAdmin', {userId});
 });
 
-app.get('/loginUserRequest', function (req, res) {
-    res.render('Auth/login');
-})
-app.get('/registerUserRequest', function (req, res) {
-    res.render('Auth/register');
-});
 
 app.get('/viewUserProfileGuest/:userId', function (req, res) {
     const userId = req.params.userId;
     res.render('Guest/userProfileGuest', {userId});
 });
 
+app.get('/viewUserProfile/:userId', function (req, res) {
+    const userId = req.params.userId;
+    if (req.session.loggedInUserId) {
+        const loggedInUserId = req.session.loggedInUserId;
+        if (req.session.loggedInUserId === userId) {
+            res.render('User/userProfile', {loggedInUserId });
+        } else {
+            res.render('User/visitProfile', {userId,loggedInUserId});
+        }
+    } else {
+        res.redirect('/login');
+    }
+});
 
 app.get('/edit/:id', function (req, res) {
     const postId = req.params.id;

@@ -120,7 +120,7 @@ async function renderPostsAdmin(posts) {
         <button class="ban-button" onclick="banUserRequest(${post.owner.id})">Ban</button>
       </div>
       <div class="post-header">
-            <span class="owner" onclick="fetchUserPostsRequest(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
+            <span class="owner" onclick="fetchUserPostsRequestAdmin(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
       </div>
       <div class="post-image">
         <img src="${post.imageUrl}" alt="Post Image">
@@ -187,7 +187,7 @@ async function renderBanPanelAdmin(posts,userId){
         <nav>
             <ul>
                 <li><a href="#" onclick="banUserFromServer(${userId})">Ban</a></li>
-                <li><a href="#" onclick="fetchUserPostsRequest(${userId})">Cancel</a></li>
+                <li><a href="#" onclick="fetchUserPostsRequestAdmin(${userId})">Cancel</a></li>
             </ul>
         </nav>
     `;
@@ -205,7 +205,7 @@ async function renderBanPanelAdmin(posts,userId){
 
         postElement.innerHTML = `
       <div class="post-header">
-            <span class="owner" onclick="fetchUserPostsRequest(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
+            <span class="owner" onclick="fetchUserPostsRequestAdmin(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
       </div>
       <div class="post-image">
         <img src="${post.imageUrl}" alt="Post Image">
@@ -363,13 +363,13 @@ async function fetchPostsAdmin() {
 
 }
 
-function fetchUserPostsRequest(userId) {
+function fetchUserPostsRequestAdmin(userId) {
     window.location.href = `/viewUserProfileAdmin/${userId}`;
 }
 
 async function fetchUserPostsAdmin(userId) {
     try {
-        const response = await fetch(`http://localhost:5000/api/GetUserPosts/${userId}`);
+        const response = await fetch(`http://localhost:5000/api/GetUserPostsAdmin/${userId}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -416,7 +416,7 @@ async function deletePostFromServer(postId,userId) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-            fetchUserPostsRequest(userId)
+            fetchUserPostsRequestAdmin(userId)
     } catch (error) {
         console.error('Error deleting post:', error);
         alert(`Failed to delete post: ${error.message}`);
@@ -448,7 +448,7 @@ async function editPostFromServer(postId,userId) {
         }
 
         alert('Post updated successfully');
-        fetchUserPostsRequest(userId);
+        fetchUserPostsRequestAdmin(userId);
     } catch (error) {
         console.error('Error updating post:', error);
         alert(`Failed to update post: ${error.message}`);

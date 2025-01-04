@@ -3,20 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="/stylesheets/user.css">
+  <link rel="stylesheet" href="/stylesheets/essentials.css">
 </head>
 <body>
 
-
+<header>
+  <div class="logo" onclick="mainPageLoggedIn(<%= loggedInUserId %>)"> FLY</div>
+</header>
 
 <div class="container"></div>
+<div class="navigation-container">
+  <nav>
+    <ul>
+      <li><a href="#" onclick="fetchUserPostsRequest(<%= loggedInUserId %>)">Profile</a></li>
+      <li><a href="#" onclick="">Add Photo</a></li>
+    </ul>
+  </nav>
+</div>
+
 
 <script>
   document.addEventListener('DOMContentLoaded', async () => {
     try {
-      const posts = await fetchPostsUser();
+      const posts = await fetchAllPosts();
       if (Array.isArray(posts) && posts.length > 0) {
-        renderPostsUser(posts);
+        await renderPostsUser(posts);
       } else {
         console.error('No posts available to render.');
       }

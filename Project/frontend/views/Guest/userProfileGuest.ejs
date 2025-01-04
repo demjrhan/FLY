@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/stylesheets/guest.css">
+    <link rel="stylesheet" href="/stylesheets/essentials.css">
 
 </head>
 <body>
@@ -11,11 +12,12 @@
 <header>
     <div class="logo" onclick="mainPage()"> FLY</div>
     <div class="buttons">
-        <button class="button" onclick="">Log In</button>
-        <button class="button" onclick="">Register</button>
+        <button class="button" onclick="loginUserRequest()">Log In</button>
+        <button class="button" onclick="registerUserRequest()">Register</button>
     </div>
 </header>
 
+<div class="profile-container"></div>
 <div class="container"></div>
 
 
@@ -24,8 +26,9 @@
         try {
             const userId = '<%= userId %>';
             const posts = await fetchUserPostsGuest(userId);
+            const user = await fetchUser(userId);
             if (Array.isArray(posts) && posts.length > 0) {
-                await renderPostsGuest(posts);
+                await renderUserProfileGuest(user,posts);
             } else {
                 goMainPage()
 

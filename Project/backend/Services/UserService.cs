@@ -1,12 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using backend.DTOs;
+using backend.Repositories;
 
 namespace backend.Services;
 
 public class UserService
 {
-    public Dictionary<string, string> ValidateRegisterUser(RegisterUserDTO registerUser)
+    private readonly UserRepository _userRepository;
+    public UserService(UserRepository userRepository)
+    {
+        _userRepository = userRepository;
+    }
+    public async Task<Dictionary<string, string>> ValidateRegisterUser(RegisterUserDTO registerUser)
     {
         var errors = new Dictionary<string, string>();
 
@@ -23,6 +29,11 @@ public class UserService
         if (!Regex.IsMatch(registerUser.Nickname, @"^[A-Za-z0-9_-]{3,15}$"))
         {
             errors.Add("Nickname", "Nickname must be 3-15 characters long and can only include letters, numbers, underscores, or dashes.");
+        }
+
+        if (await _userRepository.CheckIfNicknameExists(registerUser.Nickname))
+        {
+            errors.Add("Nickname", "Nickname is already exists in database, select new one :<.");
         }
 
         if (registerUser.BirthDate > DateTime.UtcNow.AddYears(-13))

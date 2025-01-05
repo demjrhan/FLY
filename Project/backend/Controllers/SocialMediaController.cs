@@ -221,12 +221,50 @@ public class SocialMediaController : ControllerBase
             .Where(like => like.PostId == postId)
             .Select(like => new LikeDataDTO
             {
+                Id = like.User.Id,
                 Nickname = like.User.Nickname,
                 ReactionType = like.ReactionType,
             })
             .ToListAsync();
 
         return Ok(likeDataList);
+    }
+    [HttpPut("/api/LikePost/{userId}/{postId}/{reactionType}")]
+    public async Task<IActionResult> LikePost([FromBody] LikePostDTO likePostDto)
+    {
+        var post = await _context.Posts.Include(p => p.Likes).FirstOrDefaultAsync(p => p.Id == likePostDto.postId);
+
+        if (post == null)
+        {
+            return NotFound(new { message = "Post not found" });
+        }
+
+        var user = await _context.Users.FindAsync(likePostDto.userId);
+
+        if (user == null)
+        {
+            return NotFound(new { message = "User not found" });
+        }
+
+        var existingLike = post.Likes.FirstOrDefault(l => l.UserId == likePostDto.userId);
+        if (existingLike != null)
+        {
+            return Ok(new { alreadyLiked = true, message = "User has already liked this post." });
+        }
+
+        var like = new Like
+        {
+            UserId = likePostDto.userId,
+            LikedAt = DateTime.Now,
+            PostId = likePostDto.postId,
+            ReactionType = likePostDto.reactionType,
+            User = user
+        };
+
+        post.Likes.Add(like);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { alreadyLiked = false, message = "Post liked successfully." });
     }
 
 

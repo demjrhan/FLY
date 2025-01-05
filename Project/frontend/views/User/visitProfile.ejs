@@ -12,6 +12,17 @@
     <div class="logo" onclick="mainPageLoggedIn(<%= loggedInUserId %>)"> FLY</div>
 </header>
 <div class="profile-container"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const userId = '<%= loggedInUserId %>';
+            const user = await fetchUser(userId);
+            await renderUserProfile(user);
+        } catch (error) {
+            console.error('Error rendering user profile:', error);
+        }
+    });
+</script>
 <div class="container"></div>
 <div class="navigation-container">
     <nav>
@@ -26,10 +37,10 @@
     document.addEventListener('DOMContentLoaded', async () => {
         try {
             const userId = '<%= userId %>';
+            const loggedInUserId = '<%= loggedInUserId %>';
             const posts = await fetchUserPosts(userId);
-            const user = await fetchUser(userId);
             if (Array.isArray(posts) && posts.length > 0) {
-                await renderUserProfile(user,posts);
+                await renderPostsUser(posts,loggedInUserId);
             } else {
                 console.error('No posts available to render.');
             }

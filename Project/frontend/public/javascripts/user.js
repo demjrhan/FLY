@@ -1,4 +1,5 @@
-function animateReaction(type, event) {
+
+async function likePost(type,event,loggedInUserId,postId) {
     const reactionElement = document.createElement('div');
     const {clientX, clientY} = event;
     const scrollX = window.scrollX;
@@ -18,9 +19,31 @@ function animateReaction(type, event) {
 
     const postElement = event.currentTarget.closest('.post');
     if (postElement) {
-        const likeCountElement = postElement.querySelector('.like-count');
-        const currentLikes = parseInt(likeCountElement.textContent.split(' ')[0]);
-        likeCountElement.textContent = `${currentLikes + 1} likes`;
+        try {
+            const response = await fetch(`http://localhost:5000/api/LikePost/${loggedInUserId}/${postId}/${type}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: loggedInUserId, postId, reactionType: type }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            if (result.alreadyLiked) {
+                console.log(result.message);
+            } else {
+                console.log(result.message);
+                    const likeCountElement = postElement.querySelector('.like-count');
+                    const currentLikes = parseInt(likeCountElement.textContent.split(' ')[0]);
+                    likeCountElement.textContent = `${currentLikes + 1} likes`;
+
+            }
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
+
     }
 }
 
@@ -156,7 +179,7 @@ function displayBackendErrors(errors) {
 }
 
 
-async function renderPostsUser(posts) {
+async function renderPostsUser(posts,loggedInUserId) {
 
     const container = document.querySelector('.container');
     container.innerHTML = '';
@@ -178,13 +201,13 @@ async function renderPostsUser(posts) {
       </div>
       <div class="post-actions">
         <div class="likes">
-        <span class="like-count" onclick="seeLikeDetails(event)">${post.likes} likes</span>
+        <span class="like-count"">${post.likes} likes</span>
         </div>
         <div class="reactions">
-          <button class="reaction" onclick="animateReaction('smiling', event)">
+          <button class="reaction" onclick="likePost('smiling', event,${loggedInUserId},${post.id})">
             <img src="/images/emojis/smiling.png" alt="Smiling" class="emoji">
           </button>
-          <button class="reaction" onclick="animateReaction('lovely', event)">
+          <button class="reaction" onclick="likePost('lovely', event,${loggedInUserId},${post.id})">
             <img src="/images/emojis/lovely.png" alt="Lovely" class="emoji">
           </button>
         </div>
@@ -195,7 +218,7 @@ async function renderPostsUser(posts) {
     });
 }
 
-async function renderUserProfile(user, posts) {
+async function renderUserProfile(user) {
     const profileContainer = document.querySelector('.profile-container');
     profileContainer.innerHTML = '';
 
@@ -223,10 +246,7 @@ async function renderUserProfile(user, posts) {
     textContainer.appendChild(surnameElement);
 
     profileInfo.appendChild(textContainer);
-    profileContainer.appendChild(profileInfo);
-
-    await renderPostsUser(posts);
-}
+    profileContainer.appendChild(profileInfo);}
 
 function fetchUserPostsRequest(userId) {
     window.location.href = `/viewUserProfile/${userId}`;

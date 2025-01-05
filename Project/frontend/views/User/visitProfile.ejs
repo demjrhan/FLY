@@ -15,7 +15,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', async () => {
         try {
-            const userId = '<%= loggedInUserId %>';
+            const userId = '<%= userId %>';
             const user = await fetchUser(userId);
             await renderUserProfile(user);
         } catch (error) {

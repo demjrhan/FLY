@@ -48,6 +48,48 @@ async function likePost(type,event,loggedInUserId,postId) {
 }
 
 
+async function loginUserToServer(event) {
+    event.preventDefault();
+
+    const form = document.getElementById("login-form");
+    clearErrorMessages(form);
+
+    const formData = {
+        nickname: document.getElementById("nickname").value.trim(),
+        password: document.getElementById("password").value.trim(),
+    };
+
+    const validationMessages = {
+        nickname: "Nickname is required.",
+        password: "Password is required.",
+    };
+
+    if (!validateFields(formData, validationMessages)) return;
+
+    const result = await submitForm('/api/LoginUser', formData, form);
+    await mainPageLoggedIn(result.id);
+}
+
+function validateFields(formData, validationMessages) {
+    let isValid = true;
+
+    Object.keys(formData).forEach((field) => {
+        if (!formData[field]) {
+            isValid = false;
+            const input = document.getElementById(field);
+            const errorMessage = document.createElement("div");
+            errorMessage.className = "error-message";
+            errorMessage.style.color = "red";
+            errorMessage.style.fontSize = "12px";
+            errorMessage.textContent = validationMessages[field];
+            input.parentElement.insertBefore(errorMessage, input.nextSibling);
+        }
+    });
+
+    return isValid;
+}
+
+
 async function registerUserToServer(event) {
     event.preventDefault();
 
@@ -74,34 +116,15 @@ async function registerUserToServer(event) {
 
     if (!validateFields(formData, validationMessages)) return;
 
-    await submitForm('/api/RegisterUser', formData, form);
-    alert("User registered successfully. Please log in.");
-    loginUserRequest()
+    const result = await submitForm('/api/RegisterUser', formData, form);
 
+    if (result && result.success) {
+        alert("Registered successfully. Please log in.");
+        loginUserRequest();
+    } else {
+        console.log("Registration failed. Errors are displayed.");
+    }
 }
-
-async function loginUserToServer(event) {
-    event.preventDefault();
-
-    const form = document.getElementById("login-form");
-    clearErrorMessages(form);
-
-    const formData = {
-        nickname: document.getElementById("nickname").value.trim(),
-        password: document.getElementById("password").value.trim(),
-    };
-
-    const validationMessages = {
-        nickname: "Nickname is required.",
-        password: "Password is required.",
-    };
-
-    if (!validateFields(formData, validationMessages)) return;
-
-    const result = await submitForm('/api/LoginUser', formData, form);
-    await mainPageLoggedIn(result.id);
-}
-
 
 async function submitForm(endpoint, formData, form) {
     try {
@@ -115,51 +138,16 @@ async function submitForm(endpoint, formData, form) {
 
         const result = await response.json();
 
-
         if (!response.ok) {
             handleBackendErrors(result, form);
+            return { success: false };
         }
-        return result;
+        return { success: true, result };
     } catch (error) {
         console.error("Error during form submission:", error);
         alert("An unexpected error occurred. Please try again.");
+        return { success: false };
     }
-}
-
-
-function handleBackendErrors(result, form) {
-    const generalErrorContainer = document.getElementById("validation-error");
-    if (result.errors) {
-        displayBackendErrors(result.errors);
-    } else {
-        generalErrorContainer.style.display = "block";
-        generalErrorContainer.textContent = result.message || "An error occurred.";
-    }
-}
-
-function clearErrorMessages(form) {
-    const errorMessages = form.querySelectorAll(".error-message");
-    errorMessages.forEach((msg) => msg.remove());
-}
-
-
-function validateFields(formData, validationMessages) {
-    let isValid = true;
-
-    Object.keys(formData).forEach((field) => {
-        if (!formData[field]) {
-            isValid = false;
-            const input = document.getElementById(field);
-            const errorMessage = document.createElement("div");
-            errorMessage.className = "error-message";
-            errorMessage.style.color = "red";
-            errorMessage.style.fontSize = "12px";
-            errorMessage.textContent = validationMessages[field];
-            input.parentElement.insertBefore(errorMessage, input.nextSibling);
-        }
-    });
-
-    return isValid;
 }
 
 
@@ -177,6 +165,24 @@ function displayBackendErrors(errors) {
         }
     });
 }
+
+
+
+function handleBackendErrors(result, form) {
+    const generalErrorContainer = document.getElementById("validation-error");
+    if (result.errors) {
+        displayBackendErrors(result.errors);
+    } else {
+        generalErrorContainer.style.display = "block";
+        generalErrorContainer.textContent = result.message || "An error occurred.";
+    }
+}
+
+function clearErrorMessages(form) {
+    const errorMessages = form.querySelectorAll(".error-message");
+    errorMessages.forEach((msg) => msg.remove());
+}
+
 
 
 async function renderPostsUser(posts,loggedInUserId) {
@@ -289,7 +295,11 @@ async function fetchAllPosts() {
     }
 
 }
-
+async function addPostRequest(){
+    window.location.href = "/AddPostRequest";
+}
+async function addPost(userId,post) {
+}
 function mainPage() {
     window.location.href = "/";
 }

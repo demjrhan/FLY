@@ -26,5 +26,10 @@ public class UserRepository
         var result = await _context.Users.AnyAsync(user => user.Nickname == nickname);
         return result;
     }
-
+    
+    public async Task<bool> CheckIfEmailExists(string email)
+    {
+        var result = await _context.Users.AnyAsync(user => user.Email == email);
+        return result;
+    }
 }

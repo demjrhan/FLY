@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/user.css">
+    <link rel="stylesheet" href="/stylesheets/essentials.css">
+</head>
+<body>
+
+<header>
+    <div class="logo" onclick="mainPageLoggedIn(<%= loggedInUserId %>)"> FLY</div>
+</header>
+
+
+<div class="navigation-container">
+    <nav>
+        <ul>
+            <li><a href="#" onclick="mainPageLoggedIn(<%= loggedInUserId %>)">Return</a></li>
+            <li><a href="#" onclick="">Finish</a></li>
+        </ul>
+    </nav>
+</div>
+<div class="container">
+    <form id="register-form" onsubmit="registerUserToServer(event)">
+        <h2>Register</h2>
+        <div id="validation-error" style="color: red; margin-bottom: 10px;"></div>
+
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description">
+
+
+        <button type="submit" class="button">Register</button>
+    </form>
+</div>
+<script src="../javascripts/user.js"></script>
+
+</body>
+</html>

@@ -101,6 +101,10 @@ app.get('/viewUserProfile/:userId', function (req, res) {
     }
 });
 
+app.get('/AddPostRequest', function (req, res) {
+
+})
+
 app.get('/edit/:id', function (req, res) {
     const postId = req.params.id;
     res.render('edit', {postId});

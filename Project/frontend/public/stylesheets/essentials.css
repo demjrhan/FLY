@@ -137,7 +137,6 @@ body {
 }
 
 .tag {
-    padding-bottom: 3px;
     color: #007bff;
     font-weight: bold;
     margin-right: 5px;
@@ -343,7 +342,14 @@ header .button:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px;
+    padding: 15px;
+    width: 50vw;
+    margin: 0 auto;
+    border-bottom-left-radius: 55px;
+    border-bottom-right-radius: 55px;
+    box-shadow: 15px 15px 25px rgba(255, 255, 255, 0.4),
+    -15px 15px 25px rgba(255, 255, 255, 0.4);
+    position: relative;
 }
 
 .profile-icon {

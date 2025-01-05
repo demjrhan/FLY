@@ -45,6 +45,11 @@ public class UserService
         {
             errors.Add("Email", "Email format is invalid.");
         }
+        
+        if (await _userRepository.CheckIfEmailExists(registerUser.Email))
+        {
+            errors.Add("Email", "Email is already exists in database, please use different one.");
+        }
 
         var passwordRegex = new Regex(@"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
         if (!passwordRegex.IsMatch(registerUser.Password))

@@ -10,6 +10,9 @@
 
 <header>
     <div class="logo" onclick="mainPageLoggedIn(<%= loggedInUserId %>)"> FLY</div>
+    <div class="buttons">
+        <button class="button" onclick="logOutUserRequest()">Log Out</button>
+    </div>
 </header>
 <div class="profile-container"></div>
 <script>
@@ -17,7 +20,7 @@
         try {
             const userId = '<%= userId %>';
             const user = await fetchUser(userId);
-            await renderUserProfile(user);
+            await renderUserProfileCard(user);
         } catch (error) {
             console.error('Error rendering user profile:', error);
         }
@@ -28,7 +31,7 @@
     <nav>
         <ul>
             <li><a href="#" onclick="fetchUserPostsRequest(<%= loggedInUserId %>)">Profile</a></li>
-            <li><a href="#" onclick="">Add Photo</a></li>
+            <li><a href="#" onclick="addPostRequest()">Add Photo</a></li>
         </ul>
     </nav>
 </div>

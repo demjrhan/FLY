@@ -407,7 +407,7 @@ function warnUserRequest(postId) {
     window.location.href = `/warnUserRequestAdmin/${postId}`;
 }
 
-async function deletePostFromServer(postId,userId) {
+async function deletePostFromServerAdmin(postId,userId) {
     try {
         const response = await fetch(`http://localhost:5000/api/DeletePostById/${postId}`, {
             method: 'DELETE'
@@ -428,7 +428,7 @@ function editPostRequest(postId) {
     window.location.href = `/editPostRequestAdmin/${postId}`;
 }
 
-async function editPostFromServer(postId,userId) {
+async function editPostFromServerADMIN(postId,userId) {
 
     const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
     const textarea = postElement.querySelector('textarea');

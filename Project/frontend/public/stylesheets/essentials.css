@@ -382,3 +382,23 @@ header .button:hover {
     color: #555;
     margin: 0;
 }
+.delete-button {
+    border-radius: 10px;
+    background-color: powderblue;
+    border: 1px solid #ddd;
+}
+
+.delete-button:hover {
+    background-color: #dddddd;
+}
+
+.edit-button {
+    border-radius: 10px;
+    background-color: lightblue;
+    border: 1px solid #ddd;
+}
+
+.edit-button:hover {
+    background-color: #dddddd;
+}
+

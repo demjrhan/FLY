@@ -9,3 +9,46 @@
     padding: 5px 10px 10px;
 
 }
+#drag-drop-area {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    margin-top: 10px;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+#drag-drop-area:hover {
+    border-color: #007BFF;
+    background-color: #f0f8ff;
+}
+
+#drag-drop-area.drag-over {
+    border-color: #28a745;
+    background-color: #e6ffe6;
+}
+
+#drag-drop-area p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+#image-upload {
+    display: none;
+}
+input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+}
+
+
+label {
+    font-weight: bold;
+    color: #333;
+}

@@ -17,7 +17,7 @@
     <nav>
         <ul>
             <li><a href="#" onclick="fetchUserPostsRequest(<%= loggedInUserId %>)">Return</a></li>
-            <li><a href="#" onclick="deletePostFromServer(<%= postId %>, <%= loggedInUserId %>)">Delete</a></li>
+            <li><a href="#" onclick="editPostFromServer(<%= postId %>, <%= loggedInUserId %>)">Save</a></li>
         </ul>
     </nav>
 </div>
@@ -30,7 +30,7 @@
             const postId = '<%= postId %>';
             const post = await fetchPostById(postId);
             if (post) {
-                await deletePostPage(post);
+                await editPostPage(post);
             } else {
                 console.error('No posts available to render.');
             }

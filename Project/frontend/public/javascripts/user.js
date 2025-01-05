@@ -67,7 +67,7 @@ async function loginUserToServer(event) {
     if (!validateFields(formData, validationMessages)) return;
 
     const result = await submitForm('/api/LoginUser', formData, form);
-    await mainPageLoggedIn(result.id);
+    await mainPageLoggedIn(result.result.id);
 }
 
 function validateFields(formData, validationMessages) {
@@ -75,8 +75,12 @@ function validateFields(formData, validationMessages) {
 
     Object.keys(formData).forEach((field) => {
         if (!formData[field]) {
-            isValid = false;
             const input = document.getElementById(field);
+            if (!input) {
+                console.error(`Field '${field}' does not exist in the form.`);
+                return;
+            }
+            isValid = false;
             const errorMessage = document.createElement("div");
             errorMessage.className = "error-message";
             errorMessage.style.color = "red";
@@ -151,6 +155,33 @@ async function submitForm(endpoint, formData, form) {
 }
 
 
+async function addPostToServer(event,loggedInUserId) {
+    event.preventDefault();
+
+    const form = document.getElementById("add-post-form");
+    clearErrorMessages(form);
+
+    const formData = {
+        description: document.getElementById("description").value.trim(),
+        userId: loggedInUserId,
+        imageUrl: "/images/photos/sample_photo.png"
+    };
+
+    const validationMessages = {
+        description: "Description is required."
+    };
+
+    if (!validateFields(formData, validationMessages)) return;
+
+    const result = await submitForm('/api/AddPost', formData, form);
+
+    if (result && result.success) {
+        alert("Adding post successful.");
+        await fetchUserPostsRequest(loggedInUserId)
+    } else {
+        console.log("Adding post failed. Errors are displayed.");
+    }
+}
 function displayBackendErrors(errors) {
     Object.keys(errors).forEach((field) => {
         const normalizedField = field.charAt(0).toLowerCase() + field.slice(1);
@@ -224,7 +255,50 @@ async function renderPostsUser(posts,loggedInUserId) {
     });
 }
 
-async function renderUserProfile(user) {
+async function renderUserProfile(posts,loggedInUserId) {
+
+    const container = document.querySelector('.container');
+    container.innerHTML = '';
+
+    posts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.className = 'post';
+        postElement.dataset.postId = post.id;
+
+        postElement.innerHTML = `
+        <div class ="button">
+        <button class="delete-button" onclick="deletePostRequest(${post.id})">Delete</button>
+        <button class="edit-button" onclick="editPostRequest(${post.id})">Edit</button>
+      </div>
+      <div class="post-header">
+            <span class="owner" onclick="fetchUserPostsRequest(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
+      </div>
+      <div class="post-image">
+        <img src="${post.imageUrl}" alt="Post Image">
+      </div>
+      <div class="post-description">
+        <span class="tag">@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
+      </div>
+      <div class="post-actions">
+        <div class="likes">
+        <span class="like-count"">${post.likes} likes</span>
+        </div>
+        <div class="reactions">
+          <button class="reaction" onclick="likePost('smiling', event,${loggedInUserId},${post.id})">
+            <img src="/images/emojis/smiling.png" alt="Smiling" class="emoji">
+          </button>
+          <button class="reaction" onclick="likePost('lovely', event,${loggedInUserId},${post.id})">
+            <img src="/images/emojis/lovely.png" alt="Lovely" class="emoji">
+          </button>
+        </div>
+      </div>
+    `;
+
+        container.appendChild(postElement);
+    });
+}
+
+async function renderUserProfileCard(user) {
     const profileContainer = document.querySelector('.profile-container');
     profileContainer.innerHTML = '';
 
@@ -295,10 +369,136 @@ async function fetchAllPosts() {
     }
 
 }
+
+async function logOutUserRequest(){
+    window.location.href = "/logOutUser";
+}
 async function addPostRequest(){
     window.location.href = "/AddPostRequest";
 }
-async function addPost(userId,post) {
+
+async function deletePostRequest(postId){
+    window.location.href = `/DeletePostRequest/${postId}`;
+}
+function deletePostPage(post) {
+    const container = document.querySelector('.container');
+    container.innerHTML = '';
+
+    const postElement = document.createElement('div');
+    postElement.className = 'post';
+    postElement.dataset.postId = post.id;
+
+
+    postElement.innerHTML = `
+     <div class="post-header">
+        <span class="owner">${post.owner.name} ${post.owner.surname}</span>
+    </div>
+      <div class="post-image">
+        <img src="${post.imageUrl}" alt="Post Image">
+      </div>
+      <div class="post-description">
+        <span class="description"><span class="tag">@${post.owner.nickname}</span> ${post.description}</span>
+    </div>
+      <div class="post-actions">
+        <span class="likes">${post.likes} likes</span>
+      </div>
+    `;
+    container.appendChild(postElement)
+
+}
+async function deletePostFromServer(postId,loggedInUserId){
+    try {
+        const response = await fetch(`http://localhost:5000/api/DeletePostById/${postId}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        await fetchUserPostsRequest(loggedInUserId)
+    } catch (error) {
+        console.error('Error deleting post:', error);
+        alert(`Failed to delete post: ${error.message}`);
+    }
+}
+async function editPostRequest(postId){
+    window.location.href = `/EditPostRequest/${postId}`;
+}
+function editPostPage(post) {
+    document.addEventListener('input', (event) => {
+        const textarea = event.target.closest('.post-edit-description textarea');
+        if (textarea) {
+            const lines = textarea.value.split('\n');
+            if (lines.length > 2) {
+                textarea.value = lines.slice(0, 2).join('\n');
+            }
+        }
+    });
+
+
+    const container = document.querySelector('.container');
+    container.innerHTML = '';
+
+    const postElement = document.createElement('div');
+    postElement.className = 'post';
+    postElement.dataset.postId = post.id;
+
+
+    postElement.innerHTML = `
+      <div class="post-header">
+        <span class="owner">${post.owner.name} ${post.owner.surname}</span>
+      </div>
+      <div class="post-image">
+        <img src="${post.imageUrl}" alt="Post Image">
+      </div>
+      <div class="post-edit-description">
+        <span class="description">
+          <span class="post-edit-tag">@${post.owner.nickname}</span>
+        </span>
+        <textarea class="post-edit-description" rows="2">${post.description}</textarea>
+      </div>
+    `;
+    container.appendChild(postElement);
+
+}
+async function editPostFromServer(postId,loggedInUserId){
+    const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
+    const textarea = postElement.querySelector('textarea');
+    const imageUrl = postElement.querySelector('.post-image img').src;
+
+    const description = textarea.value.trim();
+    try {
+        const response = await fetch(`http://localhost:5000/api/EditPost/${postId}`, {
+            method: 'PUT', headers: {
+                'Content-Type': 'application/json'
+            }, body: JSON.stringify({description, imageUrl})
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
+        }
+
+        alert('Post updated successfully');
+        console.log(loggedInUserId);
+        await fetchUserPostsRequest(loggedInUserId)
+    } catch (error) {
+        console.error('Error updating post:', error);
+        alert(`Failed to update post: ${error.message}`);
+    }
+}
+async function fetchPostById(postId) {
+    try {
+        const response = await fetch(`http://localhost:5000/api/GetPostById/${postId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        return [];
+    }
+
 }
 function mainPage() {
     window.location.href = "/";

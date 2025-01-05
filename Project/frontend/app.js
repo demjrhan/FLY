@@ -22,7 +22,7 @@ app.use(
         secret: 'default-random-key',
         resave: false,
         saveUninitialized: true,
-        cookie: {secure: false}, // Set `secure: true` if using HTTPS
+        cookie: {secure: false},
     })
 );
 
@@ -36,7 +36,7 @@ app.get('/logInUser/:loggedInUserId', function (req, res) {
     res.render('User/userMain', {loggedInUserId});
 });
 
-app.get('/logOut', function (req, res) {
+app.get('/logOutUser', function (req, res) {
     req.session.destroy((err) => {
         if (err) {
             console.error('Error logging out:', err);
@@ -44,6 +44,7 @@ app.get('/logOut', function (req, res) {
             console.log('Logging out successful');
         }
     });
+    res.render('Auth/welcomePage');
 });
 
 app.get('/loginUserRequest', function (req, res) {
@@ -70,11 +71,23 @@ app.get('/deletePostRequestAdmin/:postId', function (req, res) {
     res.render('Admin/deletePostRequestAdmin', {postId})
 });
 
+
+app.get('/DeletePostRequest/:postId', function (req, res) {
+    const loggedInUserId = req.session.loggedInUserId;
+    const postId = req.params.postId;
+    res.render('Post/removePost', {postId,loggedInUserId});
+});
+
 app.get('/editPostRequestAdmin/:postId', function (req, res) {
     const postId = req.params.postId;
     res.render('Admin/editPostRequestAdmin', {postId});
 });
-
+app.get('/EditPostRequest/:postId', function (req, res) {
+    const loggedInUserId = req.session.loggedInUserId;
+    console.log(loggedInUserId);
+    const postId = req.params.postId;
+    res.render('Post/editPost', {postId,loggedInUserId});
+});
 
 app.get('/viewUserProfileAdmin/:userId', function (req, res) {
     const userId = req.params.userId;
@@ -102,7 +115,8 @@ app.get('/viewUserProfile/:userId', function (req, res) {
 });
 
 app.get('/AddPostRequest', function (req, res) {
-
+    const loggedInUserId = req.session.loggedInUserId;
+    res.render('Post/addPost', {loggedInUserId});
 })
 
 app.get('/edit/:id', function (req, res) {

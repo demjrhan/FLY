@@ -148,6 +148,40 @@ public class SocialMediaController : ControllerBase
 
         return Ok(post);
     }
+    
+    [HttpGet("/api/GetPostById/{postId}")]
+    public async Task<IActionResult> GetPostById(int postId)
+    {
+        var posts = await _context.Posts
+            .Include(p => p.User)
+            .Select(post => new GetPostDTO
+            {
+                Id = post.Id,
+                Owner = new UserDTO
+                {
+                    Id = post.User.Id,
+                    Name = post.User.Name,
+                    Surname = post.User.Surname,
+                    Nickname = post.User.Nickname,
+                    Email = "",
+                    Password = ""
+                },
+                ImageUrl = post.ImageUrl,
+                Description = post.Description,
+                Likes = post.Likes.Count
+            })
+            .ToListAsync();
+
+        var post = posts.FirstOrDefault(p => p.Id == postId);
+
+        if (post == null)
+        {
+            return NotFound(new { message = "Post not found" });
+        }
+
+        return Ok(post);
+    }
+
 
     [HttpDelete("/api/DeletePostById/{postId}")]
     public async Task<IActionResult> DeletePostByIdAsync(int postId)
@@ -255,7 +289,7 @@ public class SocialMediaController : ControllerBase
         var like = new Like
         {
             UserId = likePostDto.userId,
-            LikedAt = DateTime.Now,
+            LikedAt = DateTime.UtcNow,
             PostId = likePostDto.postId,
             ReactionType = likePostDto.reactionType,
             User = user
@@ -525,16 +559,10 @@ public class SocialMediaController : ControllerBase
         {
             return BadRequest("User not found.");
         }
-
-        var lastPost = await _context.Posts
-            .OrderByDescending(post => post.Id)
-            .FirstOrDefaultAsync();
-
-        var lastId = lastPost?.Id ?? 0;
-        lastId += 1;
+        
+        
         var post = new Post
         {
-            Id = lastId,
             CreatedAt = DateTime.UtcNow,
             Description = addPostDto.Description,
             UserId = addPostDto.UserId,

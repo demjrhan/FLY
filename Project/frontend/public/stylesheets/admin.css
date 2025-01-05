@@ -24,25 +24,7 @@
     transition: all 2s ease;
 }
 
-.delete-button {
-    border-radius: 10px;
-    background-color: powderblue;
-    border: 1px solid #ddd;
-}
 
-.delete-button:hover {
-    background-color: #dddddd;
-}
-
-.edit-button {
-    border-radius: 10px;
-    background-color: lightblue;
-    border: 1px solid #ddd;
-}
-
-.edit-button:hover {
-    background-color: #dddddd;
-}
 
 .ban-button {
     border-radius: 10px;
@@ -86,13 +68,4 @@
 .like-item:last-child {
     border-bottom: none;
     margin-bottom: -5px;
-}
-.main-page-button {
-    border-radius: 10px;
-    background-color: cadetblue;
-    border: 1px solid #ddd;
-}
-
-.main-page-button:hover {
-    background-color: #dddddd;
 }

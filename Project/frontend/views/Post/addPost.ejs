@@ -17,20 +17,24 @@
     <nav>
         <ul>
             <li><a href="#" onclick="mainPageLoggedIn(<%= loggedInUserId %>)">Return</a></li>
-            <li><a href="#" onclick="">Finish</a></li>
+            <li><a href="#" onclick="addPostToServer(event,<%= loggedInUserId %>)">Finish</a></li>
         </ul>
     </nav>
 </div>
 <div class="container">
-    <form id="register-form" onsubmit="registerUserToServer(event)">
-        <h2>Register</h2>
+    <form id="add-post-form" onsubmit="">
+        <h2>Add Post</h2>
         <div id="validation-error" style="color: red; margin-bottom: 10px;"></div>
 
         <label for="description">Description:</label>
         <input type="text" id="description" name="description">
 
+        <div id="drag-drop-area"
+             style="border: 2px dashed #ccc; padding: 20px; text-align: center; margin-top: 10px;">
+            <p>Drag and drop an image here, or click to select a file</p>
+            <input type="file" id="image-upload" name="image" accept="image/*" style="display: none;">
+        </div>
 
-        <button type="submit" class="button">Register</button>
     </form>
 </div>
 <script src="../javascripts/user.js"></script>

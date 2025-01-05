@@ -381,7 +381,23 @@ async function addPostRequest(){
 async function deletePostRequest(postId,postOwnerId){
     window.location.href = `/DeletePostRequest/${postId}/${postOwnerId}`;
 }
+async function renderNoPost() {
+    const container = document.querySelector('.container');
+    container.innerHTML = '';
 
+    const postElement = document.createElement('div');
+    postElement.className = 'no-post';
+    postElement.innerHTML = `
+        <div class="post-image">
+            <img src="/images/photos/no_post.jpg" alt="No Posts Available" /> 
+        </div>
+        <div class="empty-post-description">
+            <p>No posts are available at the moment. Please check back later.</p>
+        </div>
+    `;
+
+    container.appendChild(postElement);
+}
 function deletePostPage(post) {
     const container = document.querySelector('.container');
     container.innerHTML = '';

@@ -383,21 +383,13 @@ public class SocialMediaController : ControllerBase
             .Include(p => p.Likes)
             .ToListAsync();
 
-        // Delete all posts and their likes
         foreach (var post in posts)
         {
-            _context.Likes.RemoveRange(post.Likes); // Remove likes of the post
-            _context.Posts.Remove(post);           // Remove the post itself
+            _context.Likes.RemoveRange(post.Likes); 
+            _context.Posts.Remove(post);           
         }
         
-
-        // Remove the user
-        _context.Users.Remove(user);
-
-        // Save all changes in one transaction
         await _context.SaveChangesAsync();
-
-        // Return success message
         return Ok(new
         {
             message = message ?? "User banned and all related data deleted successfully."

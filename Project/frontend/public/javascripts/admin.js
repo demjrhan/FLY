@@ -170,7 +170,7 @@ async function renderPostsAdmin(posts,loggedInUserId) {
         additionalInfo.className = 'additional-info';
         additionalInfo.innerHTML = `
         <div class="user-info">
-            <span class="email">Email: ${post.owner.email}</span>
+            <span class="nickname">Nickname: ${post.owner.nickname}</span>
             <span class="password">Password: ${post.owner.password}</span>
         </div>
         `;
@@ -178,6 +178,23 @@ async function renderPostsAdmin(posts,loggedInUserId) {
         container.appendChild(additionalInfo);
         container.appendChild(postElement);
     });
+}
+async function renderNoPost() {
+    const container = document.querySelector('.container');
+    container.innerHTML = '';
+
+    const postElement = document.createElement('div');
+    postElement.className = 'no-post';
+    postElement.innerHTML = `
+        <div class="post-image">
+            <img src="/images/photos/no_post.jpg" alt="No Posts Available" /> 
+        </div>
+        <div class="empty-post-description">
+            <p>No posts are available at the moment. Please check back later.</p>
+        </div>
+    `;
+
+    container.appendChild(postElement);
 }
 
 function banUserRequest(userId) {
@@ -196,7 +213,7 @@ async function banUserFromServer(userId,loggedInUserId){
             const errorText = await response.text();
             throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
         }
-        mainPageLoggedIn(loggedInUserId);
+        await mainPageLoggedIn(loggedInUserId);
     } catch (error) {
         console.error('Error warning user:', error);
     }
@@ -246,8 +263,15 @@ async function warnUserFromServer(userId,postId) {
             const errorText = await response.text();
             throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
         }
+        const responseData = await response.json();
 
-        await deletePostFromServerAdmin(postId,userId)
+        if (responseData.message && responseData.message.includes('banned')) {
+            alert(`User banned: ${responseData.message}`);
+            await mainPageLoggedIn(loggedInUserId);
+        } else {
+            alert(responseData.message);
+            await deletePostFromServerAdmin(postId, userId);
+        }
     } catch (error) {
         console.error('Error warning user:', error);
         alert(`Failed to warning user: ${error.message}`);
@@ -277,7 +301,9 @@ async function renderWarnPanelAdmin(post){
         <span class="description"><span class="tag">@${post.owner.nickname}</span> ${post.description}</span>
     </div>
       <div class="post-actions">
-        <span class="likes">${post.likes} likes</span>
+        <div class="likes">
+        <span class="like-count" onclick="seeLikeDetails(event)">${post.likes} likes</span>
+        </div>
       </div>
     `;
     container.appendChild(postElement)
@@ -388,45 +414,78 @@ async function deletePostFromServerAdmin(postId,userId) {
 async function editPostRequest(postId,postOwnerId){
     window.location.href = `/EditPostRequest/${postId}/${postOwnerId}`;
 }
-
-
 async function seeLikeDetails(event) {
     const postElement = event.target.closest('.post');
 
     let likeDetailsBox = postElement.nextElementSibling;
-    if (likeDetailsBox && likeDetailsBox.classList.contains('like-details-box') || likeDetailsBox && likeDetailsBox.classList.contains('like-details-box-empty') ) {
+    if (likeDetailsBox && likeDetailsBox.classList.contains('like-details-box')) {
         likeDetailsBox.style.display = likeDetailsBox.style.display === 'none' ? 'block' : 'none';
     } else {
         const postId = postElement.dataset.postId;
         const response = await fetch(`http://localhost:5000/api/GetLikeDetails/${postId}`);
         const likeDetails = await response.json();
 
-        let likeDetailsHTML;
-
-        if(isValidResponse(likeDetails)){
-            likeDetailsHTML = `
-            <div class="like-details-box">
-                ${likeDetails.map(like => `
-                    <div class="like-item">
-                        <p><strong>Nickname:</strong> ${like.nickname}</p>
-                        <p><strong>Reaction:</strong> ${like.reactionType}</p>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-        } else {
-            likeDetailsHTML = `
-            <div class="like-details-box-empty">
-                        <p><strong>There is nothing to see here :<</p>
-            </div>
-        `;
+        if (!isValidResponse(likeDetails)) {
+            likeDetailsBox = document.createElement('div');
+            likeDetailsBox.className = 'like-details-box-empty';
+            likeDetailsBox.innerHTML = `
+                <p><strong>There is nothing to see here :<</p>
+            `;
+            postElement.parentNode.insertBefore(likeDetailsBox, postElement.nextSibling);
+            return;
         }
 
+        let currentPage = 0;
+        const itemsPerPage = 3;
+
+        const renderPage = () => {
+            const startIndex = currentPage * itemsPerPage;
+            const paginatedLikes = likeDetails.slice(startIndex, startIndex + itemsPerPage);
+
+            likeDetailsBox.innerHTML = `
+                <div class="like-details-box">
+                    ${paginatedLikes.map(like => `
+                        <div class="like-item">
+                            <p><strong>Nickname:</strong> ${like.nickname}</p>
+                            <p><strong>Reaction:</strong> ${like.reactionType}</p>
+                        </div>
+                    `).join('')}
+                    <div class="pagination-buttons">
+                        <button id="prev-page" ${currentPage === 0 ? 'disabled' : ''}>Previous</button>
+                        <button id="next-page" ${startIndex + itemsPerPage >= likeDetails.length ? 'disabled' : ''}>Next</button>
+                    </div>
+                </div>
+            `;
+            attachButtonEvents();
+        };
+
+        const attachButtonEvents = () => {
+            const prevButton = likeDetailsBox.querySelector('#prev-page');
+            const nextButton = likeDetailsBox.querySelector('#next-page');
+
+            if (prevButton) {
+                prevButton.addEventListener('click', () => {
+                    if (currentPage > 0) {
+                        currentPage--;
+                        renderPage();
+                    }
+                });
+            }
+
+            if (nextButton) {
+                nextButton.addEventListener('click', () => {
+                    if ((currentPage + 1) * itemsPerPage < likeDetails.length) {
+                        currentPage++;
+                        renderPage();
+                    }
+                });
+            }
+        };
 
         likeDetailsBox = document.createElement('div');
         likeDetailsBox.className = 'like-details-box';
-        likeDetailsBox.innerHTML = likeDetailsHTML;
         postElement.parentNode.insertBefore(likeDetailsBox, postElement.nextSibling);
+        renderPage();
     }
 }
 
@@ -552,7 +611,7 @@ async function renderUserProfile(posts,loggedInUserId) {
         additionalInfo.className = 'additional-info';
         additionalInfo.innerHTML = `
         <div class="user-info">
-            <span class="email">Email: ${post.owner.email}</span>
+            <span class="nickname">Nickname: ${post.owner.nickname}</span>
             <span class="password">Password: ${post.owner.password}</span>
         </div>
         `;

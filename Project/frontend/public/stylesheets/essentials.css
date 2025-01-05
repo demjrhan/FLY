@@ -47,7 +47,10 @@ body {
     padding: 25px;
     background-color: #fff;
     border-radius: 15px;
-    box-shadow: 15px 15px 25px rgba(255, 255, 255, 0.4), /* Bottom-right */ -15px 15px 25px rgba(255, 255, 255, 0.4), /* Bottom-left */ 15px -15px 25px rgba(255, 255, 255, 0.4), /* Top-right */ -15px -15px 25px rgba(255, 255, 255, 0.4); /* Top-left */
+    box-shadow: 15px 15px 25px rgba(255, 255, 255, 0.4),
+    -15px 15px 25px rgba(255, 255, 255, 0.4),
+    15px -15px 25px rgba(255, 255, 255, 0.4),
+    -15px -15px 25px rgba(255, 255, 255, 0.4);
 }
 
 .post {
@@ -55,8 +58,6 @@ body {
     border-radius: 8px;
     overflow: hidden;
 }
-
-
 
 
 .likes {
@@ -71,19 +72,19 @@ body {
 .post-header {
     font-size: 16px;
     font-weight: bold;
-    background-color: #f9f9f9; /* Default background color */
+    background-color: #f9f9f9;
     align-self: center;
     cursor: pointer;
     display: flex;
     justify-content: center;
-    padding-left: 20px;
-    padding-top: 10px;
     border-top: 1px solid #ddd;
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
+    padding-left: 20px;
+    padding-top: 10px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    transition: background-color 2s ease; /* Smooth background transition */
+    transition: background-color 2s ease;
 }
 
 .post-header span {
@@ -94,7 +95,7 @@ body {
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    transition: all 2s ease; /* Smooth text transition */
+    transition: all 2s ease;
 }
 
 .post-header:hover span {
@@ -106,6 +107,7 @@ body {
     -webkit-text-fill-color: transparent;
     transition: all 2s ease;
 }
+
 .post-description {
     padding: 10px 25px 15px;
     background-color: #f9f9f9;
@@ -255,40 +257,41 @@ body {
 
 
 .navigation-container {
-    position: fixed; /* Fixes it to the viewport */
-    bottom: 10px; /* Positions it slightly above the bottom */
-    left: 50%; /* Centers horizontally */
-    transform: translateX(-50%); /* Adjusts for centering */
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
     background: linear-gradient(
             to right,
-            #8B2635, /* Cherry Wine */
+            #8B2635,
             #65001A
-    );    padding: 10px 20px; /* Adds padding for better appearance */
-    border-radius: 20px; /* Rounds the edges for a modern look */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
-    display: flex; /* Creates a horizontal layout */
-    justify-content: space-between; /* Spreads items evenly */
-    gap: 20px; /* Adds space between navigation items */
-    z-index: 1000; /* Ensures it stays above other elements */
+    );
+    padding: 10px 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    z-index: 1000;
 }
 
 .navigation-container nav ul {
-    list-style: none; /* Removes bullet points */
-    display: flex; /* Aligns items horizontally */
-    gap: 15px; /* Adds space between navigation items */
+    list-style: none;
+    display: flex;
+    gap: 15px;
     margin: 0;
     padding: 0;
 }
 
 .navigation-container nav ul li a {
-    text-decoration: none; /* Removes underline */
-    color: white; /* Text color */
+    text-decoration: none;
+    color: white;
     font-family: Bahnschrift, ui-serif;
     font-size: 16px;
     font-weight: bold;
-    padding: 5px 10px; /* Adds spacing around text */
-    border-radius: 10px; /* Rounds the edges */
-    transition: color 0.3s ease; /* Smooth hover effect for text color */
+    padding: 5px 10px;
+    border-radius: 10px;
+    transition: color 0.3s ease;
 }
 
 
@@ -312,6 +315,7 @@ header .logo {
     font-size: 1.5rem;
     font-weight: bold;
 }
+
 header .logo:hover {
     transform: scale(1.05);
     cursor: pointer;
@@ -337,6 +341,7 @@ header .button:hover {
     transform: scale(1.05);
     background-color: #e5e5e5;
 }
+
 .profile-info {
     background-color: #f9f9f9;
     display: flex;
@@ -382,6 +387,7 @@ header .button:hover {
     color: #555;
     margin: 0;
 }
+
 .delete-button {
     border-radius: 10px;
     background-color: powderblue;
@@ -402,3 +408,70 @@ header .button:hover {
     background-color: #dddddd;
 }
 
+.no-post {
+    margin: 20px auto;
+    max-width: 600px;
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 15px 15px 25px rgba(255, 255, 255, 0.4), -15px 15px 25px rgba(255, 255, 255, 0.4);
+    text-align: center;
+    font-family: Bahnschrift, ui-serif;
+}
+
+.no-post .post-image {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 15px 15px 0 0;
+}
+
+.no-post .post-image img {
+    height: 500px;
+    width: 500px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.no-post .empty-post-description {
+    padding: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+    border-radius: 0 0 15px 15px;
+    line-height: 1.5;
+}
+.pagination-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.pagination-buttons button {
+    background: linear-gradient(to right, #f8b195, #f67280);
+    border: none;
+    color: white;
+    font-family: Bahnschrift, ui-serif;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.pagination-buttons button:hover {
+    background: linear-gradient(to right, #c06c84, #6c5b7b);
+    transform: scale(1.1);
+}
+
+.pagination-buttons button:disabled {
+    background: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}

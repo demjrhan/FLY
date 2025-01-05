@@ -73,6 +73,18 @@ public class SampleData
                         Name = "Emma", Surname = "Harris", BirthDate = DateTime.Parse("1975-10-10"),
                         Email = "emma.harris@example.com", Password = "Pass987#", CreatedAt = DateTime.Now,
                         WarnCount = 0, isBanned = false, Nickname = "EmmaHarris", isAdmin = false
+                    },
+                    new User
+                    {
+                        Name = "Demirhan", Surname = "Yalcin", BirthDate = DateTime.Parse("2003-08-30"),
+                        Email = "demirhanylcn@gmail.com", Password = "a", CreatedAt = DateTime.Now,
+                        WarnCount = 0, isBanned = false, Nickname = "a", isAdmin = true
+                    },
+                    new User
+                    {
+                        Name = "Demirhan", Surname = "Yalcin", BirthDate = DateTime.Parse("2003-08-30"),
+                        Email = "demirhanylcn@gmail.com", Password = "b", CreatedAt = DateTime.Now,
+                        WarnCount = 0, isBanned = false, Nickname = "b", isAdmin = false
                     }
                 };
                 context.Users.AddRange(userData);
@@ -81,98 +93,50 @@ public class SampleData
 
             if (!context.Posts.Any())
             {
-                var postData = new List<Post>
+                var postData = new List<Post>();
+
+                for (int userId = 1; userId <= 12; userId++)
                 {
-                    new Post
+                    for (int i = 0; i < 2; i++)
                     {
-                        UserId = 1, Description = "Exploring the beauty of nature.",
-                        CreatedAt = DateTime.Parse("2024-01-01"),
-                        ImageUrl = "/images/photos/sample_photo.png"
-                    },
-                    new Post
-                    {
-                        UserId = 2, Description = "Excited to share my new project!",
-                        CreatedAt = DateTime.Parse("2024-01-02"),
-                        ImageUrl = "/images/photos/sample_photo.png"
-                    },
-                    new Post
-                    {
-                        UserId = 3, Description = "Life is all about the little moments.",
-                        CreatedAt = DateTime.Parse("2024-01-03"),
-                        ImageUrl = "/images/photos/sample_photo.png"
-                    },
-                    new Post
-                    {
-                        UserId = 4, Description = "Just finished reading an amazing book.",
-                        CreatedAt = DateTime.Parse("2024-01-04"),
-                        ImageUrl = "/images/photos/sample_photo.png"
-                    },
-                    new Post
-                    {
-                        UserId = 5, Description = "Anyone up for a weekend hike?",
-                        CreatedAt = DateTime.Parse("2024-01-05"),
-                        ImageUrl = "/images/photos/sample_photo.png"
-                    },
-                    new Post
-                    {
-                        UserId = 1, Description = "Throwback to my last vacation!",
-                        CreatedAt = DateTime.Parse("2024-01-06"),
-                        ImageUrl = "/images/photos/sample_photo.png"
-                    },
-                    new Post
-                    {
-                        UserId = 3, Description = "Learning new skills is so rewarding.",
-                        CreatedAt = DateTime.Parse("2024-01-07"),
-                        ImageUrl = "/images/photos/sample_photo.png"
-                    },
-                    new Post
-                    {
-                        UserId = 4, Description = "Cooking my favorite dish today.",
-                        CreatedAt = DateTime.Parse("2024-01-08"),
-                        ImageUrl = "/images/photos/sample_photo.png"
-                    },
-                    new Post
-                    {
-                        UserId = 2, Description = "Here's a photo from my latest adventure.",
-                        CreatedAt = DateTime.Parse("2024-01-09"),
-                        ImageUrl = "/images/photos/sample_photo.png"
-                    },
-                    new Post
-                    {
-                        UserId = 5, Description = "Grateful for another wonderful day.",
-                        CreatedAt = DateTime.Parse("2024-01-10"),
-                        ImageUrl = "/images/photos/sample_photo.png"
+                        postData.Add(new Post
+                        {
+                            UserId = userId,
+                            Description = "We are testing this app!",
+                            CreatedAt = DateTime.UtcNow.AddDays(-i),
+                            ImageUrl = "/images/photos/sample_photo.png"
+                        });
                     }
-                };
+                }
+
                 context.Posts.AddRange(postData);
                 context.SaveChanges();
             }
 
             if (!context.Likes.Any())
             {
-                var likeData = new List<Like>
+                var likeData = new List<Like>();
+
+                var posts = context.Posts.ToList();
+                var users = context.Users.ToList();
+
+                foreach (var user in users)
                 {
-                    new Like { UserId = 1, PostId = 2, LikedAt = DateTime.Parse("2024-01-02"), ReactionType = "Like" },
-                    new Like { UserId = 1, PostId = 3, LikedAt = DateTime.Parse("2024-01-03"), ReactionType = "Love" },
-                    new Like { UserId = 1, PostId = 4, LikedAt = DateTime.Parse("2024-01-04"), ReactionType = "Wow" },
-                    new Like { UserId = 1, PostId = 5, LikedAt = DateTime.Parse("2024-01-05"), ReactionType = "Haha" },
-                    new Like { UserId = 2, PostId = 1, LikedAt = DateTime.Parse("2024-01-03"), ReactionType = "Love" },
-                    new Like { UserId = 2, PostId = 2, LikedAt = DateTime.Parse("2024-01-04"), ReactionType = "Angry" },
-                    new Like { UserId = 2, PostId = 4, LikedAt = DateTime.Parse("2024-01-05"), ReactionType = "Like" },
-                    new Like { UserId = 2, PostId = 5, LikedAt = DateTime.Parse("2024-01-06"), ReactionType = "Sad" },
-                    new Like { UserId = 3, PostId = 1, LikedAt = DateTime.Parse("2024-01-07"), ReactionType = "Wow" },
-                    new Like { UserId = 3, PostId = 2, LikedAt = DateTime.Parse("2024-01-08"), ReactionType = "Love" },
-                    new Like { UserId = 3, PostId = 3, LikedAt = DateTime.Parse("2024-01-09"), ReactionType = "Haha" },
-                    new Like { UserId = 3, PostId = 4, LikedAt = DateTime.Parse("2024-01-10"), ReactionType = "Like" },
-                    new Like { UserId = 4, PostId = 1, LikedAt = DateTime.Parse("2024-01-03"), ReactionType = "Love" },
-                    new Like { UserId = 4, PostId = 3, LikedAt = DateTime.Parse("2024-01-04"), ReactionType = "Wow" },
-                    new Like { UserId = 4, PostId = 5, LikedAt = DateTime.Parse("2024-01-06"), ReactionType = "Haha" },
-                    new Like { UserId = 5, PostId = 2, LikedAt = DateTime.Parse("2024-01-07"), ReactionType = "Sad" },
-                    new Like { UserId = 5, PostId = 4, LikedAt = DateTime.Parse("2024-01-08"), ReactionType = "Angry" },
-                    new Like { UserId = 5, PostId = 5, LikedAt = DateTime.Parse("2024-01-09"), ReactionType = "Like" },
-                    new Like { UserId = 5, PostId = 3, LikedAt = DateTime.Parse("2024-01-10"), ReactionType = "Love" },
-                    new Like { UserId = 1, PostId = 1, LikedAt = DateTime.Parse("2024-01-11"), ReactionType = "Haha" }
-                };
+                    foreach (var post in posts)
+                    {
+                        if (user.Id != post.UserId)
+                        {
+                            likeData.Add(new Like
+                            {
+                                UserId = user.Id,
+                                PostId = post.Id,
+                                LikedAt = DateTime.UtcNow,
+                                ReactionType = "Smiling"
+                            });
+                        }
+                    }
+                }
+
                 context.Likes.AddRange(likeData);
                 context.SaveChanges();
             }

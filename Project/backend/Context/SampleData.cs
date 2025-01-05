@@ -113,33 +113,7 @@ public class SampleData
                 context.SaveChanges();
             }
 
-            if (!context.Likes.Any())
-            {
-                var likeData = new List<Like>();
-
-                var posts = context.Posts.ToList();
-                var users = context.Users.ToList();
-
-                foreach (var user in users)
-                {
-                    foreach (var post in posts)
-                    {
-                        if (user.Id != post.UserId)
-                        {
-                            likeData.Add(new Like
-                            {
-                                UserId = user.Id,
-                                PostId = post.Id,
-                                LikedAt = DateTime.UtcNow,
-                                ReactionType = "Smiling"
-                            });
-                        }
-                    }
-                }
-
-                context.Likes.AddRange(likeData);
-                context.SaveChanges();
-            }
+            
         }
     }
 }

@@ -149,7 +149,7 @@ async function renderPostsAdmin(posts,loggedInUserId) {
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
       <div class="post-description">
-        <span class="tag">@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
+        <span class="tag" onclick="viewUserProfileAdmin(${post.owner.id})">@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
       </div>
       <div class="post-actions">
         <div class="likes">
@@ -418,8 +418,8 @@ async function seeLikeDetails(event) {
     const postElement = event.target.closest('.post');
 
     let likeDetailsBox = postElement.nextElementSibling;
-    if (likeDetailsBox && likeDetailsBox.classList.contains('like-details-box')) {
-        likeDetailsBox.style.display = likeDetailsBox.style.display === 'none' ? 'block' : 'none';
+    if (likeDetailsBox && likeDetailsBox.classList.contains('like-details-box') || likeDetailsBox.classList.contains('like-details-box-empty') ) {
+        likeDetailsBox.classList.toggle('hidden');
     } else {
         const postId = postElement.dataset.postId;
         const response = await fetch(`http://localhost:5000/api/GetLikeDetails/${postId}`);

@@ -9,13 +9,13 @@ async function renderPostsGuest(posts) {
 
         postElement.innerHTML = `
       <div class="post-header">
-            <span class="owner" onclick="fetchUserPostsRequestGuest(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
+            <span class="owner" onclick="viewUserProfileGuest(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
       </div>
       <div class="post-image">
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
       <div class="post-description">
-        <span class="tag">@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
+        <span class="tag" onclick="viewUserProfileGuest(${post.owner.id})">@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
       </div>
       <div class="post-actions">
         <div class="likes">
@@ -61,7 +61,7 @@ async function renderUserProfileGuest(user, posts) {
 
     await renderPostsGuest(posts);
 }
-function fetchUserPostsRequestGuest(userId) {
+function viewUserProfileGuest(userId) {
     window.location.href = `/viewUserProfileGuest/${userId}`;
 }
 

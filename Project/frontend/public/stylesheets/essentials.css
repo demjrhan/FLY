@@ -139,6 +139,7 @@ body {
 }
 
 .tag {
+    cursor: pointer;
     color: #007bff;
     font-weight: bold;
     margin-right: 5px;

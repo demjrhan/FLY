@@ -16,7 +16,12 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/packages', (req, res) => {
+    const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
+    const dependencies = packageJson.dependencies || {};
 
+    res.render('packages', { packages: dependencies });
+});
 app.use(
     session({
         secret: 'default-random-key',

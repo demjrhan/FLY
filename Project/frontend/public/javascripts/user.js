@@ -234,7 +234,7 @@ async function renderPostsUser(posts,loggedInUserId) {
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
       <div class="post-description">
-        <span class="tag">@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
+        <span class="tag" onclick="viewUserProfileAdmin(${post.owner.id})>@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
       </div>
       <div class="post-actions">
         <div class="likes">

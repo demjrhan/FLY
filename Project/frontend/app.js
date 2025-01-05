@@ -35,6 +35,11 @@ app.get('/logInUser/:loggedInUserId', function (req, res) {
     req.session.loggedInUserId = loggedInUserId;
     res.render('User/userMain', {loggedInUserId});
 });
+app.get('/logInAdmin/:loggedInUserId', function (req, res) {
+    const loggedInUserId = req.params.loggedInUserId;
+    req.session.loggedInUserId = loggedInUserId;
+    res.render('Admin/adminMain', {loggedInUserId});
+});
 
 app.get('/logOutUser', function (req, res) {
     req.session.destroy((err) => {
@@ -59,11 +64,14 @@ app.get('/addPostAdminRequest', function (req, res) {
 });
 app.get('/banUserRequestAdmin/:userId', function (req, res) {
     const userId = req.params.userId;
-    res.render('Admin/banUserRequestAdmin', {userId})
+    const loggedInUserId = req.session.loggedInUserId;
+    res.render('Admin/banUser', {userId,loggedInUserId})
 });
-app.get('/warnUserRequestAdmin/:postId', function (req, res) {
+app.get('/warnUserRequestAdmin/:postId/:userId', function (req, res) {
     const postId = req.params.postId;
-    res.render('Admin/warnUserRequestAdmin', {postId})
+    const userId = req.params.userId;
+    const loggedInUserId = req.session.loggedInUserId;
+    res.render('Admin/warnUser', {postId,userId,loggedInUserId})
 });
 
 app.get('/deletePostRequestAdmin/:postId', function (req, res) {
@@ -84,7 +92,6 @@ app.get('/editPostRequestAdmin/:postId', function (req, res) {
 });
 app.get('/EditPostRequest/:postId', function (req, res) {
     const loggedInUserId = req.session.loggedInUserId;
-    console.log(loggedInUserId);
     const postId = req.params.postId;
     res.render('Post/editPost', {postId,loggedInUserId});
 });

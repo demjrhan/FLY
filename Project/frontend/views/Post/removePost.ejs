@@ -16,7 +16,7 @@
 <div class="navigation-container">
     <nav>
         <ul>
-            <li><a href="#" onclick="fetchUserPostsRequest(<%= loggedInUserId %>)">Return</a></li>
+            <li><a href="#" onclick="window.history.back()">Return</a></li>
             <li><a href="#" onclick="deletePostFromServer(<%= postId %>, <%= loggedInUserId %>)">Delete</a></li>
         </ul>
     </nav>

@@ -263,6 +263,17 @@ public class SocialMediaController : ControllerBase
 
         return Ok(likeDataList);
     }
+    [HttpGet("/api/isAdmin/{userId}")]
+    public async Task<IActionResult> IsAdmin(int userId)
+    {
+        var user = await _context.Users.FindAsync(userId);
+
+        if (user == null)
+        {
+            return NotFound(new { message = "User not found" });
+        }
+
+        return Ok(user.isAdmin);    }
     [HttpPut("/api/LikePost/{userId}/{postId}/{reactionType}")]
     public async Task<IActionResult> LikePost([FromBody] LikePostDTO likePostDto)
     {

@@ -500,10 +500,28 @@ async function fetchPostById(postId) {
     }
 
 }
+
+async function isAdmin(loggedInUserId){
+    try {
+        const response = await fetch(`http://localhost:5000/api/isAdmin/${loggedInUserId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        return [];
+    }
+}
 function mainPage() {
     window.location.href = "/";
 }
 
 function mainPageLoggedIn(loggedInUserId) {
-    window.location.href = `/logInUser/${loggedInUserId}`;
+    if(isAdmin){
+        window.location.href = `/logInAdmin/${loggedInUserId}`;
+    } else {
+        window.location.href = `/logInUser/${loggedInUserId}`;
+    }
+
 }

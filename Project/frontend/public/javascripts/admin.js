@@ -1,4 +1,5 @@
-function animateReaction(type, event) {
+
+async function likePost(type,event,loggedInUserId,postId) {
     const reactionElement = document.createElement('div');
     const {clientX, clientY} = event;
     const scrollX = window.scrollX;
@@ -18,11 +19,34 @@ function animateReaction(type, event) {
 
     const postElement = event.currentTarget.closest('.post');
     if (postElement) {
-        const likeCountElement = postElement.querySelector('.like-count');
-        const currentLikes = parseInt(likeCountElement.textContent.split(' ')[0]);
-        likeCountElement.textContent = `${currentLikes + 1} likes`;
+        try {
+            const response = await fetch(`http://localhost:5000/api/LikePost/${loggedInUserId}/${postId}/${type}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: loggedInUserId, postId, reactionType: type }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            if (result.alreadyLiked) {
+                console.log(result.message);
+            } else {
+                console.log(result.message);
+                const likeCountElement = postElement.querySelector('.like-count');
+                const currentLikes = parseInt(likeCountElement.textContent.split(' ')[0]);
+                likeCountElement.textContent = `${currentLikes + 1} likes`;
+
+            }
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
+
     }
 }
+
 function addPostAdminRequest() {
     window.location.href = `/addPostAdminRequest`;
 }
@@ -87,22 +111,7 @@ async function addPostToServer() {
 
 }
 
-async function renderPostsAdmin(posts) {
-
-    const navigation = document.createElement('div');
-    navigation.className = 'navigation-container';
-
-    navigation.innerHTML = `
-        <nav>
-            <ul>
-                <li><a href="#" onclick="">Profile</a></li>
-                <li><a href="#" onclick="addPostAdminRequest()">Add Photo</a></li>
-            </ul>
-        </nav>
-    `;
-
-    const navigationController = document.querySelector('body'); // Adjust selector if needed
-    navigationController.prepend(navigation);
+async function renderPostsAdmin(posts,loggedInUserId) {
 
     const container = document.querySelector('.container');
     container.innerHTML = '';
@@ -116,7 +125,7 @@ async function renderPostsAdmin(posts) {
       <div class ="button">
         <button class="delete-button" onclick="deletePostRequest(${post.id})">Delete</button>
         <button class="edit-button" onclick="editPostRequest(${post.id})">Edit</button>
-        <button class="warn-button" onclick="warnUserRequest(${post.id})">Warn</button>
+        <button class="warn-button" onclick="warnUserRequest(${post.id}, ${post.owner.id})">Warn</button>
         <button class="ban-button" onclick="banUserRequest(${post.owner.id})">Ban</button>
       </div>
       <div class="post-header">
@@ -133,10 +142,10 @@ async function renderPostsAdmin(posts) {
         <span class="like-count" onclick="seeLikeDetails(event)">${post.likes} likes</span>
         </div>
         <div class="reactions">
-          <button class="reaction" onclick="animateReaction('smiling', event)">
+          <button class="reaction" onclick="likePost('smiling', event,${loggedInUserId},${post.id})">
             <img src="/images/emojis/smiling.png" alt="Smiling" class="emoji">
           </button>
-          <button class="reaction" onclick="animateReaction('lovely', event)">
+          <button class="reaction" onclick="likePost('lovely', event,${loggedInUserId},${post.id})">
             <img src="/images/emojis/lovely.png" alt="Lovely" class="emoji">
           </button>
         </div>
@@ -179,21 +188,7 @@ async function banUserFromServer(userId){
     }
 
 }
-async function renderBanPanelAdmin(posts,userId){
-    const navigation = document.createElement('div');
-    navigation.className = 'navigation-container';
-
-    navigation.innerHTML = `
-        <nav>
-            <ul>
-                <li><a href="#" onclick="banUserFromServer(${userId})">Ban</a></li>
-                <li><a href="#" onclick="fetchUserPostsRequestAdmin(${userId})">Cancel</a></li>
-            </ul>
-        </nav>
-    `;
-
-    const navigationController = document.querySelector('body');
-    navigationController.prepend(navigation);
+async function renderBanPanelAdmin(posts){
 
     const container = document.querySelector('.container');
     container.innerHTML = '';
@@ -238,7 +233,7 @@ async function warnUserFromServer(userId,postId) {
             throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
         }
 
-        await deletePostFromServer(postId)
+        await deletePostFromServerAdmin(postId,userId)
     } catch (error) {
         console.error('Error warning user:', error);
         alert(`Failed to warning user: ${error.message}`);
@@ -246,8 +241,10 @@ async function warnUserFromServer(userId,postId) {
 
 }
 
-async function warnUser(post) {
-    const container = document.querySelector('.small-container');
+
+async function renderWarnPanelAdmin(post){
+
+    const container = document.querySelector('.container');
     container.innerHTML = '';
 
     const postElement = document.createElement('div');
@@ -256,10 +253,6 @@ async function warnUser(post) {
 
 
     postElement.innerHTML = `
-      <div class ="button">
-        <button class="main-page-button" onclick="goMainPage(${post.id})">Return</button>
-        <button class="delete-button" onclick="warnUserFromServer(${post.owner.id},${post.id})">Warn</button>
-      </div>
      <div class="post-header">
         <span class="owner">${post.owner.name} ${post.owner.surname}</span>
     </div>
@@ -275,7 +268,6 @@ async function warnUser(post) {
     `;
     container.appendChild(postElement)
 }
-
 function editPost(post) {
     document.addEventListener('input', (event) => {
         const textarea = event.target.closest('.post-edit-description textarea');
@@ -386,6 +378,7 @@ async function fetchPostByPostIdAdmin(postId) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
+        console.log(response)
         return await response.json();
     } catch (error) {
         console.error('Error fetching posts:', error);
@@ -403,8 +396,8 @@ function deletePostRequest(postId) {
     window.location.href = `/deletePostRequestAdmin/${postId}`;
 }
 
-function warnUserRequest(postId) {
-    window.location.href = `/warnUserRequestAdmin/${postId}`;
+function warnUserRequest(postId,userId) {
+    window.location.href = `/warnUserRequestAdmin/${postId}/${userId}`;
 }
 
 async function deletePostFromServerAdmin(postId,userId) {
@@ -504,8 +497,14 @@ function deleteImage() {
         postImage.src = '/images/photos/empty.jpg';
     }
 }
+function mainPageLoggedIn(loggedInUserId) {
+    if(isAdmin){
+        window.location.href = `/logInAdmin/${loggedInUserId}`;
+    } else {
+        window.location.href = `/logInUser/${loggedInUserId}`;
+    }
 
-
+}
 
 function isValidResponse(response) {
     return response && response.length > 0;

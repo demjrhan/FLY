@@ -3,22 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/stylesheets/admin.css">
     <link rel="stylesheet" href="/stylesheets/essentials.css">
+    <link rel="stylesheet" href="/stylesheets/admin.css">
 </head>
 <body>
 
+<header>
+    <div class="logo" onclick="mainPageLoggedIn(<%= loggedInUserId %>)"> FLY</div>
+    <div class="buttons">
+        <button class="button" onclick="logOutUserRequest()">Log Out</button>
+    </div>
+</header>
+
+<div class="navigation-container">
+    <nav>
+        <ul>
+            <li><a href="#" onclick="window.history.back()">Return</a></li>
+            <li><a href="#" onclick="banUserFromServer(<%= userId %>)">Ban</a></li>
+        </ul>
+    </nav>
+</div>
 
 <div class="container"></div>
-
-
 <script>
     document.addEventListener('DOMContentLoaded', async () => {
         try {
             const userId = '<%= userId %>';
             const posts = await fetchUserPostsAdmin(userId);
             if (Array.isArray(posts) && posts.length > 0) {
-                await renderPostsAdmin(posts);
+                await renderBanPanelAdmin(posts);
             } else {
                 goMainPage()
 
@@ -29,7 +42,7 @@
     });
 
 </script>
-<script src="../javascripts/admin.js"></script>
+<script src="/javascripts/admin.js"></script>
 
 </body>
 </html>

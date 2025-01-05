@@ -3,34 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/stylesheets/user.css">
     <link rel="stylesheet" href="/stylesheets/essentials.css">
+    <link rel="stylesheet" href="/stylesheets/admin.css">
 </head>
 <body>
 
 <header>
     <div class="logo" onclick="mainPageLoggedIn(<%= loggedInUserId %>)"> FLY</div>
+    <div class="buttons">
+        <button class="button" onclick="logOutUserRequest()">Log Out</button>
+    </div>
 </header>
-
 
 <div class="navigation-container">
     <nav>
         <ul>
             <li><a href="#" onclick="window.history.back()">Return</a></li>
-            <li><a href="#" onclick="editPostFromServer(<%= postId %>, <%= loggedInUserId %>)">Save</a></li>
+            <li><a href="#" onclick="warnUserFromServer(<%= userId %>,<%= postId %>)">Warn</a></li>
         </ul>
     </nav>
 </div>
+
 <div class="container"></div>
-
 <script>
-
     document.addEventListener('DOMContentLoaded', async () => {
         try {
             const postId = '<%= postId %>';
-            const post = await fetchPostById(postId);
+            const post = await fetchPostByPostIdAdmin(postId);
+            console.log(post);
             if (post) {
-                await editPostPage(post);
+                await renderWarnPanelAdmin(post);
             } else {
                 console.error('No posts available to render.');
             }
@@ -40,6 +42,7 @@
     });
 
 </script>
-<script src="../javascripts/user.js"></script>
+<script src="/javascripts/admin.js"></script>
+
 </body>
 </html>

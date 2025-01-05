@@ -10,16 +10,13 @@
 
 <header>
     <div class="logo" onclick="mainPageLoggedIn(<%= loggedInUserId %>)"> FLY</div>
-    <div class="buttons">
-        <button class="button" onclick="logOutUserRequest()">Log Out</button>
-    </div>
 </header>
 
 <div class="navigation-container">
     <nav>
         <ul>
             <li><a href="#" onclick="window.history.back()">Return</a></li>
-            <li><a href="#" onclick="banUserFromServer(<%= userId %>)">Ban</a></li>
+            <li><a href="#" onclick="banUserFromServer(<%= userId %>,<%= loggedInUserId %>)">Ban</a></li>
         </ul>
     </nav>
 </div>

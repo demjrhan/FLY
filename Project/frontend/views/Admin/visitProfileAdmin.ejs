@@ -30,18 +30,20 @@
 <div class="navigation-container">
     <nav>
         <ul>
-<!--            <li><a href="#" onclick="visitProfileRequest(<%= loggedInUserId %>)">Profile</a></li>-->
-<!--            <li><a href="#" onclick="addPostRequest()">Add Photo</a></li>-->
+            <li><a href="#" onclick="viewUserProfileAdmin(<%= loggedInUserId %>)">Profile</a></li>
+            <li><a href="#" onclick="addPostRequest()">Add Photo</a></li>
         </ul>
     </nav>
 </div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', async () => {
         try {
             const userId = '<%= userId %>';
             const loggedInUserId = '<%= loggedInUserId %>';
-            const posts = await fetchUserPosts(userId);
+            const posts = await fetchUserPostsAdmin(userId);
+            console.log(posts);
             if (Array.isArray(posts) && posts.length > 0) {
                 await renderPostsAdmin(posts,loggedInUserId);
             } else {
@@ -53,7 +55,7 @@
     });
 
 </script>
-<script src="../javascripts/admin.js"></script>
 
+<script src="/javascripts/admin.js"></script>
 </body>
 </html>

@@ -177,7 +177,7 @@ async function addPostToServer(event,loggedInUserId) {
 
     if (result && result.success) {
         alert("Adding post successful.");
-        await fetchUserPostsRequest(loggedInUserId)
+        await viewUserProfile(loggedInUserId)
     } else {
         console.log("Adding post failed. Errors are displayed.");
     }
@@ -228,7 +228,7 @@ async function renderPostsUser(posts,loggedInUserId) {
 
         postElement.innerHTML = `
       <div class="post-header">
-            <span class="owner" onclick="fetchUserPostsRequest(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
+            <span class="owner" onclick="viewUserProfile(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
       </div>
       <div class="post-image">
         <img src="${post.imageUrl}" alt="Post Image">
@@ -267,11 +267,11 @@ async function renderUserProfile(posts,loggedInUserId) {
 
         postElement.innerHTML = `
         <div class ="button">
-        <button class="delete-button" onclick="deletePostRequest(${post.id})">Delete</button>
-        <button class="edit-button" onclick="editPostRequest(${post.id})">Edit</button>
+        <button class="delete-button" onclick="deletePostRequest(${post.id}, ${post.owner.id})">Delete</button>
+        <button class="edit-button" onclick="editPostRequest(${post.id}, ${post.owner.id})">Edit</button>
       </div>
       <div class="post-header">
-            <span class="owner" onclick="fetchUserPostsRequest(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
+            <span class="owner" onclick="viewUserProfile(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
       </div>
       <div class="post-image">
         <img src="${post.imageUrl}" alt="Post Image">
@@ -326,9 +326,10 @@ async function renderUserProfileCard(user) {
     textContainer.appendChild(surnameElement);
 
     profileInfo.appendChild(textContainer);
-    profileContainer.appendChild(profileInfo);}
+    profileContainer.appendChild(profileInfo);
+}
 
-function fetchUserPostsRequest(userId) {
+function viewUserProfile(userId) {
     window.location.href = `/viewUserProfile/${userId}`;
 }
 
@@ -377,9 +378,10 @@ async function addPostRequest(){
     window.location.href = "/AddPostRequest";
 }
 
-async function deletePostRequest(postId){
-    window.location.href = `/DeletePostRequest/${postId}`;
+async function deletePostRequest(postId,postOwnerId){
+    window.location.href = `/DeletePostRequest/${postId}/${postOwnerId}`;
 }
+
 function deletePostPage(post) {
     const container = document.querySelector('.container');
     container.innerHTML = '';
@@ -415,14 +417,14 @@ async function deletePostFromServer(postId,loggedInUserId){
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        await fetchUserPostsRequest(loggedInUserId)
+        await viewUserProfile(loggedInUserId)
     } catch (error) {
         console.error('Error deleting post:', error);
         alert(`Failed to delete post: ${error.message}`);
     }
 }
-async function editPostRequest(postId){
-    window.location.href = `/EditPostRequest/${postId}`;
+async function editPostRequest(postId,postOwnerId){
+    window.location.href = `/EditPostRequest/${postId}/${postOwnerId}`;
 }
 function editPostPage(post) {
     document.addEventListener('input', (event) => {
@@ -480,8 +482,7 @@ async function editPostFromServer(postId,loggedInUserId){
         }
 
         alert('Post updated successfully');
-        console.log(loggedInUserId);
-        await fetchUserPostsRequest(loggedInUserId)
+        await viewUserProfile(loggedInUserId);
     } catch (error) {
         console.error('Error updating post:', error);
         alert(`Failed to update post: ${error.message}`);
@@ -517,8 +518,9 @@ function mainPage() {
     window.location.href = "/";
 }
 
-function mainPageLoggedIn(loggedInUserId) {
-    if(isAdmin){
+async function mainPageLoggedIn(loggedInUserId) {
+    if(await isAdmin(loggedInUserId)){
+        console.log(loggedInUserId);
         window.location.href = `/logInAdmin/${loggedInUserId}`;
     } else {
         window.location.href = `/logInUser/${loggedInUserId}`;

@@ -59,9 +59,6 @@ app.get('/registerUserRequest', function (req, res) {
     res.render('Auth/register');
 });
 
-app.get('/addPostAdminRequest', function (req, res) {
-    res.render('Admin/addPostAdminRequest')
-});
 app.get('/banUserRequestAdmin/:userId', function (req, res) {
     const userId = req.params.userId;
     const loggedInUserId = req.session.loggedInUserId;
@@ -80,25 +77,52 @@ app.get('/deletePostRequestAdmin/:postId', function (req, res) {
 });
 
 
-app.get('/DeletePostRequest/:postId', function (req, res) {
-    const loggedInUserId = req.session.loggedInUserId;
+app.get('/DeletePostRequest/:postId/:postOwnerId', function (req, res) {
+    const postOwnerId = req.params.postOwnerId;
     const postId = req.params.postId;
-    res.render('Post/removePost', {postId,loggedInUserId});
+
+    if (req.session.loggedInUserId) {
+        const loggedInUserId = req.session.loggedInUserId;
+        if (req.session.loggedInUserId === postOwnerId) {
+            res.render('Post/deletePost', {postId,loggedInUserId});
+        } else {
+            res.render('Post/deletePostAdmin', {postId,postOwnerId,loggedInUserId});
+        }
+    } else {
+        res.render('Auth/welcomePage');
+    }
 });
 
-app.get('/editPostRequestAdmin/:postId', function (req, res) {
+app.get('/EditPostRequest/:postId/:postOwnerId', function (req, res) {
+    const postOwnerId = req.params.postOwnerId;
     const postId = req.params.postId;
-    res.render('Admin/editPostRequestAdmin', {postId});
-});
-app.get('/EditPostRequest/:postId', function (req, res) {
-    const loggedInUserId = req.session.loggedInUserId;
-    const postId = req.params.postId;
-    res.render('Post/editPost', {postId,loggedInUserId});
+
+    if (req.session.loggedInUserId) {
+        const loggedInUserId = req.session.loggedInUserId;
+        if (req.session.loggedInUserId === postOwnerId) {
+            res.render('Post/editPost', {postId,loggedInUserId});
+        } else {
+            res.render('Post/editPostAdmin', {postId,postOwnerId,loggedInUserId});
+        }
+    } else {
+        res.render('Auth/welcomePage');
+    }
+
+
 });
 
 app.get('/viewUserProfileAdmin/:userId', function (req, res) {
     const userId = req.params.userId;
-    res.render('Admin/viewUserProfileAdmin', {userId});
+    if (req.session.loggedInUserId) {
+        const loggedInUserId = req.session.loggedInUserId;
+        if (req.session.loggedInUserId === userId) {
+            res.render('Admin/userProfileAdmin', {loggedInUserId});
+        } else {
+            res.render('Admin/visitProfileAdmin', {userId,loggedInUserId});
+        }
+    } else {
+        res.render('Auth/welcomePage');
+    }
 });
 
 
@@ -117,7 +141,7 @@ app.get('/viewUserProfile/:userId', function (req, res) {
             res.render('User/visitProfile', {userId,loggedInUserId});
         }
     } else {
-        res.redirect('/login');
+        res.render('Auth/welcomePage');
     }
 });
 
@@ -125,11 +149,10 @@ app.get('/AddPostRequest', function (req, res) {
     const loggedInUserId = req.session.loggedInUserId;
     res.render('Post/addPost', {loggedInUserId});
 })
-
-app.get('/edit/:id', function (req, res) {
-    const postId = req.params.id;
-    res.render('edit', {postId});
-});
+app.get('/AddPostRequestAdmin', function (req, res) {
+    const loggedInUserId = req.session.loggedInUserId;
+    res.render('Post/addPostAdmin', {loggedInUserId});
+})
 
 
 app.use(function (req, res, next) {

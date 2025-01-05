@@ -18,8 +18,8 @@
 <div class="navigation-container">
     <nav>
         <ul>
-            <li><a href="#" onclick="fetchUserPostsRequestAdmin(<%= loggedInUserId %>)">Profile</a></li>
-            <li><a href="#" onclick="">Add Photo</a></li>
+            <li><a href="#" onclick="viewUserProfileAdmin(<%= loggedInUserId %>)">Profile</a></li>
+            <li><a href="#" onclick="addPostRequest()">Add Photo</a></li>
         </ul>
     </nav>
 </div>
@@ -39,7 +39,7 @@
     });
 
 </script>
-<script src="../javascripts/admin.js"></script>
+<script src="/javascripts/admin.js"></script>
 
 </body>
 </html>

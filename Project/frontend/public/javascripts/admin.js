@@ -47,68 +47,82 @@ async function likePost(type,event,loggedInUserId,postId) {
     }
 }
 
-function addPostAdminRequest() {
-    window.location.href = `/addPostAdminRequest`;
+
+async function addPostToServer(event,loggedInUserId) {
+    event.preventDefault();
+
+    const form = document.getElementById("add-post-form");
+    clearErrorMessages(form);
+
+    const formData = {
+        description: document.getElementById("description").value.trim(),
+        userId: loggedInUserId,
+        imageUrl: "/images/photos/sample_photo.png"
+    };
+
+    const validationMessages = {
+        description: "Description is required."
+    };
+
+    if (!validateFields(formData, validationMessages)) return;
+
+    const result = await submitForm('/api/AddPost', formData, form);
+
+    if (result && result.success) {
+        alert("Adding post successful.");
+        await viewUserProfileAdmin(loggedInUserId)
+    } else {
+        console.log("Adding post failed. Errors are displayed.");
+    }
 }
+function validateFields(formData, validationMessages) {
+    let isValid = true;
 
-async function addPostToServer() {
-    const post = document.createElement('div');
-    post.className = 'post';
-    post.innerHTML = `
-            <div class="post-content">
-                <h2>Add New Post</h2>
-                <label for="description">Description:</label>
-                <textarea id="post-description" rows="3" placeholder="Enter post description"></textarea>
-                <label for="image-url">Image URL:</label>
-                <input type="text" id="image-url" placeholder="Enter image URL">
-                <label for="user-id">User ID:</label>
-                <input type="number" id="user-id" placeholder="Enter your user ID">
-                <div class="post-actions">
-                    <button id="submit-post">Submit</button>
-                    <button id="cancel-post">Cancel</button>
-                </div>
-            </div>
-        `;
-    document.body.appendChild(post);
-
-    document.getElementById('submit-post').addEventListener('click', async () => {
-        const description = document.getElementById('post-description').value.trim();
-        const imageUrl = document.getElementById('image-url').value.trim();
-        const userId = parseInt(document.getElementById('user-id').value.trim(), 10);
-
-
-
-        const postData = {
-            Description: description,
-            ImageUrl: imageUrl,
-            UserId: userId,
-        };
-
-        try {
-            const response = await fetch('http://localhost:5000/api/AddPost', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(postData),
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
+    Object.keys(formData).forEach((field) => {
+        if (!formData[field]) {
+            const input = document.getElementById(field);
+            if (!input) {
+                console.error(`Field '${field}' does not exist in the form.`);
+                return;
             }
-            goMainPage();
-
-        } catch (error) {
-            console.error('Error adding post:', error);
-            alert(`Failed to add post: ${error.message}`);
+            isValid = false;
+            const errorMessage = document.createElement("div");
+            errorMessage.className = "error-message";
+            errorMessage.style.color = "red";
+            errorMessage.style.fontSize = "12px";
+            errorMessage.textContent = validationMessages[field];
+            input.parentElement.insertBefore(errorMessage, input.nextSibling);
         }
     });
 
-    document.getElementById('cancel-post').addEventListener('click', async () => {
-        goMainPage();
-    })
+    return isValid;
+}
+async function submitForm(endpoint, formData, form) {
+    try {
+        const response = await fetch(`http://localhost:5000${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
 
+        const result = await response.json();
+
+        if (!response.ok) {
+            handleBackendErrors(result, form);
+            return { success: false };
+        }
+        return { success: true, result };
+    } catch (error) {
+        console.error("Error during form submission:", error);
+        alert("An unexpected error occurred. Please try again.");
+        return { success: false };
+    }
+}
+function clearErrorMessages(form) {
+    const errorMessages = form.querySelectorAll(".error-message");
+    errorMessages.forEach((msg) => msg.remove());
 }
 
 async function renderPostsAdmin(posts,loggedInUserId) {
@@ -123,13 +137,13 @@ async function renderPostsAdmin(posts,loggedInUserId) {
 
         postElement.innerHTML = `
       <div class ="button">
-        <button class="delete-button" onclick="deletePostRequest(${post.id})">Delete</button>
-        <button class="edit-button" onclick="editPostRequest(${post.id})">Edit</button>
+        <button class="delete-button" onclick="deletePostRequest(${post.id}, ${post.owner.id})">Delete</button>
+        <button class="edit-button" onclick="editPostRequest(${post.id}, ${post.owner.id})">Edit</button>
         <button class="warn-button" onclick="warnUserRequest(${post.id}, ${post.owner.id})">Warn</button>
         <button class="ban-button" onclick="banUserRequest(${post.owner.id})">Ban</button>
       </div>
       <div class="post-header">
-            <span class="owner" onclick="fetchUserPostsRequestAdmin(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
+            <span class="owner" onclick="viewUserProfileAdmin(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
       </div>
       <div class="post-image">
         <img src="${post.imageUrl}" alt="Post Image">
@@ -169,7 +183,7 @@ async function renderPostsAdmin(posts,loggedInUserId) {
 function banUserRequest(userId) {
     window.location.href = `/banUserRequestAdmin/${userId}`;
 }
-async function banUserFromServer(userId){
+async function banUserFromServer(userId,loggedInUserId){
 
     try {
         const response = await fetch(`http://localhost:5000/api/BanUser/${userId}`, {
@@ -182,7 +196,7 @@ async function banUserFromServer(userId){
             const errorText = await response.text();
             throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
         }
-        goMainPage()
+        mainPageLoggedIn(loggedInUserId);
     } catch (error) {
         console.error('Error warning user:', error);
     }
@@ -200,7 +214,7 @@ async function renderBanPanelAdmin(posts){
 
         postElement.innerHTML = `
       <div class="post-header">
-            <span class="owner" onclick="fetchUserPostsRequestAdmin(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
+            <span class="owner" onclick="viewUserProfileAdmin(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
       </div>
       <div class="post-image">
         <img src="${post.imageUrl}" alt="Post Image">
@@ -268,78 +282,7 @@ async function renderWarnPanelAdmin(post){
     `;
     container.appendChild(postElement)
 }
-function editPost(post) {
-    document.addEventListener('input', (event) => {
-        const textarea = event.target.closest('.post-edit-description textarea');
-        if (textarea) {
-            const lines = textarea.value.split('\n');
-            if (lines.length > 2) {
-                textarea.value = lines.slice(0, 2).join('\n');
-            }
-        }
-    });
 
-
-    const container = document.querySelector('.small-container');
-    container.innerHTML = '';
-
-    const postElement = document.createElement('div');
-    postElement.className = 'post';
-    postElement.dataset.postId = post.id;
-
-
-    postElement.innerHTML = `
-      <div class ="button">
-        <button class="delete-image-button" onclick="deleteImage(${post.id})">Delete Image</button>
-        <button class="main-page-button" onclick="goMainPage()">Return</button>
-        <button class="save-button" onclick="editPostFromServer(${post.id}, ${post.owner.id})">Save</button>
-      </div>
-      <div class="post-header">
-        <span class="owner">${post.owner.name} ${post.owner.surname}</span>
-      </div>
-      <div class="post-image">
-        <img src="${post.imageUrl}" alt="Post Image">
-      </div>
-      <div class="post-edit-description">
-        <span class="description">
-          <span class="post-edit-tag">@${post.owner.nickname}</span>
-        </span>
-        <textarea class="post-edit-description" rows="2">${post.description}</textarea>
-      </div>
-    `;
-    container.appendChild(postElement);
-}
-
-function deletePost(post) {
-    const container = document.querySelector('.small-container');
-    container.innerHTML = '';
-
-    const postElement = document.createElement('div');
-    postElement.className = 'post';
-    postElement.dataset.postId = post.id;
-
-
-    postElement.innerHTML = `
-      <div class ="button">
-        <button class="main-page-button" onclick="goMainPage(${post.id})">Return</button>
-        <button class="delete-button" onclick="deletePostFromServer(${post.id}, ${post.owner.id})">Delete</button>
-      </div>
-     <div class="post-header">
-        <span class="owner">${post.owner.name} ${post.owner.surname}</span>
-    </div>
-      <div class="post-image">
-        <img src="${post.imageUrl}" alt="Post Image">
-      </div>
-      <div class="post-description">
-        <span class="description"><span class="tag">@${post.owner.nickname}</span> ${post.description}</span>
-    </div>
-      <div class="post-actions">
-        <span class="likes">${post.likes} likes</span>
-      </div>
-    `;
-    container.appendChild(postElement)
-
-}
 
 async function fetchPostsAdmin() {
     try {
@@ -355,7 +298,7 @@ async function fetchPostsAdmin() {
 
 }
 
-function fetchUserPostsRequestAdmin(userId) {
+function viewUserProfileAdmin(userId) {
     window.location.href = `/viewUserProfileAdmin/${userId}`;
 }
 
@@ -387,13 +330,38 @@ async function fetchPostByPostIdAdmin(postId) {
 
 }
 
+function deletePostPage(post) {
+    const container = document.querySelector('.container');
+    container.innerHTML = '';
 
+    const postElement = document.createElement('div');
+    postElement.className = 'post';
+    postElement.dataset.postId = post.id;
+
+
+    postElement.innerHTML = `
+     <div class="post-header">
+        <span class="owner">${post.owner.name} ${post.owner.surname}</span>
+    </div>
+      <div class="post-image">
+        <img src="${post.imageUrl}" alt="Post Image">
+      </div>
+      <div class="post-description">
+        <span class="description"><span class="tag">@${post.owner.nickname}</span> ${post.description}</span>
+    </div>
+      <div class="post-actions">
+        <span class="likes">${post.likes} likes</span>
+      </div>
+    `;
+    container.appendChild(postElement)
+
+}
 function goMainPage() {
     window.location.href = `/`;
 }
 
-function deletePostRequest(postId) {
-    window.location.href = `/deletePostRequestAdmin/${postId}`;
+async function deletePostRequest(postId,postOwnerId){
+    window.location.href = `/DeletePostRequest/${postId}/${postOwnerId}`;
 }
 
 function warnUserRequest(postId,userId) {
@@ -409,7 +377,7 @@ async function deletePostFromServerAdmin(postId,userId) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-            fetchUserPostsRequestAdmin(userId)
+        await viewUserProfileAdmin(userId)
     } catch (error) {
         console.error('Error deleting post:', error);
         alert(`Failed to delete post: ${error.message}`);
@@ -417,36 +385,8 @@ async function deletePostFromServerAdmin(postId,userId) {
 }
 
 
-function editPostRequest(postId) {
-    window.location.href = `/editPostRequestAdmin/${postId}`;
-}
-
-async function editPostFromServerADMIN(postId,userId) {
-
-    const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
-    const textarea = postElement.querySelector('textarea');
-    const imageUrl = postElement.querySelector('.post-image img').src;
-
-    const description = textarea.value.trim();
-    try {
-        const response = await fetch(`http://localhost:5000/api/EditPost/${postId}`, {
-            method: 'PUT', headers: {
-                'Content-Type': 'application/json'
-            }, body: JSON.stringify({description, imageUrl})
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
-        }
-
-        alert('Post updated successfully');
-        fetchUserPostsRequestAdmin(userId);
-    } catch (error) {
-        console.error('Error updating post:', error);
-        alert(`Failed to update post: ${error.message}`);
-    }
-
+async function editPostRequest(postId,postOwnerId){
+    window.location.href = `/EditPostRequest/${postId}/${postOwnerId}`;
 }
 
 
@@ -497,8 +437,22 @@ function deleteImage() {
         postImage.src = '/images/photos/empty.jpg';
     }
 }
-function mainPageLoggedIn(loggedInUserId) {
-    if(isAdmin){
+
+async function isAdmin(loggedInUserId){
+    try {
+        const response = await fetch(`http://localhost:5000/api/isAdmin/${loggedInUserId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        return [];
+    }
+}
+async function mainPageLoggedIn(loggedInUserId) {
+    if(await isAdmin(loggedInUserId)){
+        console.log(loggedInUserId);
         window.location.href = `/logInAdmin/${loggedInUserId}`;
     } else {
         window.location.href = `/logInUser/${loggedInUserId}`;
@@ -508,4 +462,169 @@ function mainPageLoggedIn(loggedInUserId) {
 
 function isValidResponse(response) {
     return response && response.length > 0;
+}
+
+async function logOutUserRequest(){
+    window.location.href = "/logOutUser";
+}
+async function fetchUser(userId) {
+    try {
+        const response = await fetch(`http://localhost:5000/api/GetUser/${userId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        return [];
+    }
+}
+async function renderUserProfileCard(user) {
+    const profileContainer = document.querySelector('.profile-container');
+    profileContainer.innerHTML = '';
+
+    const profileInfo = document.createElement('div');
+    profileInfo.className = 'profile-info';
+
+    const profileIcon = document.createElement('div');
+    profileIcon.className = 'profile-icon';
+    profileIcon.innerHTML = '<img src="/images/photos/profile-icon.png" alt="Profile Icon">';
+
+    profileInfo.appendChild(profileIcon);
+
+    const textContainer = document.createElement('div');
+    textContainer.className = 'text-container';
+
+    const nameElement = document.createElement('p');
+    nameElement.className = 'name';
+    nameElement.textContent = user.name;
+
+    const surnameElement = document.createElement('p');
+    surnameElement.className = 'surname';
+    surnameElement.textContent = user.surname;
+
+    textContainer.appendChild(nameElement);
+    textContainer.appendChild(surnameElement);
+
+    profileInfo.appendChild(textContainer);
+    profileContainer.appendChild(profileInfo);
+}
+
+async function renderUserProfile(posts,loggedInUserId) {
+
+    const container = document.querySelector('.container');
+    container.innerHTML = '';
+
+    posts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.className = 'post';
+        postElement.dataset.postId = post.id;
+
+        postElement.innerHTML = `
+        <div class ="button">
+        <button class="delete-button" onclick="deletePostRequest(${post.id}, ${post.owner.id})">Delete</button>
+        <button class="edit-button" onclick="editPostRequest(${post.id}, ${post.owner.id})">Edit</button>
+      </div>
+      <div class="post-header">
+            <span class="owner" onclick="viewUserProfileAdmin(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
+      </div>
+      <div class="post-image">
+        <img src="${post.imageUrl}" alt="Post Image">
+      </div>
+      <div class="post-description">
+        <span class="tag">@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
+      </div>
+      <div class="post-actions">
+        <div class="likes">
+        <span class="like-count"">${post.likes} likes</span>
+        </div>
+        <div class="reactions">
+          <button class="reaction" onclick="likePost('smiling', event,${loggedInUserId},${post.id})">
+            <img src="/images/emojis/smiling.png" alt="Smiling" class="emoji">
+          </button>
+          <button class="reaction" onclick="likePost('lovely', event,${loggedInUserId},${post.id})">
+            <img src="/images/emojis/lovely.png" alt="Lovely" class="emoji">
+          </button>
+        </div>
+      </div>
+    `;
+        const additionalInfo = document.createElement('div');
+        additionalInfo.className = 'additional-info';
+        additionalInfo.innerHTML = `
+        <div class="user-info">
+            <span class="email">Email: ${post.owner.email}</span>
+            <span class="password">Password: ${post.owner.password}</span>
+        </div>
+        `;
+
+        container.appendChild(additionalInfo);
+        container.appendChild(postElement);
+    });
+}
+async function editPostFromServer(postId,userId){
+    const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
+    const textarea = postElement.querySelector('textarea');
+    const imageUrl = postElement.querySelector('.post-image img').src;
+
+    const description = textarea.value.trim();
+    try {
+        const response = await fetch(`http://localhost:5000/api/EditPost/${postId}`, {
+            method: 'PUT', headers: {
+                'Content-Type': 'application/json'
+            }, body: JSON.stringify({description, imageUrl})
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
+        }
+
+        alert('Post updated successfully');
+        await viewUserProfileAdmin(userId);
+    } catch (error) {
+        console.error('Error updating post:', error);
+        alert(`Failed to update post: ${error.message}`);
+    }
+}
+function editPostPage(post) {
+    document.addEventListener('input', (event) => {
+        const textarea = event.target.closest('.post-edit-description textarea');
+        if (textarea) {
+            const lines = textarea.value.split('\n');
+            if (lines.length > 2) {
+                textarea.value = lines.slice(0, 2).join('\n');
+            }
+        }
+    });
+
+
+    const container = document.querySelector('.container');
+    container.innerHTML = '';
+
+    const postElement = document.createElement('div');
+    postElement.className = 'post';
+    postElement.dataset.postId = post.id;
+
+
+    postElement.innerHTML = `
+      <div class="post-header">
+        <span class="owner">${post.owner.name} ${post.owner.surname}</span>
+      </div>
+      <div class="post-image">
+        <img src="${post.imageUrl}" alt="Post Image">
+      </div>
+      <div class="post-edit-description">
+        <span class="description">
+          <span class="post-edit-tag">@${post.owner.nickname}</span>
+        </span>
+        <textarea class="post-edit-description" rows="2">${post.description}</textarea>
+      </div>
+    `;
+
+    container.appendChild(postElement);
+
+}
+
+async function addPostRequest(){
+    window.location.href = "/AddPostRequestAdmin";
 }

@@ -17,7 +17,7 @@
     <nav>
         <ul>
             <li><a href="#" onclick="window.history.back()">Return</a></li>
-            <li><a href="#" onclick="editPostFromServer(<%= postId %>, <%= loggedInUserId %>)">Save</a></li>
+            <li><a href="#" onclick="deletePostFromServerAdmin(<%= postId %>, <%= postOwnerId %>)">Delete</a></li>
         </ul>
     </nav>
 </div>
@@ -28,9 +28,9 @@
     document.addEventListener('DOMContentLoaded', async () => {
         try {
             const postId = '<%= postId %>';
-            const post = await fetchPostById(postId);
+            const post = await fetchPostByPostIdAdmin(postId);
             if (post) {
-                await editPostPage(post);
+                await deletePostPage(post);
             } else {
                 console.error('No posts available to render.');
             }
@@ -40,6 +40,6 @@
     });
 
 </script>
-<script src="/javascripts/user.js"></script>
+<script src="/javascripts/admin.js"></script>
 </body>
 </html>

@@ -67,7 +67,13 @@ async function loginUserToServer(event) {
     if (!validateFields(formData, validationMessages)) return;
 
     const result = await submitForm('/api/LoginUser', formData, form);
-    await mainPageLoggedIn(result.result.id);
+    if (result && result.success) {
+        alert("Logged in successfully.");
+        await mainPageLoggedIn(result.result.id);
+    } else {
+        await mainPage()
+    }
+
 }
 
 function validateFields(formData, validationMessages) {
@@ -225,8 +231,8 @@ async function renderPostsUser(posts,loggedInUserId) {
         const postElement = document.createElement('div');
         postElement.className = 'post';
         postElement.dataset.postId = post.id;
-
-        postElement.innerHTML = `
+        if (!post.owner.isBanned) {
+            postElement.innerHTML = `
       <div class="post-header">
             <span class="owner" onclick="viewUserProfile(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
       </div>
@@ -234,7 +240,8 @@ async function renderPostsUser(posts,loggedInUserId) {
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
       <div class="post-description">
-        <span class="tag" onclick="viewUserProfileAdmin(${post.owner.id})>@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
+        <span class="tag" onclick="viewUserProfile(${post.owner.id})">@${post.owner.nickname}</span>
+        <span class="description"> ${post.description}</span>
       </div>
       <div class="post-actions">
         <div class="likes">
@@ -250,6 +257,21 @@ async function renderPostsUser(posts,loggedInUserId) {
         </div>
       </div>
     `;
+        } else {
+            postElement.innerHTML = `
+      <div class="post-header">
+            <span class="owner" onclick="viewUserProfile(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
+      </div>
+      <div class="post-image">
+        <img src="${post.imageUrl}" alt="Post Image">
+      </div>
+      <div class="post-description">
+        <span class="tag" onclick="viewUserProfile(${post.owner.id})">@${post.owner.nickname}</span>
+        <span class="description"> ${post.description}</span>
+      </div>
+    `;
+        }
+
 
         container.appendChild(postElement);
     });
@@ -265,7 +287,8 @@ async function renderUserProfile(posts,loggedInUserId) {
         postElement.className = 'post';
         postElement.dataset.postId = post.id;
 
-        postElement.innerHTML = `
+        if (!post.owner.isBanned) {
+            postElement.innerHTML = `
         <div class ="button">
         <button class="delete-button" onclick="deletePostRequest(${post.id}, ${post.owner.id})">Delete</button>
         <button class="edit-button" onclick="editPostRequest(${post.id}, ${post.owner.id})">Edit</button>
@@ -277,7 +300,8 @@ async function renderUserProfile(posts,loggedInUserId) {
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
       <div class="post-description">
-        <span class="tag">@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
+        <span class="tag" onclick="viewUserProfile(${post.owner.id})">@${post.owner.nickname}</span>
+        <span class="description"> ${post.description}</span>
       </div>
       <div class="post-actions">
         <div class="likes">
@@ -293,6 +317,22 @@ async function renderUserProfile(posts,loggedInUserId) {
         </div>
       </div>
     `;
+        } else {
+            postElement.innerHTML = `
+       
+      <div class="post-header">
+            <span class="owner" onclick="viewUserProfile(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
+      </div>
+      <div class="post-image">
+        <img src="${post.imageUrl}" alt="Post Image">
+      </div>
+      <div class="post-description">
+        <span class="tag">@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
+      </div>
+
+    `;
+        }
+
 
         container.appendChild(postElement);
     });

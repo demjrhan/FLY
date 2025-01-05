@@ -1,5 +1,4 @@
-
-async function likePost(type,event,loggedInUserId,postId) {
+async function likePost(type, event, loggedInUserId, postId) {
     const reactionElement = document.createElement('div');
     const {clientX, clientY} = event;
     const scrollX = window.scrollX;
@@ -22,8 +21,8 @@ async function likePost(type,event,loggedInUserId,postId) {
         try {
             const response = await fetch(`http://localhost:5000/api/LikePost/${loggedInUserId}/${postId}/${type}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: loggedInUserId, postId, reactionType: type }),
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({userId: loggedInUserId, postId, reactionType: type}),
             });
 
             if (!response.ok) {
@@ -48,7 +47,7 @@ async function likePost(type,event,loggedInUserId,postId) {
 }
 
 
-async function addPostToServer(event,loggedInUserId) {
+async function addPostToServer(event, loggedInUserId) {
     event.preventDefault();
 
     const form = document.getElementById("add-post-form");
@@ -75,6 +74,8 @@ async function addPostToServer(event,loggedInUserId) {
         console.log("Adding post failed. Errors are displayed.");
     }
 }
+
+
 function validateFields(formData, validationMessages) {
     let isValid = true;
 
@@ -97,7 +98,8 @@ function validateFields(formData, validationMessages) {
 
     return isValid;
 }
-async function submitForm(endpoint, formData, form) {
+
+async function submitForm(endpoint, formData, form = null) {
     try {
         const response = await fetch(`http://localhost:5000${endpoint}`, {
             method: 'POST',
@@ -109,62 +111,82 @@ async function submitForm(endpoint, formData, form) {
 
         const result = await response.json();
 
-        if (!response.ok) {
-            handleBackendErrors(result, form);
-            return { success: false };
+        if (form) {
+            if (!response.ok) {
+                handleBackendErrors(result, form);
+                return {success: false};
+            }
         }
-        return { success: true, result };
+
+        return {success: true, result};
     } catch (error) {
         console.error("Error during form submission:", error);
         alert("An unexpected error occurred. Please try again.");
-        return { success: false };
+        return {success: false};
     }
 }
+
 function clearErrorMessages(form) {
     const errorMessages = form.querySelectorAll(".error-message");
     errorMessages.forEach((msg) => msg.remove());
 }
 
-async function renderPostsAdmin(posts,loggedInUserId) {
+async function renderPostsAdmin(posts, loggedInUserId) {
 
     const container = document.querySelector('.container');
     container.innerHTML = '';
-
     posts.forEach(post => {
         const postElement = document.createElement('div');
         postElement.className = 'post';
         postElement.dataset.postId = post.id;
 
-        postElement.innerHTML = `
-      <div class ="button">
-        <button class="delete-button" onclick="deletePostRequest(${post.id}, ${post.owner.id})">Delete</button>
-        <button class="edit-button" onclick="editPostRequest(${post.id}, ${post.owner.id})">Edit</button>
-        <button class="warn-button" onclick="warnUserRequest(${post.id}, ${post.owner.id})">Warn</button>
-        <button class="ban-button" onclick="banUserRequest(${post.owner.id})">Ban</button>
-      </div>
-      <div class="post-header">
+        if (!post.owner.isBanned) {
+            postElement.innerHTML = `
+        <div class="button">
+            <button class="delete-button" onclick="deletePostRequest(${post.id}, ${post.owner.id})">Delete</button>
+            <button class="edit-button" onclick="editPostRequest(${post.id}, ${post.owner.id})">Edit</button>
+            <button class="warn-button" onclick="warnUserRequest(${post.id}, ${post.owner.id})">Warn</button>
+            <button class="ban-button" onclick="banUserRequest(${post.owner.id})">Ban</button>
+        </div>
+        <div class="post-header">
             <span class="owner" onclick="viewUserProfileAdmin(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
-      </div>
-      <div class="post-image">
-        <img src="${post.imageUrl}" alt="Post Image">
-      </div>
-      <div class="post-description">
-        <span class="tag" onclick="viewUserProfileAdmin(${post.owner.id})">@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
-      </div>
-      <div class="post-actions">
-        <div class="likes">
-        <span class="like-count" onclick="seeLikeDetails(event)">${post.likes} likes</span>
         </div>
-        <div class="reactions">
-          <button class="reaction" onclick="likePost('smiling', event,${loggedInUserId},${post.id})">
-            <img src="/images/emojis/smiling.png" alt="Smiling" class="emoji">
-          </button>
-          <button class="reaction" onclick="likePost('lovely', event,${loggedInUserId},${post.id})">
-            <img src="/images/emojis/lovely.png" alt="Lovely" class="emoji">
-          </button>
+        <div class="post-image">
+            <img src="${post.imageUrl}" alt="Post Image">
         </div>
-      </div>
+        <div class="post-description">
+            <span class="tag" onclick="viewUserProfileAdmin(${post.owner.id})">@${post.owner.nickname}</span>
+            <span class="description"> ${post.description}</span>
+        </div>
+        <div class="post-actions">
+            <div class="likes">
+                <span class="like-count" onclick="seeLikeDetails(event)">${post.likes} likes</span>
+            </div>
+            <div class="reactions">
+                <button class="reaction" onclick="likePost('smiling', event, ${loggedInUserId}, ${post.id})">
+                    <img src="/images/emojis/smiling.png" alt="Smiling" class="emoji">
+                </button>
+                <button class="reaction" onclick="likePost('lovely', event, ${loggedInUserId}, ${post.id})">
+                    <img src="/images/emojis/lovely.png" alt="Lovely" class="emoji">
+                </button>
+            </div>
+        </div>
     `;
+        } else {
+            postElement.innerHTML = `
+        <div class="post-header">
+            <span class="owner" onclick="viewUserProfileAdmin(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
+        </div>
+        <div class="post-image">
+            <img src="${post.imageUrl}" alt="Post Image">
+        </div>
+        <div class="post-description">
+            <span class="tag" onclick="viewUserProfileAdmin(${post.owner.id})">@${post.owner.nickname}</span>
+            <span class="description"> ${post.description}</span>
+        </div>
+    `;
+        }
+
 
         const additionalInfo = document.createElement('div');
         additionalInfo.className = 'additional-info';
@@ -179,6 +201,8 @@ async function renderPostsAdmin(posts,loggedInUserId) {
         container.appendChild(postElement);
     });
 }
+
+
 async function renderNoPost() {
     const container = document.querySelector('.container');
     container.innerHTML = '';
@@ -200,7 +224,8 @@ async function renderNoPost() {
 function banUserRequest(userId) {
     window.location.href = `/banUserRequestAdmin/${userId}`;
 }
-async function banUserFromServer(userId,loggedInUserId){
+
+async function banUserFromServer(userId) {
 
     try {
         const response = await fetch(`http://localhost:5000/api/BanUser/${userId}`, {
@@ -208,18 +233,19 @@ async function banUserFromServer(userId,loggedInUserId){
                 'Content-Type': 'application/json'
             }
         });
-
         if (!response.ok) {
             const errorText = await response.text();
             throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
         }
-        await mainPageLoggedIn(loggedInUserId);
+        await viewUserProfileAdmin(userId);
+
     } catch (error) {
         console.error('Error warning user:', error);
     }
 
 }
-async function renderBanPanelAdmin(posts){
+
+async function renderBanPanelAdmin(posts) {
 
     const container = document.querySelector('.container');
     container.innerHTML = '';
@@ -250,7 +276,7 @@ async function renderBanPanelAdmin(posts){
     });
 }
 
-async function warnUserFromServer(userId,postId) {
+async function warnUserFromServer(userId, postId) {
 
     try {
         const response = await fetch(`http://localhost:5000/api/WarnUser/${userId}`, {
@@ -280,7 +306,7 @@ async function warnUserFromServer(userId,postId) {
 }
 
 
-async function renderWarnPanelAdmin(post){
+async function renderWarnPanelAdmin(post) {
 
     const container = document.querySelector('.container');
     container.innerHTML = '';
@@ -382,19 +408,20 @@ function deletePostPage(post) {
     container.appendChild(postElement)
 
 }
+
 function goMainPage() {
     window.location.href = `/`;
 }
 
-async function deletePostRequest(postId,postOwnerId){
+async function deletePostRequest(postId, postOwnerId) {
     window.location.href = `/DeletePostRequest/${postId}/${postOwnerId}`;
 }
 
-function warnUserRequest(postId,userId) {
+function warnUserRequest(postId, userId) {
     window.location.href = `/warnUserRequestAdmin/${postId}/${userId}`;
 }
 
-async function deletePostFromServerAdmin(postId,userId) {
+async function deletePostFromServerAdmin(postId, userId) {
     try {
         const response = await fetch(`http://localhost:5000/api/DeletePostById/${postId}`, {
             method: 'DELETE'
@@ -411,14 +438,15 @@ async function deletePostFromServerAdmin(postId,userId) {
 }
 
 
-async function editPostRequest(postId,postOwnerId){
+async function editPostRequest(postId, postOwnerId) {
     window.location.href = `/EditPostRequest/${postId}/${postOwnerId}`;
 }
+
 async function seeLikeDetails(event) {
     const postElement = event.target.closest('.post');
 
     let likeDetailsBox = postElement.nextElementSibling;
-    if (likeDetailsBox && likeDetailsBox.classList.contains('like-details-box') || likeDetailsBox.classList.contains('like-details-box-empty') ) {
+    if (likeDetailsBox && likeDetailsBox.classList.contains('like-details-box') || likeDetailsBox.classList.contains('like-details-box-empty')) {
         likeDetailsBox.classList.toggle('hidden');
     } else {
         const postId = postElement.dataset.postId;
@@ -497,7 +525,7 @@ function deleteImage() {
     }
 }
 
-async function isAdmin(loggedInUserId){
+async function isAdmin(loggedInUserId) {
     try {
         const response = await fetch(`http://localhost:5000/api/isAdmin/${loggedInUserId}`);
         if (!response.ok) {
@@ -509,8 +537,9 @@ async function isAdmin(loggedInUserId){
         return [];
     }
 }
+
 async function mainPageLoggedIn(loggedInUserId) {
-    if(await isAdmin(loggedInUserId)){
+    if (await isAdmin(loggedInUserId)) {
         console.log(loggedInUserId);
         window.location.href = `/logInAdmin/${loggedInUserId}`;
     } else {
@@ -523,9 +552,10 @@ function isValidResponse(response) {
     return response && response.length > 0;
 }
 
-async function logOutUserRequest(){
+async function logOutUserRequest() {
     window.location.href = "/logOutUser";
 }
+
 async function fetchUser(userId) {
     try {
         const response = await fetch(`http://localhost:5000/api/GetUser/${userId}`);
@@ -538,6 +568,7 @@ async function fetchUser(userId) {
         return [];
     }
 }
+
 async function renderUserProfileCard(user) {
     const profileContainer = document.querySelector('.profile-container');
     profileContainer.innerHTML = '';
@@ -569,7 +600,7 @@ async function renderUserProfileCard(user) {
     profileContainer.appendChild(profileInfo);
 }
 
-async function renderUserProfile(posts,loggedInUserId) {
+async function renderUserProfile(posts, loggedInUserId) {
 
     const container = document.querySelector('.container');
     container.innerHTML = '';
@@ -579,34 +610,38 @@ async function renderUserProfile(posts,loggedInUserId) {
         postElement.className = 'post';
         postElement.dataset.postId = post.id;
 
-        postElement.innerHTML = `
-        <div class ="button">
-        <button class="delete-button" onclick="deletePostRequest(${post.id}, ${post.owner.id})">Delete</button>
-        <button class="edit-button" onclick="editPostRequest(${post.id}, ${post.owner.id})">Edit</button>
-      </div>
-      <div class="post-header">
+            postElement.innerHTML = `
+        <div class="button">
+            <button class="delete-button" onclick="deletePostRequest(${post.id}, ${post.owner.id})">Delete</button>
+            <button class="edit-button" onclick="editPostRequest(${post.id}, ${post.owner.id})">Edit</button>
+            <button class="warn-button" onclick="warnUserRequest(${post.id}, ${post.owner.id})">Warn</button>
+            <button class="ban-button" onclick="banUserRequest(${post.owner.id})">Ban</button>
+        </div>
+        <div class="post-header">
             <span class="owner" onclick="viewUserProfileAdmin(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
-      </div>
-      <div class="post-image">
-        <img src="${post.imageUrl}" alt="Post Image">
-      </div>
-      <div class="post-description">
-        <span class="tag">@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
-      </div>
-      <div class="post-actions">
-        <div class="likes">
-        <span class="like-count"">${post.likes} likes</span>
         </div>
-        <div class="reactions">
-          <button class="reaction" onclick="likePost('smiling', event,${loggedInUserId},${post.id})">
-            <img src="/images/emojis/smiling.png" alt="Smiling" class="emoji">
-          </button>
-          <button class="reaction" onclick="likePost('lovely', event,${loggedInUserId},${post.id})">
-            <img src="/images/emojis/lovely.png" alt="Lovely" class="emoji">
-          </button>
+        <div class="post-image">
+            <img src="${post.imageUrl}" alt="Post Image">
         </div>
-      </div>
+        <div class="post-description">
+            <span class="tag" onclick="viewUserProfileAdmin(${post.owner.id})">@${post.owner.nickname}</span>
+            <span class="description"> ${post.description}</span>
+        </div>
+        <div class="post-actions">
+            <div class="likes">
+                <span class="like-count" onclick="seeLikeDetails(event)">${post.likes} likes</span>
+            </div>
+            <div class="reactions">
+                <button class="reaction" onclick="likePost('smiling', event, ${loggedInUserId}, ${post.id})">
+                    <img src="/images/emojis/smiling.png" alt="Smiling" class="emoji">
+                </button>
+                <button class="reaction" onclick="likePost('lovely', event, ${loggedInUserId}, ${post.id})">
+                    <img src="/images/emojis/lovely.png" alt="Lovely" class="emoji">
+                </button>
+            </div>
+        </div>
     `;
+
         const additionalInfo = document.createElement('div');
         additionalInfo.className = 'additional-info';
         additionalInfo.innerHTML = `
@@ -620,7 +655,8 @@ async function renderUserProfile(posts,loggedInUserId) {
         container.appendChild(postElement);
     });
 }
-async function editPostFromServer(postId,userId){
+
+async function editPostFromServer(postId, userId) {
     const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
     const textarea = postElement.querySelector('textarea');
     const imageUrl = postElement.querySelector('.post-image img').src;
@@ -645,6 +681,7 @@ async function editPostFromServer(postId,userId){
         alert(`Failed to update post: ${error.message}`);
     }
 }
+
 function editPostPage(post) {
     document.addEventListener('input', (event) => {
         const textarea = event.target.closest('.post-edit-description textarea');
@@ -684,6 +721,6 @@ function editPostPage(post) {
 
 }
 
-async function addPostRequest(){
+async function addPostRequest() {
     window.location.href = "/AddPostRequestAdmin";
 }

@@ -43,7 +43,6 @@
             const userId = '<%= userId %>';
             const loggedInUserId = '<%= loggedInUserId %>';
             const posts = await fetchUserPostsAdmin(userId);
-            console.log(posts);
             if (Array.isArray(posts) && posts.length > 0) {
                 await renderPostsAdmin(posts,loggedInUserId);
             } else {

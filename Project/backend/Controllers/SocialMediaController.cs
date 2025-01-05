@@ -38,7 +38,8 @@ public class SocialMediaController : ControllerBase
                     Surname = post.User.Surname,
                     Nickname = post.User.Nickname,
                     Email = post.User.Email,
-                    Password = post.User.Password
+                    Password = post.User.Password,
+                    isBanned = post.User.isBanned
                 },
                 ImageUrl = post.ImageUrl,
                 Description = post.Description,
@@ -63,7 +64,8 @@ public class SocialMediaController : ControllerBase
                     Surname = post.User.Surname,
                     Nickname = post.User.Nickname,
                     Email = "",
-                    Password = ""
+                    Password = "",
+                    isBanned = post.User.isBanned
                     
                 },
                 ImageUrl = post.ImageUrl,
@@ -89,7 +91,8 @@ public class SocialMediaController : ControllerBase
                     Surname = post.User.Surname,
                     Nickname = post.User.Nickname,
                     Email = "",
-                    Password = ""
+                    Password = "",
+                    isBanned = post.User.isBanned
                     
                 },
                 ImageUrl = post.ImageUrl,
@@ -110,7 +113,8 @@ public class SocialMediaController : ControllerBase
             Name = user.Name,
             Surname = user.Surname,
             Nickname = user.Nickname,
-            Password = user.Password
+            Password = user.Password,
+            isBanned = user.isBanned
         }).ToListAsync();
 
         return Ok(users);
@@ -131,7 +135,8 @@ public class SocialMediaController : ControllerBase
                     Surname = post.User.Surname,
                     Nickname = post.User.Nickname,
                     Email = post.User.Email,
-                    Password = post.User.Password
+                    Password = post.User.Password,
+                    isBanned =  post.User.isBanned
                 },
                 ImageUrl = post.ImageUrl,
                 Description = post.Description,
@@ -164,7 +169,8 @@ public class SocialMediaController : ControllerBase
                     Surname = post.User.Surname,
                     Nickname = post.User.Nickname,
                     Email = "",
-                    Password = ""
+                    Password = "",
+                    isBanned =  post.User.isBanned
                 },
                 ImageUrl = post.ImageUrl,
                 Description = post.Description,
@@ -363,7 +369,8 @@ public class SocialMediaController : ControllerBase
             Name = user.Name,
             Surname = user.Surname,
             Email = user.Email,
-            Password = user.Password
+            Password = user.Password,
+            isBanned =  user.isBanned
         });
         
     }
@@ -371,30 +378,43 @@ public class SocialMediaController : ControllerBase
     [HttpDelete("/api/BanUser/{userId}")]
     public async Task<IActionResult> BanUser(int userId, string? message)
     {
-        var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Id == userId);
-
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null)
         {
             return BadRequest(new { message = "User is not found in the system." });
         }
+
         var posts = await _context.Posts
             .Where(p => p.UserId == userId)
             .Include(p => p.Likes)
             .ToListAsync();
 
-        foreach (var post in posts)
-        {
-            _context.Likes.RemoveRange(post.Likes); 
-            _context.Posts.Remove(post);           
-        }
-        
+        var likesToDelete = posts.SelectMany(p => p.Likes).ToList();
+        _context.Likes.RemoveRange(likesToDelete);
+        _context.Posts.RemoveRange(posts);
         await _context.SaveChangesAsync();
-        return Ok(new
+        var banPost = new Post
         {
-            message = message ?? "User banned and all related data deleted successfully."
-        });
+            CreatedAt = DateTime.Now,
+            Description = "Because of various reasons, this user is banned.",
+            ImageUrl = "/images/photos/banned.jpg",
+            UserId = user.Id,
+            Likes = new List<Like>(),
+            User = user
+        };
+        await _context.Posts.AddAsync(banPost);
+
+        user.isBanned = true;
+
+        
+            await _context.SaveChangesAsync();
+            return Ok(new
+            {
+                message = message ?? "User banned and all related data deleted successfully."
+            });
+        
     }
+
 
     [HttpDelete("/api/DeleteUsersAllPosts/{userId}")]
     public async Task<IActionResult> DeleteUsersAllPosts(int userId)
@@ -436,7 +456,8 @@ public class SocialMediaController : ControllerBase
                     Surname = post.User.Surname,
                     Nickname = post.User.Nickname,
                     Email = post.User.Email,
-                    Password = post.User.Password
+                    Password = post.User.Password,
+                    isBanned = post.User.isBanned
                 },
                 ImageUrl = post.ImageUrl,
                 Description = post.Description,
@@ -464,7 +485,8 @@ public class SocialMediaController : ControllerBase
                     Surname = post.User.Surname,
                     Nickname = post.User.Nickname,
                     Email = "",
-                    Password = ""
+                    Password = "",
+                    isBanned = post.User.isBanned
                 },
                 ImageUrl = post.ImageUrl,
                 Description = post.Description,
@@ -491,7 +513,8 @@ public class SocialMediaController : ControllerBase
                     Surname = post.User.Surname,
                     Nickname = post.User.Nickname,
                     Email = "",
-                    Password = ""
+                    Password = "",
+                    isBanned = post.User.isBanned
                 },
                 ImageUrl = post.ImageUrl,
                 Description = post.Description,
@@ -514,7 +537,8 @@ public class SocialMediaController : ControllerBase
                 Name = u.Name,
                 Surname = u.Surname,
                 Nickname = u.Nickname,
-                Password = u.Password
+                Password = u.Password,
+                isBanned = u.isBanned
             })
             .FirstOrDefaultAsync();
 
@@ -544,7 +568,8 @@ public class SocialMediaController : ControllerBase
                     Surname = like.Post.User.Surname,
                     Nickname = like.Post.User.Nickname,
                     Email = like.Post.User.Email,
-                    Password = like.Post.User.Password
+                    Password = like.Post.User.Password,
+                    isBanned = like.Post.User.isBanned
                 },
                 ImageUrl = like.Post.ImageUrl,
                 Description = like.Post.Description,
@@ -562,7 +587,11 @@ public class SocialMediaController : ControllerBase
         {
             return BadRequest("User not found.");
         }
-        
+
+        if (user.isBanned)
+        {
+            return BadRequest("User is banned, can not post.");
+        }
         
         var post = new Post
         {

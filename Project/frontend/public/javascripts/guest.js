@@ -7,7 +7,8 @@ async function renderPostsGuest(posts) {
         postElement.className = 'post';
         postElement.dataset.postId = post.id;
 
-        postElement.innerHTML = `
+        if (!post.owner.isBanned) {
+            postElement.innerHTML = `
       <div class="post-header">
             <span class="owner" onclick="viewUserProfileGuest(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
       </div>
@@ -23,6 +24,22 @@ async function renderPostsGuest(posts) {
         </div>
       </div>
     `;
+        } else {
+            postElement.innerHTML = `
+      <div class="post-header">
+            <span class="owner" onclick="viewUserProfileGuest(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>
+      </div>
+      <div class="post-image">
+        <img src="${post.imageUrl}" alt="Post Image">
+      </div>
+      <div class="post-description">
+        <span class="tag" onclick="viewUserProfileGuest(${post.owner.id})">@${post.owner.nickname}</span>
+        
+        <span class="description"> ${post.description}</span>
+      </div>
+    `;
+        }
+
 
         container.appendChild(postElement);
     });

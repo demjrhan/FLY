@@ -24,7 +24,6 @@ Configurations: `Data/UserConfiguration.cs`, `Data/PostConfiguration.cs`, `Data/
 
 ## 🚀 Build and Run Instructions
 
-### Backend
 ## Navigate to the backend directory  
 cd TIN_PRO/Project/backend  
 dotnet restore  
@@ -33,7 +32,6 @@ dotnet ef migrations add InitialCreate
 dotnet ef database update  
 dotnet run  
 
-### Frontend
 ## Navigate to the frontend directory  
 cd TIN_PRO/Project/frontend   
 npm install    

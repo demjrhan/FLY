@@ -142,7 +142,8 @@ public class UserRepository
             Surname = user.Surname,
             Email = user.Email,
             Password = user.Password,
-            isBanned =  user.isBanned
+            isBanned =  user.isBanned,
+            warnCount = user.WarnCount
         };
         
     }

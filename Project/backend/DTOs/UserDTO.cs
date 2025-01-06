@@ -10,4 +10,6 @@ public class UserDTO
     
     public string Password { get; set; }
     public bool isBanned { get; set; }
+    
+    public int warnCount { get; set; }
 }

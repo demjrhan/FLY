@@ -68,7 +68,10 @@ async function loginUserToServer(event) {
 
     const result = await submitForm('/api/LoginUser', formData, form);
     if (result && result.success) {
-        alert("Logged in successfully.");
+        const warnCount = result.result.warnCount;
+        if(warnCount == 0) alert(`Logged in successfully.`);
+        else alert(`Logged in successfully. Your total warn counts are : ${warnCount} please post appropriate posts.`);
+
         await mainPageLoggedIn(result.result.id);
     } else {
         await mainPage()

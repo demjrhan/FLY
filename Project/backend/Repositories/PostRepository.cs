@@ -268,5 +268,18 @@ public class PostRepository
     {
         return await _context.Posts.Include(p => p.Likes).FirstOrDefaultAsync(p => p.Id == postId);
     }
+
+    public async Task DeleteUsersAllPostsAsync(int userId)
+    {
+        var posts = _context.Posts.Where(post => post.User.Id == userId);
+        _context.Posts.RemoveRange(posts);
+        await _context.SaveChangesAsync();
+         
+    }
+    public async Task<bool> CheckIfUserHasPostsAsync(int userId)
+    {
+        return await _context.Posts.AnyAsync(post => post.UserId == userId);
+    }
+
     
 }

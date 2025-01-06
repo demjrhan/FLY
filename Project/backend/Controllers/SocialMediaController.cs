@@ -235,22 +235,22 @@ public class SocialMediaController : ControllerBase
 [HttpDelete("/api/DeleteUsersAllPosts/{userId}")]
     public async Task<IActionResult> DeleteUsersAllPosts(int userId)
     {
-        var userExists = await _context.Users.AnyAsync(u => u.Id == userId);
-        if (!userExists)
+        try
         {
-            return NotFound(new { message = "User not found." });
-        }
+            await _userService.CheckIfUserExistsAsync(userId);
+            await _postService.CheckIfUserHasPostsAsync(userId);
+            await _postService.DeleteUsersAllPosts(userId);
+            return Ok(new { message = "User posts deleted successfully." });
 
-        var posts = _context.Posts.Where(post => post.User.Id == userId);
-        if (!posts.Any())
+        }
+        catch (UserNotFoundException ex)
         {
-            return NotFound(new { message = "No posts found for the user." });
+            return BadRequest(new { message = ex.Message });
         }
-
-        _context.Posts.RemoveRange(posts);
-        await _context.SaveChangesAsync();
-
-        return Ok(new { message = "User posts deleted successfully." });
+        catch (UserDoesntHaveAnyPostException ex)
+        {
+            return Ok(new { message = ex.Message, posts = new List<GetPostDTO>() });
+        }
     }
 
 

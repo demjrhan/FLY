@@ -108,6 +108,7 @@ async function submitForm(endpoint, formData, form = null) {
             body: JSON.stringify(formData),
         });
 
+
         const result = await response.json();
 
         if (form) {
@@ -617,8 +618,6 @@ async function renderUserProfile(posts, loggedInUserId) {
         <div class="button">
             <button class="delete-button" onclick="deletePostRequest(${post.id}, ${post.owner.id})">Delete</button>
             <button class="edit-button" onclick="editPostRequest(${post.id}, ${post.owner.id})">Edit</button>
-            <button class="warn-button" onclick="warnUserRequest(${post.id}, ${post.owner.id})">Warn</button>
-            <button class="ban-button" onclick="banUserRequest(${post.owner.id})">Ban</button>
         </div>
         <div class="post-header">
             <span class="owner" onclick="viewUserProfileAdmin(${post.owner.id})">${post.owner.name} ${post.owner.surname}</span>

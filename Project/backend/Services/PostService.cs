@@ -118,7 +118,7 @@ public class PostService
         var posts = await _postRepository.GetPostsLikedByUserAsync(userId);
         if (posts == null || posts.Count == 0)
         {
-            throw new UserDoesntHaveAnyPostException(userId);
+            throw new UserDidNotLikeAnyPostException(userId);
         }
         return posts;
     }
@@ -152,4 +152,16 @@ public class PostService
         return await _postRepository.GetLikeDetailsAsync(postId);
         
     }
+
+    public async Task DeleteUsersAllPosts(int userId)
+    {
+        await _postRepository.DeleteUsersAllPostsAsync(userId);
+    }
+    public async Task<bool> CheckIfUserHasPostsAsync(int userId)
+    {
+        var result = await _postRepository.CheckIfUserHasPostsAsync(userId);
+        if (!result) throw new UserDoesntHaveAnyPostException(userId);
+        return result;
+    }
+    
 }

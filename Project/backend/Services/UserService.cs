@@ -145,5 +145,11 @@ public class UserService
 
         return user;
     }
+    public async Task<bool> CheckIfUserExistsAsync(int userId)
+    {
+        var result = await _userRepository.CheckIfUserExistsAsync(userId);
+        if (!result) throw new UserNotFoundException(userId);
+        return result;
+    }
 
 }

@@ -47,7 +47,7 @@ npm start
   - Warned users will see a notification each time they log into the website.  
 
 - **Ban Users:**  
-  - Banned users cannot log into the website.  
+  - Banned users cannot create post.  
   - All posts by banned users will be removed from the platform.  
 
 #### Guest Functionalities:
@@ -68,8 +68,6 @@ npm start
 
 - **Post Attributes:**  
   - Each post will display the creator's nickname in the format "@example".  
-    - Regular users’ nicknames will appear in **blue**.  
-    - Admins’ nicknames will appear in **red**.  
   - Posts will support various reaction types, and a **like count** will indicate the total number of reactions received.  
   - Each post can include a **description** provided by the user, offering additional context or details about the content.  
 

@@ -69,8 +69,10 @@ async function loginUserToServer(event) {
     const result = await submitForm('/api/LoginUser', formData, form);
     if (result && result.success) {
         const warnCount = result.result.warnCount;
+        const isBanned = result.result.isBanned;
         if(warnCount == 0) alert(`Logged in successfully.`);
-        else alert(`Logged in successfully. Your total warn counts are : ${warnCount} please post appropriate posts.`);
+        else if (warnCount > 0 && warnCount < 3)alert(`Logged in successfully. Your total warn counts are : ${warnCount} please post appropriate posts.`);
+        if(warnCount == 3 || isBanned)  alert(`Logged in successfully but unfortunately you are banned and thats why you will not be able to post any more posts anymore. Please reach admins.`);
 
         await mainPageLoggedIn(result.result.id);
     } else {

@@ -33,4 +33,14 @@ public class PostService
 
         return posts;
     }
+    
+    public async Task<GetPostDTO> GetPostByIdAdminAsync(int postId)
+    {
+        var post = await _postRepository.GetPostByIdAdmin(postId);
+        if (post == null)
+        {
+            throw new PostNotFoundException(postId);
+        }
+        return post;
+    }
 }

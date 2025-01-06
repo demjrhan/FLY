@@ -25,7 +25,7 @@ public class SocialMediaController : ControllerBase
         _postService = postService;
     }
 
-    
+
     [HttpGet("/api/GetAllPostsAdmin")]
     public async Task<IActionResult> GetAllPostsAdminAsync()
     {
@@ -39,6 +39,7 @@ public class SocialMediaController : ControllerBase
             return BadRequest(new { message = ex.Message, posts = new List<GetPostDTO>() });
         }
     }
+
     [HttpGet("/api/GetAllPostsGuest")]
     public async Task<IActionResult> GetAllPostsGuestAsync()
     {
@@ -52,6 +53,7 @@ public class SocialMediaController : ControllerBase
             return BadRequest(new { message = ex.Message, posts = new List<GetPostDTO>() });
         }
     }
+
     [HttpGet("/api/GetAllPostsUser")]
     public async Task<IActionResult> GetAllPostsUserAsync()
     {
@@ -62,9 +64,10 @@ public class SocialMediaController : ControllerBase
         }
         catch (NoExistingPostException ex)
         {
-            return BadRequest(new { message = ex.Message});
+            return BadRequest(new { message = ex.Message });
         }
     }
+
     [HttpGet("/api/GetAllUsersAdmin")]
     public async Task<IActionResult> GetAllUsersAdmin()
     {
@@ -75,9 +78,10 @@ public class SocialMediaController : ControllerBase
         }
         catch (NoExistingUserException ex)
         {
-            return BadRequest(new { message = ex.Message});
+            return BadRequest(new { message = ex.Message });
         }
     }
+
     [HttpPut("/api/WarnUser/{userId}")]
     public async Task<IActionResult> WarnUserAsync(int userId)
     {
@@ -91,22 +95,22 @@ public class SocialMediaController : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
+
     [HttpDelete("/api/BanUser/{userId}")]
     public async Task<IActionResult> BanUser(int userId)
     {
-        
         try
         {
-            string message = "Because user have 3 or more warns, user banned from system.";
+            string message = "Because of various reasons this user banned from this app... ";
             await _userService.BanUserAsync(userId, message);
-            return Ok(new { message});
+            return Ok(new { message });
         }
         catch (UserNotFoundException ex)
         {
             return BadRequest(new { message = ex.Message });
         }
-        
     }
+
     [HttpGet("/api/isAdmin/{userId}")]
     public async Task<IActionResult> IsAdmin(int userId)
     {
@@ -119,9 +123,8 @@ public class SocialMediaController : ControllerBase
         {
             return BadRequest(new { message = ex.Message });
         }
-        
     }
-    
+
     [HttpPost("/api/RegisterUser")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDTO registerUser)
     {
@@ -131,9 +134,9 @@ public class SocialMediaController : ControllerBase
         {
             return BadRequest(new { Message = "Validation failed", Errors = validationErrors });
         }
-        
 
-        return Ok(new { Message = "User registered successfully"});
+
+        return Ok(new { Message = "User registered successfully" });
     }
 
     [HttpPost("/api/LoginUser")]
@@ -148,118 +151,110 @@ public class SocialMediaController : ControllerBase
         {
             return BadRequest(new { message = ex.Message });
         }
-        
+    }
+
+    [HttpGet("/api/GetUser/{userId}")]
+    public async Task<IActionResult> GetUser(int userId)
+    {
+        try
+        {
+            var user = await _userService.GetUserAsync(userId);
+            return Ok(user);
+        }
+        catch (UserNotFoundException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("/api/GetPostByIdAdmin/{postId}")]
+    public async Task<IActionResult> GetPostByIdAdmin(int postId)
+    {
+        try
+        {
+            var post = await _postService.GetPostByIdAdminAsync(postId);
+
+            return Ok(post);
+        }
+        catch (PostNotFoundException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("/api/GetPostById/{postId}")]
+    public async Task<IActionResult> GetPostById(int postId)
+    {
+        var posts = await _context.Posts
+            .Include(p => p.User)
+            .Select(post => new GetPostDTO
+            {
+                Id = post.Id,
+                Owner = new UserDTO
+                {
+                    Id = post.User.Id,
+                    Name = post.User.Name,
+                    Surname = post.User.Surname,
+                    Nickname = post.User.Nickname,
+                    Email = "",
+                    Password = "",
+                    isBanned = post.User.isBanned
+                },
+                ImageUrl = post.ImageUrl,
+                Description = post.Description,
+                Likes = post.Likes.Count
+            })
+            .ToListAsync();
+
+        var post = posts.FirstOrDefault(p => p.Id == postId);
+
+        if (post == null)
+        {
+            return NotFound(new { message = "Post not found" });
+        }
+
+        return Ok(post);
     }
 
 
-    // [HttpGet("/api/GetPostByIdAdmin/{postId}")]
-    // public async Task<IActionResult> GetPostByIdAdmin(int postId)
-    // {
-    //     var posts = await _context.Posts
-    //         .Include(p => p.User)
-    //         .Select(post => new GetPostDTO
-    //         {
-    //             Id = post.Id,
-    //             Owner = new UserDTO
-    //             {
-    //                 Id = post.User.Id,
-    //                 Name = post.User.Name,
-    //                 Surname = post.User.Surname,
-    //                 Nickname = post.User.Nickname,
-    //                 Email = post.User.Email,
-    //                 Password = post.User.Password,
-    //                 isBanned =  post.User.isBanned
-    //             },
-    //             ImageUrl = post.ImageUrl,
-    //             Description = post.Description,
-    //             Likes = post.Likes.Count
-    //         })
-    //         .ToListAsync();
-    //
-    //     var post = posts.FirstOrDefault(p => p.Id == postId);
-    //
-    //     if (post == null)
-    //     {
-    //         return NotFound(new { message = "Post not found" });
-    //     }
-    //
-    //     return Ok(post);
-    // }
-    //
-    // [HttpGet("/api/GetPostById/{postId}")]
-    // public async Task<IActionResult> GetPostById(int postId)
-    // {
-    //     var posts = await _context.Posts
-    //         .Include(p => p.User)
-    //         .Select(post => new GetPostDTO
-    //         {
-    //             Id = post.Id,
-    //             Owner = new UserDTO
-    //             {
-    //                 Id = post.User.Id,
-    //                 Name = post.User.Name,
-    //                 Surname = post.User.Surname,
-    //                 Nickname = post.User.Nickname,
-    //                 Email = "",
-    //                 Password = "",
-    //                 isBanned =  post.User.isBanned
-    //             },
-    //             ImageUrl = post.ImageUrl,
-    //             Description = post.Description,
-    //             Likes = post.Likes.Count
-    //         })
-    //         .ToListAsync();
-    //
-    //     var post = posts.FirstOrDefault(p => p.Id == postId);
-    //
-    //     if (post == null)
-    //     {
-    //         return NotFound(new { message = "Post not found" });
-    //     }
-    //
-    //     return Ok(post);
-    // }
-    //
-    //
-    // [HttpDelete("/api/DeletePostById/{postId}")]
-    // public async Task<IActionResult> DeletePostByIdAsync(int postId)
-    // {
-    //     var post = await _context.Posts.FindAsync(postId);
-    //
-    //     if (post == null)
-    //     {
-    //         return NotFound(new { message = "Post not found" });
-    //     }
-    //
-    //     _context.Posts.Remove(post);
-    //     await _context.SaveChangesAsync();
-    //
-    //     return Ok(new { message = "Post deleted successfully" });
-    // }
-    //
-    // [HttpPut("/api/EditPost/{postId}")]
-    // public async Task<IActionResult> EditPostAsync(int postId, [FromBody] EditPostDTO editPostDto)
-    // {
-    //     if (string.IsNullOrWhiteSpace(editPostDto.Description) || string.IsNullOrWhiteSpace(editPostDto.ImageUrl))
-    //     {
-    //         return BadRequest(new { message = "Description or ImageUrl cannot be empty." });
-    //     }
-    //
-    //     var post = await _context.Posts.FindAsync(postId);
-    //
-    //     if (post == null)
-    //     {
-    //         return NotFound(new { message = "Post not found" });
-    //     }
-    //
-    //     post.Description = editPostDto.Description;
-    //     post.ImageUrl = editPostDto.ImageUrl;
-    //     await _context.SaveChangesAsync();
-    //
-    //     return Ok(new { message = "Post updated successfully", post });
-    // }
+    [HttpDelete("/api/DeletePostById/{postId}")]
+    public async Task<IActionResult> DeletePostByIdAsync(int postId)
+    {
+        var post = await _context.Posts.FindAsync(postId);
 
-   
+        if (post == null)
+        {
+            return NotFound(new { message = "Post not found" });
+        }
+
+        _context.Posts.Remove(post);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Post deleted successfully" });
+    }
+
+    [HttpPut("/api/EditPost/{postId}")]
+    public async Task<IActionResult> EditPostAsync(int postId, [FromBody] EditPostDTO editPostDto)
+    {
+        if (string.IsNullOrWhiteSpace(editPostDto.Description) || string.IsNullOrWhiteSpace(editPostDto.ImageUrl))
+        {
+            return BadRequest(new { message = "Description or ImageUrl cannot be empty." });
+        }
+
+        var post = await _context.Posts.FindAsync(postId);
+
+        if (post == null)
+        {
+            return NotFound(new { message = "Post not found" });
+        }
+
+        post.Description = editPostDto.Description;
+        post.ImageUrl = editPostDto.ImageUrl;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Post updated successfully", post });
+    }
+
 
     [HttpGet("/api/GetLikeDetails/{postId}")]
     public async Task<IActionResult> GetLikeDetails(int postId)
@@ -284,7 +279,7 @@ public class SocialMediaController : ControllerBase
 
         return Ok(likeDataList);
     }
-    
+
     [HttpPut("/api/LikePost/{userId}/{postId}/{reactionType}")]
     public async Task<IActionResult> LikePost([FromBody] LikePostDTO likePostDto)
     {
@@ -324,8 +319,6 @@ public class SocialMediaController : ControllerBase
     }
 
 
-    
-
     [HttpDelete("/api/DeleteUsersAllPosts/{userId}")]
     public async Task<IActionResult> DeleteUsersAllPosts(int userId)
     {
@@ -341,12 +334,11 @@ public class SocialMediaController : ControllerBase
             return NotFound(new { message = "No posts found for the user." });
         }
 
-        _context.Posts.RemoveRange(posts); 
+        _context.Posts.RemoveRange(posts);
         await _context.SaveChangesAsync();
 
         return Ok(new { message = "User posts deleted successfully." });
     }
-
 
 
     [HttpGet("/api/GetUserPostsAdmin/{userId}")]
@@ -376,8 +368,8 @@ public class SocialMediaController : ControllerBase
 
         return Ok(posts);
     }
-    
-    
+
+
     [HttpGet("/api/GetUserPostsGuest/{userId}")]
     public async Task<IActionResult> GetUserPostsGuest(int userId)
     {
@@ -405,7 +397,7 @@ public class SocialMediaController : ControllerBase
 
         return Ok(posts);
     }
-    
+
     [HttpGet("/api/GetUserPosts/{userId}")]
     public async Task<IActionResult> GetUserPosts(int userId)
     {
@@ -432,32 +424,6 @@ public class SocialMediaController : ControllerBase
             }).ToListAsync();
 
         return Ok(posts);
-    }
-    
-    [HttpGet("/api/GetUser/{userId}")]
-    public async Task<IActionResult> GetUser(int userId)
-    {
-        
-        var user = await _context.Users
-            .Where(u => u.Id == userId)
-            .Select(u => new UserDTO
-            {
-                Id = u.Id,
-                Email = u.Email,
-                Name = u.Name,
-                Surname = u.Surname,
-                Nickname = u.Nickname,
-                Password = u.Password,
-                isBanned = u.isBanned
-            })
-            .FirstOrDefaultAsync();
-
-        if (user == null)
-        {
-            return NotFound($"User with ID {userId} not found.");
-        }
-
-        return Ok(user);
     }
 
 
@@ -502,7 +468,7 @@ public class SocialMediaController : ControllerBase
         {
             return BadRequest("User is banned, can not post.");
         }
-        
+
         var post = new Post
         {
             CreatedAt = DateTime.UtcNow,

@@ -135,5 +135,15 @@ public class UserService
        
         
     }
+    public async Task<UserDTO?> GetUserAsync(int userId)
+    {
+        var user = await _userRepository.GetUserAsync(userId);
+        if (user == null)
+        {
+            throw new UserNotFoundException(userId);
+        }
+
+        return user;
+    }
 
 }

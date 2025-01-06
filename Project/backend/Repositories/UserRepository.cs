@@ -38,6 +38,24 @@ public class UserRepository
         return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
     }
 
+    public async Task<UserDTO?> GetUserAsync(int userId)
+    {
+        return await _context.Users
+            .Where(u => u.Id == userId)
+            .Select(u => new UserDTO
+            {
+                Id = u.Id,
+                Email = u.Email,
+                Name = u.Name,
+                Surname = u.Surname,
+                Nickname = u.Nickname,
+                Password = u.Password,
+                isBanned = u.isBanned
+            })
+            .FirstOrDefaultAsync();
+
+    }
+
     public async Task WarnUserAsync(User user)
     {
         user.WarnCount += 1;

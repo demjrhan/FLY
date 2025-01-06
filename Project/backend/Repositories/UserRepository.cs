@@ -1,8 +1,6 @@
 ﻿using backend.Context;
 using backend.DTOs;
-using backend.Exceptions;
 using backend.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repositories;

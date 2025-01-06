@@ -155,7 +155,6 @@ async function submitForm(endpoint, formData, form) {
         return { success: true, result };
     } catch (error) {
         console.error("Error during form submission:", error);
-        alert("An unexpected error occurred. Please try again.");
         return { success: false };
     }
 }
@@ -182,7 +181,6 @@ async function addPostToServer(event,loggedInUserId) {
     const result = await submitForm('/api/AddPost', formData, form);
 
     if (result && result.success) {
-        alert("Adding post successful.");
         await viewUserProfile(loggedInUserId)
     } else {
         console.log("Adding post failed. Errors are displayed.");
@@ -476,7 +474,6 @@ async function deletePostFromServer(postId,loggedInUserId){
         await viewUserProfile(loggedInUserId)
     } catch (error) {
         console.error('Error deleting post:', error);
-        alert(`Failed to delete post: ${error.message}`);
     }
 }
 async function editPostRequest(postId,postOwnerId){
@@ -537,11 +534,9 @@ async function editPostFromServer(postId,loggedInUserId){
             throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText || 'Unknown error'}`);
         }
 
-        alert('Post updated successfully');
         await viewUserProfile(loggedInUserId);
     } catch (error) {
         console.error('Error updating post:', error);
-        alert(`Failed to update post: ${error.message}`);
     }
 }
 async function fetchPostById(postId) {

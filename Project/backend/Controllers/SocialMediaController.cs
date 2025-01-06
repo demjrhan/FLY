@@ -321,7 +321,7 @@ public class SocialMediaController : ControllerBase
         {
             var user = await _userService.GetUserByIdAsync(addPostDto.UserId);
             await _postService.AddPost(addPostDto, user);
-            return Ok("Post created successfully.");
+            return Ok(new { message = "Post created successfully." });
         }
         catch (UserBannedException ex)
         {

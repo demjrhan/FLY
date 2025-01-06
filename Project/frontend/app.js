@@ -159,7 +159,14 @@ app.get('/AddPostRequestAdmin', function (req, res) {
     res.render('Post/addPostAdmin', {loggedInUserId});
 })
 
-
+app.get('/SeeAllUsers', function (req, res) {
+    const loggedInUserId = req.session.loggedInUserId;
+    res.render('Admin/seeAllUsers', {loggedInUserId});
+})
+app.get('/SeeAllLikes', function (req, res) {
+    const loggedInUserId = req.session.loggedInUserId;
+    res.render('Admin/seeAllLikes', {loggedInUserId});
+})
 app.use(function (req, res, next) {
     next(createError(404));
 });

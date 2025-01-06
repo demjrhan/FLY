@@ -1,4 +1,5 @@
 ﻿using backend.DTOs;
+using backend.Exceptions;
 using backend.Models;
 using backend.Repositories;
 
@@ -22,5 +23,16 @@ public class LikeService
     public async Task LikePostAsync(Post post, LikePostDTO likePostDto, User user)
     {
         await _likeRepository.LikePostAsync(post, likePostDto, user);
+    }
+    
+    public async Task<List<LikeDataDTO>> GetAllLikesAdminAsync()
+    {
+        var likes = await _likeRepository.GetAllLikesAdminAsync();
+        if (likes.Count == 0)
+        {
+            throw new NoExistingLikesException();
+        }
+
+        return likes;
     }
 }

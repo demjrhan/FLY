@@ -376,7 +376,20 @@ public class SocialMediaController : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
+    [HttpGet("/api/GetAllLikesAdmin")]
+    public async Task<IActionResult> GetAllLikesAdminAsync()
+    {
+        try
+        {
+            var likes = await _likeService.GetAllLikesAdminAsync();
+            return Ok(likes);
+        }
+        catch (NoExistingLikesException ex)
+        {
+            return Ok(new { message = ex.Message, likes = new List<LikeDataDTO>()});
+        }
+    }
 
-
+    
     
 }

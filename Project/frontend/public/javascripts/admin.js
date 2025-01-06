@@ -725,6 +725,93 @@ function editPostPage(post) {
 
 }
 
+async function fetchAllUsersAdmin() {
+    try {
+        const response = await fetch(`http://localhost:5000/api/GetAllUsersAdmin`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        return [];
+    }
+
+
+}
+
+async function renderAllUsersAdmin(users) {
+    const container = document.querySelector('.container');
+    container.innerHTML = '';
+
+    users.forEach(user => {
+        const userElement = document.createElement('div');
+        userElement.className = 'user';
+        userElement.dataset.userId = user.id;
+
+        userElement.innerHTML = `
+        <div class="user-info">
+            <div class="user-header">
+                <span class="name">${user.name} ${user.surname}</span>
+                <span class="nickname">@${user.nickname}</span>
+            </div>
+            <div class="user-details">
+                <span class="email">Email: ${user.email}</span>
+                <span class="password">Password: ${user.password}</span>
+                <span class="warn-count">Warnings: ${user.warnCount}</span>
+                <span class="status">Status: ${user.isBanned ? "Banned" : "Active"}</span>
+            </div>
+        </div>
+        `;
+
+        container.appendChild(userElement);
+    });
+}
+
+
+async function seeAllUsersRequest() {
+    window.location.href = `/SeeAllUsers`;
+}
+async function fetchAllLikesAdmin() {
+    try {
+        const response = await fetch(`http://localhost:5000/api/GetAllLikesAdmin`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        return [];
+    }
+
+
+}
+async function renderAllLikesAdmin(likes) {
+    const container = document.querySelector('.container');
+    container.innerHTML = '';
+
+    likes.forEach(like => {
+        const likeElement = document.createElement('div');
+        likeElement.className = 'like';
+        likeElement.dataset.likeId = like.id;
+
+        likeElement.innerHTML = `
+        <div class="like-info">
+            <div class="like-header">
+                <span class="nickname">@${like.nickname}</span>
+            </div>
+            <div class="like-details">
+                <span class="reaction-type">Reaction: ${like.reactionType}</span>
+            </div>
+        </div>
+        `;
+
+        container.appendChild(likeElement);
+    });
+}
+async function seeAllLikesRequest() {
+    window.location.href = `/SeeAllLikes`;
+}
 async function addPostRequest() {
     window.location.href = "/AddPostRequestAdmin";
 }

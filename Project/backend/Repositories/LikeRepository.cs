@@ -1,6 +1,7 @@
 ﻿using backend.Context;
 using backend.DTOs;
 using backend.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repositories;
 
@@ -32,4 +33,17 @@ public class LikeRepository
         await _context.SaveChangesAsync();
     }
     
+    public async Task<List<LikeDataDTO>> GetAllLikesAdminAsync()
+    {
+        return await _context.Likes
+            .Include(like => like.User)
+            .Select(like => new LikeDataDTO()
+            {
+                Id = like.Id,
+                Nickname = like.User.Nickname,
+                ReactionType = like.ReactionType
+            }).ToListAsync();
+
+    }
+
 }

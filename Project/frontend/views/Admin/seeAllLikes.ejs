@@ -3,38 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/panel.css">
     <link rel="stylesheet" href="/stylesheets/essentials.css">
-    <link rel="stylesheet" href="/stylesheets/admin.css">
 </head>
 <body>
 <header>
     <div class="logo" onclick="mainPageLoggedIn(<%= loggedInUserId %>)"> FLY</div>
     <div class="buttons">
         <button class="button" onclick="logOutUserRequest()">Log Out</button>
-        <button class="button" onclick="seeAllLikesRequest()">See All Likes</button>
         <button class="button" onclick="seeAllUsersRequest()">See All Users</button>
     </div>
 </header>
 
 <div class="container"></div>
-<div class="navigation-container">
-    <nav>
-        <ul>
-            <li><a href="#" onclick="viewUserProfileAdmin(<%= loggedInUserId %>)">Profile</a></li>
-            <li><a href="#" onclick="addPostRequest()">Add Photo</a></li>
-        </ul>
-    </nav>
-</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', async () => {
         try {
-            const posts = await fetchPostsAdmin();
-            if (Array.isArray(posts) && posts.length > 0) {
-               await renderPostsAdmin(posts,<%= loggedInUserId %>);
-            } else {
-                await renderNoPost();
-            }
+            const likes = await fetchAllLikesAdmin();
+            await renderAllLikesAdmin(likes);
+
         } catch (error) {
             console.error('Error fetching or rendering posts:', error);
         }

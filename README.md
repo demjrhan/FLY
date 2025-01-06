@@ -25,7 +25,7 @@ Configurations: `Data/UserConfiguration.cs`, `Data/PostConfiguration.cs`, `Data/
 ## 🚀 Build and Run Instructions
 
 ## Navigate to the backend directory  
-cd TIN_PRO/Project/backend  
+cd TIN_PRO/Project/backend
 mkdir Migrations
 dotnet restore  
 dotnet build  

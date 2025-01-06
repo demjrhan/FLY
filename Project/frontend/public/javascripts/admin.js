@@ -446,7 +446,7 @@ async function seeLikeDetails(event) {
     const postElement = event.target.closest('.post');
 
     let likeDetailsBox = postElement.nextElementSibling;
-    if (likeDetailsBox && likeDetailsBox.classList.contains('like-details-box') || likeDetailsBox.classList.contains('like-details-box-empty')) {
+    if (likeDetailsBox && (likeDetailsBox.classList.contains('like-details-box') || likeDetailsBox.classList.contains('like-details-box-empty'))) {
         likeDetailsBox.classList.toggle('hidden');
     } else {
         const postId = postElement.dataset.postId;
@@ -459,7 +459,11 @@ async function seeLikeDetails(event) {
             likeDetailsBox.innerHTML = `
                 <p><strong>There is nothing to see here :<</p>
             `;
-            postElement.parentNode.insertBefore(likeDetailsBox, postElement.nextSibling);
+            if (postElement.nextSibling) {
+                postElement.parentNode.insertBefore(likeDetailsBox, postElement.nextSibling);
+            } else {
+                postElement.parentNode.appendChild(likeDetailsBox);
+            }
             return;
         }
 
@@ -512,10 +516,15 @@ async function seeLikeDetails(event) {
 
         likeDetailsBox = document.createElement('div');
         likeDetailsBox.className = 'like-details-box';
-        postElement.parentNode.insertBefore(likeDetailsBox, postElement.nextSibling);
+        if (postElement.nextSibling) {
+            postElement.parentNode.insertBefore(likeDetailsBox, postElement.nextSibling);
+        } else {
+            postElement.parentNode.appendChild(likeDetailsBox);
+        }
         renderPage();
     }
 }
+
 
 
 function deleteImage() {

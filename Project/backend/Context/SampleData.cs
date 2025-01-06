@@ -103,7 +103,7 @@ public class SampleData
                         {
                             UserId = userId,
                             Description = "We are testing this app!",
-                            CreatedAt = DateTime.UtcNow.AddDays(-i),
+                            CreatedAt = DateTime.UtcNow,
                             ImageUrl = "/images/photos/sample_photo.png"
                         });
                     }
@@ -113,7 +113,34 @@ public class SampleData
                 context.SaveChanges();
             }
 
-            
+            if (!context.Likes.Any())
+            {
+                var likeData = new List<Like>
+                {
+                    new Like { UserId = 1, PostId = 2, LikedAt = DateTime.Parse("2024-01-02"), ReactionType = "smiling" },
+                    new Like { UserId = 1, PostId = 3, LikedAt = DateTime.Parse("2024-01-03"), ReactionType = "smiling" },
+                    new Like { UserId = 1, PostId = 4, LikedAt = DateTime.Parse("2024-01-04"), ReactionType = "smiling" },
+                    new Like { UserId = 1, PostId = 5, LikedAt = DateTime.Parse("2024-01-05"), ReactionType = "lovely" },
+                    new Like { UserId = 2, PostId = 1, LikedAt = DateTime.Parse("2024-01-03"), ReactionType = "lovely" },
+                    new Like { UserId = 2, PostId = 2, LikedAt = DateTime.Parse("2024-01-04"), ReactionType = "smiling" },
+                    new Like { UserId = 2, PostId = 4, LikedAt = DateTime.Parse("2024-01-05"), ReactionType = "smiling" },
+                    new Like { UserId = 2, PostId = 5, LikedAt = DateTime.Parse("2024-01-06"), ReactionType = "smiling" },
+                    new Like { UserId = 3, PostId = 1, LikedAt = DateTime.Parse("2024-01-07"), ReactionType = "smiling" },
+                    new Like { UserId = 3, PostId = 2, LikedAt = DateTime.Parse("2024-01-08"), ReactionType = "lovely" },
+                    new Like { UserId = 3, PostId = 3, LikedAt = DateTime.Parse("2024-01-09"), ReactionType = "lovely" },
+                    new Like { UserId = 3, PostId = 4, LikedAt = DateTime.Parse("2024-01-10"), ReactionType = "lovely" },
+                    new Like { UserId = 4, PostId = 1, LikedAt = DateTime.Parse("2024-01-03"), ReactionType = "smiling" },
+                    new Like { UserId = 4, PostId = 3, LikedAt = DateTime.Parse("2024-01-04"), ReactionType = "smiling" },
+                    new Like { UserId = 4, PostId = 5, LikedAt = DateTime.Parse("2024-01-06"), ReactionType = "lovely" },
+                    new Like { UserId = 5, PostId = 2, LikedAt = DateTime.Parse("2024-01-07"), ReactionType = "smiling" },
+                    new Like { UserId = 5, PostId = 4, LikedAt = DateTime.Parse("2024-01-08"), ReactionType = "smiling" },
+                    new Like { UserId = 5, PostId = 5, LikedAt = DateTime.Parse("2024-01-09"), ReactionType = "smiling" },
+                    new Like { UserId = 5, PostId = 3, LikedAt = DateTime.Parse("2024-01-10"), ReactionType = "smiling" },
+                    new Like { UserId = 1, PostId = 1, LikedAt = DateTime.Parse("2024-01-11"), ReactionType = "smiling" }
+                };
+                context.Likes.AddRange(likeData);
+                context.SaveChanges();
+            }
         }
     }
 }

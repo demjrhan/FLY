@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using backend.Context;
 using backend.DTOs;
+using backend.Exceptions;
 using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -15,236 +16,250 @@ public class SocialMediaController : ControllerBase
 {
     private readonly MasterContext _context;
     private readonly UserService _userService;
+    private readonly PostService _postService;
 
-    public SocialMediaController(MasterContext context, UserService userService)
+    public SocialMediaController(MasterContext context, UserService userService, PostService postService)
     {
         _userService = userService;
         _context = context;
+        _postService = postService;
     }
 
     
-    [HttpGet("/api/getAllPostsAdmin")]
+    [HttpGet("/api/GetAllPostsAdmin")]
     public async Task<IActionResult> GetAllPostsAdminAsync()
     {
-        var posts = await _context.Posts
-            .Include(p => p.User)
-            .Select(post => new GetPostDTO
-            {
-                Id = post.Id,
-                Owner = new UserDTO
-                {
-                    Id = post.User.Id,
-                    Name = post.User.Name,
-                    Surname = post.User.Surname,
-                    Nickname = post.User.Nickname,
-                    Email = post.User.Email,
-                    Password = post.User.Password,
-                    isBanned = post.User.isBanned
-                },
-                ImageUrl = post.ImageUrl,
-                Description = post.Description,
-                Likes = post.Likes.Count
-            })
-            .ToListAsync();
-
-        return Ok(posts);
+        try
+        {
+            var posts = await _postService.GetAllPostsAdminAsync();
+            return Ok(posts);
+        }
+        catch (NoExistingPostException ex)
+        {
+            return BadRequest(new { message = ex.Message, posts = new List<GetPostDTO>() });
+        }
     }
     [HttpGet("/api/GetAllPostsGuest")]
     public async Task<IActionResult> GetAllPostsGuestAsync()
     {
-        var posts = await _context.Posts
-            .Include(p => p.User)
-            .Select(post => new GetPostDTO
-            {
-                Id = post.Id,
-                Owner = new UserDTO
-                {
-                    Id = post.User.Id,
-                    Name = post.User.Name,
-                    Surname = post.User.Surname,
-                    Nickname = post.User.Nickname,
-                    Email = "",
-                    Password = "",
-                    isBanned = post.User.isBanned
-                    
-                },
-                ImageUrl = post.ImageUrl,
-                Description = post.Description,
-                Likes = post.Likes.Count
-            })
-            .ToListAsync();
-
-        return Ok(posts);
+        try
+        {
+            var posts = await _postService.GetAllPostsAsync();
+            return Ok(posts);
+        }
+        catch (NoExistingPostException ex)
+        {
+            return BadRequest(new { message = ex.Message, posts = new List<GetPostDTO>() });
+        }
     }
     [HttpGet("/api/GetAllPostsUser")]
     public async Task<IActionResult> GetAllPostsUserAsync()
     {
-        var posts = await _context.Posts
-            .Include(p => p.User)
-            .Select(post => new GetPostDTO
-            {
-                Id = post.Id,
-                Owner = new UserDTO
-                {
-                    Id = post.User.Id,
-                    Name = post.User.Name,
-                    Surname = post.User.Surname,
-                    Nickname = post.User.Nickname,
-                    Email = "",
-                    Password = "",
-                    isBanned = post.User.isBanned
-                    
-                },
-                ImageUrl = post.ImageUrl,
-                Description = post.Description,
-                Likes = post.Likes.Count
-            })
-            .ToListAsync();
-
-        return Ok(posts);
+        try
+        {
+            var posts = await _postService.GetAllPostsAsync();
+            return Ok(posts);
+        }
+        catch (NoExistingPostException ex)
+        {
+            return BadRequest(new { message = ex.Message});
+        }
     }
-    [HttpGet("/api/getAllUsersAdmin")]
+    [HttpGet("/api/GetAllUsersAdmin")]
     public async Task<IActionResult> GetAllUsersAdmin()
     {
-        var users = await _context.Users.Select(user => new UserDTO
+        try
         {
-            Id = user.Id,
-            Email = user.Email,
-            Name = user.Name,
-            Surname = user.Surname,
-            Nickname = user.Nickname,
-            Password = user.Password,
-            isBanned = user.isBanned
-        }).ToListAsync();
-
-        return Ok(users);
-    }
-
-    [HttpGet("/api/getPostByPostIdAdmin/{postId}")]
-    public async Task<IActionResult> GetPostByPostIdAdmin(int postId)
-    {
-        var posts = await _context.Posts
-            .Include(p => p.User)
-            .Select(post => new GetPostDTO
-            {
-                Id = post.Id,
-                Owner = new UserDTO
-                {
-                    Id = post.User.Id,
-                    Name = post.User.Name,
-                    Surname = post.User.Surname,
-                    Nickname = post.User.Nickname,
-                    Email = post.User.Email,
-                    Password = post.User.Password,
-                    isBanned =  post.User.isBanned
-                },
-                ImageUrl = post.ImageUrl,
-                Description = post.Description,
-                Likes = post.Likes.Count
-            })
-            .ToListAsync();
-
-        var post = posts.FirstOrDefault(p => p.Id == postId);
-
-        if (post == null)
-        {
-            return NotFound(new { message = "Post not found" });
+            var users = await _userService.GetAllUsersAdminAsync();
+            return Ok(users);
         }
-
-        return Ok(post);
-    }
-    
-    [HttpGet("/api/GetPostById/{postId}")]
-    public async Task<IActionResult> GetPostById(int postId)
-    {
-        var posts = await _context.Posts
-            .Include(p => p.User)
-            .Select(post => new GetPostDTO
-            {
-                Id = post.Id,
-                Owner = new UserDTO
-                {
-                    Id = post.User.Id,
-                    Name = post.User.Name,
-                    Surname = post.User.Surname,
-                    Nickname = post.User.Nickname,
-                    Email = "",
-                    Password = "",
-                    isBanned =  post.User.isBanned
-                },
-                ImageUrl = post.ImageUrl,
-                Description = post.Description,
-                Likes = post.Likes.Count
-            })
-            .ToListAsync();
-
-        var post = posts.FirstOrDefault(p => p.Id == postId);
-
-        if (post == null)
+        catch (NoExistingUserException ex)
         {
-            return NotFound(new { message = "Post not found" });
+            return BadRequest(new { message = ex.Message});
         }
-
-        return Ok(post);
     }
-
-
-    [HttpDelete("/api/DeletePostById/{postId}")]
-    public async Task<IActionResult> DeletePostByIdAsync(int postId)
-    {
-        var post = await _context.Posts.FindAsync(postId);
-
-        if (post == null)
-        {
-            return NotFound(new { message = "Post not found" });
-        }
-
-        _context.Posts.Remove(post);
-        await _context.SaveChangesAsync();
-
-        return Ok(new { message = "Post deleted successfully" });
-    }
-
-    [HttpPut("/api/EditPost/{postId}")]
-    public async Task<IActionResult> EditPostAsync(int postId, [FromBody] EditPostDTO editPostDto)
-    {
-        if (string.IsNullOrWhiteSpace(editPostDto.Description) || string.IsNullOrWhiteSpace(editPostDto.ImageUrl))
-        {
-            return BadRequest(new { message = "Description or ImageUrl cannot be empty." });
-        }
-
-        var post = await _context.Posts.FindAsync(postId);
-
-        if (post == null)
-        {
-            return NotFound(new { message = "Post not found" });
-        }
-
-        post.Description = editPostDto.Description;
-        post.ImageUrl = editPostDto.ImageUrl;
-        await _context.SaveChangesAsync();
-
-        return Ok(new { message = "Post updated successfully", post });
-    }
-
     [HttpPut("/api/WarnUser/{userId}")]
     public async Task<IActionResult> WarnUserAsync(int userId)
     {
-        var user = await _context.Users.FindAsync(userId);
-
-        if (user == null)
+        try
         {
-            return NotFound(new { message = "User not found" });
+            await _userService.WarnUserAsync(userId);
+            return Ok(new { message = "User warned successfully" });
         }
-
-        user.WarnCount += 1;
-        await _context.SaveChangesAsync();
-        if (user.WarnCount >= 3)
+        catch (UserNotFoundException ex)
         {
-            return await BanUser(user.Id, "Because user have 3 or more warns, user banned from system.");
-        } 
-        return Ok(new { message = "User warned successfully", user });
+            return BadRequest(new { message = ex.Message });
+        }
     }
+    [HttpDelete("/api/BanUser/{userId}")]
+    public async Task<IActionResult> BanUser(int userId)
+    {
+        
+        try
+        {
+            string message = "Because user have 3 or more warns, user banned from system.";
+            await _userService.BanUserAsync(userId, message);
+            return Ok(new { message});
+        }
+        catch (UserNotFoundException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        
+    }
+    [HttpGet("/api/isAdmin/{userId}")]
+    public async Task<IActionResult> IsAdmin(int userId)
+    {
+        try
+        {
+            var result = await _userService.IsAdminAsync(userId);
+            return Ok(result);
+        }
+        catch (UserNotFoundException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        
+    }
+    
+    [HttpPost("/api/RegisterUser")]
+    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDTO registerUser)
+    {
+        var validationErrors = await _userService.RegisterUserAsync(registerUser);
+
+        if (validationErrors.Count > 0)
+        {
+            return BadRequest(new { Message = "Validation failed", Errors = validationErrors });
+        }
+        
+
+        return Ok(new { Message = "User registered successfully"});
+    }
+
+    [HttpPost("/api/LoginUser")]
+    public async Task<IActionResult> LoginUser([FromBody] LoginUserDTO loginUserDto)
+    {
+        try
+        {
+            var user = await _userService.LoginUser(loginUserDto);
+            return Ok(user);
+        }
+        catch (LoginDetailsWrongException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        
+    }
+
+
+    // [HttpGet("/api/GetPostByIdAdmin/{postId}")]
+    // public async Task<IActionResult> GetPostByIdAdmin(int postId)
+    // {
+    //     var posts = await _context.Posts
+    //         .Include(p => p.User)
+    //         .Select(post => new GetPostDTO
+    //         {
+    //             Id = post.Id,
+    //             Owner = new UserDTO
+    //             {
+    //                 Id = post.User.Id,
+    //                 Name = post.User.Name,
+    //                 Surname = post.User.Surname,
+    //                 Nickname = post.User.Nickname,
+    //                 Email = post.User.Email,
+    //                 Password = post.User.Password,
+    //                 isBanned =  post.User.isBanned
+    //             },
+    //             ImageUrl = post.ImageUrl,
+    //             Description = post.Description,
+    //             Likes = post.Likes.Count
+    //         })
+    //         .ToListAsync();
+    //
+    //     var post = posts.FirstOrDefault(p => p.Id == postId);
+    //
+    //     if (post == null)
+    //     {
+    //         return NotFound(new { message = "Post not found" });
+    //     }
+    //
+    //     return Ok(post);
+    // }
+    //
+    // [HttpGet("/api/GetPostById/{postId}")]
+    // public async Task<IActionResult> GetPostById(int postId)
+    // {
+    //     var posts = await _context.Posts
+    //         .Include(p => p.User)
+    //         .Select(post => new GetPostDTO
+    //         {
+    //             Id = post.Id,
+    //             Owner = new UserDTO
+    //             {
+    //                 Id = post.User.Id,
+    //                 Name = post.User.Name,
+    //                 Surname = post.User.Surname,
+    //                 Nickname = post.User.Nickname,
+    //                 Email = "",
+    //                 Password = "",
+    //                 isBanned =  post.User.isBanned
+    //             },
+    //             ImageUrl = post.ImageUrl,
+    //             Description = post.Description,
+    //             Likes = post.Likes.Count
+    //         })
+    //         .ToListAsync();
+    //
+    //     var post = posts.FirstOrDefault(p => p.Id == postId);
+    //
+    //     if (post == null)
+    //     {
+    //         return NotFound(new { message = "Post not found" });
+    //     }
+    //
+    //     return Ok(post);
+    // }
+    //
+    //
+    // [HttpDelete("/api/DeletePostById/{postId}")]
+    // public async Task<IActionResult> DeletePostByIdAsync(int postId)
+    // {
+    //     var post = await _context.Posts.FindAsync(postId);
+    //
+    //     if (post == null)
+    //     {
+    //         return NotFound(new { message = "Post not found" });
+    //     }
+    //
+    //     _context.Posts.Remove(post);
+    //     await _context.SaveChangesAsync();
+    //
+    //     return Ok(new { message = "Post deleted successfully" });
+    // }
+    //
+    // [HttpPut("/api/EditPost/{postId}")]
+    // public async Task<IActionResult> EditPostAsync(int postId, [FromBody] EditPostDTO editPostDto)
+    // {
+    //     if (string.IsNullOrWhiteSpace(editPostDto.Description) || string.IsNullOrWhiteSpace(editPostDto.ImageUrl))
+    //     {
+    //         return BadRequest(new { message = "Description or ImageUrl cannot be empty." });
+    //     }
+    //
+    //     var post = await _context.Posts.FindAsync(postId);
+    //
+    //     if (post == null)
+    //     {
+    //         return NotFound(new { message = "Post not found" });
+    //     }
+    //
+    //     post.Description = editPostDto.Description;
+    //     post.ImageUrl = editPostDto.ImageUrl;
+    //     await _context.SaveChangesAsync();
+    //
+    //     return Ok(new { message = "Post updated successfully", post });
+    // }
+
+   
 
     [HttpGet("/api/GetLikeDetails/{postId}")]
     public async Task<IActionResult> GetLikeDetails(int postId)
@@ -269,17 +284,7 @@ public class SocialMediaController : ControllerBase
 
         return Ok(likeDataList);
     }
-    [HttpGet("/api/isAdmin/{userId}")]
-    public async Task<IActionResult> IsAdmin(int userId)
-    {
-        var user = await _context.Users.FindAsync(userId);
-
-        if (user == null)
-        {
-            return NotFound(new { message = "User not found" });
-        }
-
-        return Ok(user.isAdmin);    }
+    
     [HttpPut("/api/LikePost/{userId}/{postId}/{reactionType}")]
     public async Task<IActionResult> LikePost([FromBody] LikePostDTO likePostDto)
     {
@@ -319,102 +324,7 @@ public class SocialMediaController : ControllerBase
     }
 
 
-    [HttpPost("/api/RegisterUser")]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDTO registerUser)
-    {
-        var validationErrors = await _userService.ValidateRegisterUser(registerUser);
-
-        if (validationErrors.Count > 0)
-        {
-            return BadRequest(new { Message = "Validation failed", Errors = validationErrors });
-        }
-
-        var user = new User
-        {
-            Name = registerUser.Name,
-            Surname = registerUser.Surname,
-            Nickname = registerUser.Nickname,
-            BirthDate = registerUser.BirthDate,
-            Email = registerUser.Email,
-            Password = registerUser.Password,
-            CreatedAt = DateTime.UtcNow,
-            WarnCount = 0,
-            isBanned = false,
-            isAdmin = false,
-            Posts = new List<Post>(),
-            Likes = new List<Like>()
-        };
-
-        await _context.Users.AddAsync(user);
-        await _context.SaveChangesAsync();
-
-        return Ok(new { Message = "User registered successfully", User = registerUser });
-    }
-
-    [HttpPost("/api/LoginUser")]
-    public async Task<IActionResult> LoginUser([FromBody] LoginUserDTO loginUserDto)
-    {
-        var user = await _context.Users.Where(user => user.Nickname == loginUserDto.Nickname && user.Password == loginUserDto.Password)
-            .FirstOrDefaultAsync();
-        
-        
-        if (user == null)
-        {
-            return BadRequest(new { Message = "Either nickname or password is wrong." });
-        }
-        
-        return Ok(new UserDTO{
-            Id = user.Id,
-            Nickname = user.Nickname,
-            Name = user.Name,
-            Surname = user.Surname,
-            Email = user.Email,
-            Password = user.Password,
-            isBanned =  user.isBanned
-        });
-        
-    }
     
-    [HttpDelete("/api/BanUser/{userId}")]
-    public async Task<IActionResult> BanUser(int userId, string? message)
-    {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-        if (user == null)
-        {
-            return BadRequest(new { message = "User is not found in the system." });
-        }
-
-        var posts = await _context.Posts
-            .Where(p => p.UserId == userId)
-            .Include(p => p.Likes)
-            .ToListAsync();
-
-        var likesToDelete = posts.SelectMany(p => p.Likes).ToList();
-        _context.Likes.RemoveRange(likesToDelete);
-        _context.Posts.RemoveRange(posts);
-        await _context.SaveChangesAsync();
-        var banPost = new Post
-        {
-            CreatedAt = DateTime.Now,
-            Description = "Because of various reasons, this user is banned.",
-            ImageUrl = "/images/photos/banned.jpg",
-            UserId = user.Id,
-            Likes = new List<Like>(),
-            User = user
-        };
-        await _context.Posts.AddAsync(banPost);
-
-        user.isBanned = true;
-
-        
-            await _context.SaveChangesAsync();
-            return Ok(new
-            {
-                message = message ?? "User banned and all related data deleted successfully."
-            });
-        
-    }
-
 
     [HttpDelete("/api/DeleteUsersAllPosts/{userId}")]
     public async Task<IActionResult> DeleteUsersAllPosts(int userId)

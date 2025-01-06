@@ -1,5 +1,8 @@
 ﻿using backend.Context;
-using Microsoft.AspNetCore.Mvc;
+using backend.DTOs;
+using backend.Exceptions;
+using backend.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repositories;
@@ -15,21 +18,119 @@ public class UserRepository
 
     public async Task<List<string>> GetAllNicknames()
     {
-        var usernames = await _context.Users
+        return await _context.Users
             .Select(user => user.Nickname)
             .ToListAsync();
-        return usernames;
     }
 
-    public async Task<bool> CheckIfNicknameExists(string nickname)
+    public async Task<bool> CheckIfNicknameExistsAsync(string nickname)
     {
-        var result = await _context.Users.AnyAsync(user => user.Nickname == nickname);
-        return result;
+        return await _context.Users.AnyAsync(user => user.Nickname == nickname);
+    }
+
+    public async Task<bool> CheckIfEmailExistsAsync(string email)
+    {
+        return await _context.Users.AnyAsync(user => user.Email == email);
+    }
+
+    public async Task<User?> GetUserByIdAsync(int userId)
+    {
+        return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+    }
+
+    public async Task WarnUserAsync(User user)
+    {
+        user.WarnCount += 1;
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task BanUserAsync(User user, string message)
+    {
+        
+        var banPost = new Post
+        {
+            CreatedAt = DateTime.Now,
+            Description = message,
+            ImageUrl = "/images/photos/banned.jpg",
+            UserId = user.Id,
+            Likes = new List<Like>(),
+            User = user
+        };
+        await _context.Posts.AddAsync(banPost);
+        user.isBanned = true;
+        await _context.SaveChangesAsync();
+        
+    }
+
+    public async Task DeleteAllUserPostsAndLikesAsync(int userId)
+    {
+        var posts = await _context.Posts
+            .Where(p => p.UserId == userId)
+            .Include(p => p.Likes)
+            .ToListAsync();
+
+        var likesToDelete = posts.SelectMany(p => p.Likes).ToList();
+        _context.Likes.RemoveRange(likesToDelete);
+        _context.Posts.RemoveRange(posts);
+        await _context.SaveChangesAsync();
+    }
+    public async Task<List<UserDTO>> GetAllUsersAdminAsync()
+    {
+        return await _context.Users.Select(user => new UserDTO
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Name = user.Name,
+            Surname = user.Surname,
+            Nickname = user.Nickname,
+            Password = user.Password,
+            isBanned = user.isBanned
+        }).ToListAsync();
+    }
+    public bool IsAdmin(User user)
+    {
+        return user.isAdmin;
+    }
+    public async Task RegisterUserAsync(RegisterUserDTO registerUser)
+    {
+        var user = new User
+        {
+            Name = registerUser.Name,
+            Surname = registerUser.Surname,
+            Nickname = registerUser.Nickname,
+            BirthDate = registerUser.BirthDate,
+            Email = registerUser.Email,
+            Password = registerUser.Password,
+            CreatedAt = DateTime.UtcNow,
+            WarnCount = 0,
+            isBanned = false,
+            isAdmin = false,
+            Posts = new List<Post>(),
+            Likes = new List<Like>()
+        };
+
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
     }
     
-    public async Task<bool> CheckIfEmailExists(string email)
+    public UserDTO LogInUserDetails(User user)
     {
-        var result = await _context.Users.AnyAsync(user => user.Email == email);
-        return result;
+        return new UserDTO{
+            Id = user.Id,
+            Nickname = user.Nickname,
+            Name = user.Name,
+            Surname = user.Surname,
+            Email = user.Email,
+            Password = user.Password,
+            isBanned =  user.isBanned
+        };
+        
     }
+
+    public async Task<User?> CheckUserExists(LoginUserDTO loginUserDto)
+    {
+        return await _context.Users.Where(user => user.Nickname == loginUserDto.Nickname && user.Password == loginUserDto.Password)
+            .FirstOrDefaultAsync();
+    }
+    
 }

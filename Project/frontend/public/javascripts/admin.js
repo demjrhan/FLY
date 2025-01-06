@@ -338,7 +338,7 @@ async function renderWarnPanelAdmin(post) {
 
 async function fetchPostsAdmin() {
     try {
-        const response = await fetch('http://localhost:5000/api/getAllPostsAdmin');
+        const response = await fetch('http://localhost:5000/api/GetAllPostsAdmin');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -369,7 +369,7 @@ async function fetchUserPostsAdmin(userId) {
 
 async function fetchPostByPostIdAdmin(postId) {
     try {
-        const response = await fetch(`http://localhost:5000/api/getPostByPostIdAdmin/${postId}`);
+        const response = await fetch(`http://localhost:5000/api/GetPostByIdAdmin/${postId}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

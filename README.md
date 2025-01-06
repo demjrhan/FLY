@@ -26,6 +26,7 @@ Configurations: `Data/UserConfiguration.cs`, `Data/PostConfiguration.cs`, `Data/
 
 ## Navigate to the backend directory  
 cd TIN_PRO/Project/backend  
+mkdir Migrations
 dotnet restore  
 dotnet build  
 dotnet ef migrations add InitialCreate  

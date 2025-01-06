@@ -262,8 +262,9 @@ async function renderBanPanelAdmin(posts) {
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
       <div class="post-description">
-        <span class="description"><span class="tag">@${post.owner.nickname}</span> ${post.description}</span>
-      </div>
+            <span class="tag" onclick="viewUserProfileAdmin(${post.owner.id})">@${post.owner.nickname}</span>
+            <span class="description" > ${post.description}</span>
+        </div>
       <div class="post-actions">
         <div class="likes">
         <span class="like-count" onclick="seeLikeDetails(event)">${post.likes} likes</span>
@@ -320,8 +321,9 @@ async function renderWarnPanelAdmin(post) {
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
       <div class="post-description">
-        <span class="description"><span class="tag">@${post.owner.nickname}</span> ${post.description}</span>
-    </div>
+            <span class="tag" onclick="viewUserProfileAdmin(${post.owner.id})">@${post.owner.nickname}</span>
+            <span class="description" > ${post.description}</span>
+        </div>
       <div class="post-actions">
         <div class="likes">
         <span class="like-count" onclick="seeLikeDetails(event)">${post.likes} likes</span>
@@ -395,8 +397,9 @@ function deletePostPage(post) {
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
       <div class="post-description">
-        <span class="description"><span class="tag">@${post.owner.nickname}</span> ${post.description}</span>
-    </div>
+            <span class="tag" onclick="viewUserProfileAdmin(${post.owner.id})">@${post.owner.nickname}</span>
+            <span class="description" > ${post.description}</span>
+        </div>
       <div class="post-actions">
         <span class="likes">${post.likes} likes</span>
       </div>
@@ -627,7 +630,7 @@ async function renderUserProfile(posts, loggedInUserId) {
         </div>
         <div class="post-description">
             <span class="tag" onclick="viewUserProfileAdmin(${post.owner.id})">@${post.owner.nickname}</span>
-            <span class="description"> ${post.description}</span>
+            <span class="description" > ${post.description}</span>
         </div>
         <div class="post-actions">
             <div class="likes">
@@ -711,8 +714,9 @@ function editPostPage(post) {
       </div>
       <div class="post-edit-description">
         <span class="description">
-          <span class="post-edit-tag">@${post.owner.nickname}</span>
+          <span class="post-edit-tag" onclick="viewUserProfileAdmin(${post.owner.id})">@${post.owner.nickname}</span>
         </span>
+        
         <textarea class="post-edit-description" rows="2">${post.description}</textarea>
       </div>
     `;

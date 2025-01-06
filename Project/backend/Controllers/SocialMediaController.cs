@@ -80,7 +80,7 @@ public class SocialMediaController : ControllerBase
         }
         catch (NoExistingUserException ex)
         {
-            return Ok(new { message = ex.Message, posts = new List<UserDTO>()});
+            return Ok(new { message = ex.Message, users = new List<UserDTO>()});
         }
     }
 
@@ -210,7 +210,7 @@ public class SocialMediaController : ControllerBase
         }
         catch (PostNotFoundException ex)
         {
-            return BadRequest(new { message = ex.Message });
+            return BadRequest(new { message = ex.Message , posts = new List<GetPostDTO>()});
         }
     }
 
@@ -249,7 +249,7 @@ public class SocialMediaController : ControllerBase
         }
         catch (UserDoesntHaveAnyPostException ex)
         {
-            return Ok(new { message = ex.Message, posts = new List<GetPostDTO>() });
+            return Ok(new { message = ex.Message, posts = new List<GetPostDTO>()});
         }
     }
 

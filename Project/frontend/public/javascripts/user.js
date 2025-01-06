@@ -325,7 +325,8 @@ async function renderUserProfile(posts,loggedInUserId) {
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
       <div class="post-description">
-        <span class="tag">@${post.owner.nickname}</span><span class="description"> ${post.description}</span>
+        <span class="tag" onclick="viewUserProfile(${post.owner.id})">@${post.owner.nickname}</span>
+        <span class="description"> ${post.description}</span>
       </div>
 
     `;
@@ -453,8 +454,9 @@ function deletePostPage(post) {
         <img src="${post.imageUrl}" alt="Post Image">
       </div>
       <div class="post-description">
-        <span class="description"><span class="tag">@${post.owner.nickname}</span> ${post.description}</span>
-    </div>
+        <span class="tag" onclick="viewUserProfile(${post.owner.id})">@${post.owner.nickname}</span>
+        <span class="description"> ${post.description}</span>
+      </div>
       <div class="post-actions">
         <span class="likes">${post.likes} likes</span>
       </div>
@@ -508,7 +510,7 @@ function editPostPage(post) {
       </div>
       <div class="post-edit-description">
         <span class="description">
-          <span class="post-edit-tag">@${post.owner.nickname}</span>
+          <span class="post-edit-tag" onclick="viewUserProfile(${post.owner.id})">@${post.owner.nickname}</span>
         </span>
         <textarea class="post-edit-description" rows="2">${post.description}</textarea>
       </div>

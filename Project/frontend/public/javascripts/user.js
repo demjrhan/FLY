@@ -76,7 +76,8 @@ async function loginUserToServer(event) {
 
         await mainPageLoggedIn(result.result.id);
     } else {
-        await mainPage()
+        console.log("Login failed. Errors are displayed.");
+
     }
 
 }

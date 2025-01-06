@@ -1,0 +1,9 @@
+In this application gpt is used on the parts:
+- Create animation for reaction on posts.
+- Populating database with data.
+- Front end css for better visualization.
+- Understanding concept of ejs file, window.history.back was a good find from gpt.
+- Checking on routes and fixing typo. ( This was a big issue, because of one big letter I was not able to go correct route )
+- General idea and how we progress in development phase.
+- Debugging and error solution.
+- Documentation for GitHub repository, texts in application.

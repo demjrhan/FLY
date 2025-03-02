@@ -2,7 +2,7 @@
 TIN Winter Semester 2024
 
 <p align="center">
-    <img src="https://github.com/demjrhan/TIN_PRO/blob/main/TIN_PROJECT.png" alt="TIN PROJECT VERTABELO GIF" width="500"/>
+    <img src="https://github.com/demjrhan/TIN_PRO/blob/main/TIN_PROJECT.png" alt="TIN PROJECT VERTABELO PNG" width="500"/>
 </p>
 
 ## 🔑 Authentication Details

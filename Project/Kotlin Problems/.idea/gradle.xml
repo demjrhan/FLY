@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="delegatedBuild" value="false" />
+        <option name="distributionType" value="WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Topics/Constants and val variables/Calculating the cube of a user-specified integer" />
+            <option value="$PROJECT_DIR$/Topics/Constants and val variables/Creating and printing a double value of an integer input" />
+            <option value="$PROJECT_DIR$/Topics/Constants and val variables/Theory" />
+            <option value="$PROJECT_DIR$/Topics/Constants and val variables/What is the result" />
+            <option value="$PROJECT_DIR$/Topics/Constants and val variables/Why does the code work" />
+            <option value="$PROJECT_DIR$/Topics/Constants and val variables/Zero, one, or more" />
+            <option value="$PROJECT_DIR$/Topics/Data types/How to declare a type" />
+            <option value="$PROJECT_DIR$/Topics/Data types/Legitimate literals" />
+            <option value="$PROJECT_DIR$/Topics/Data types/Theory" />
+            <option value="$PROJECT_DIR$/Topics/Data types/Think as a compiler" />
+            <option value="$PROJECT_DIR$/Topics/Data types/What is type inference" />
+            <option value="$PROJECT_DIR$/Topics/Introduction to Kotlin/And what for" />
+            <option value="$PROJECT_DIR$/Topics/Introduction to Kotlin/Displaying a greeting message in Kotlin" />
+            <option value="$PROJECT_DIR$/Topics/Introduction to Kotlin/Hello, Kotlin" />
+            <option value="$PROJECT_DIR$/Topics/Introduction to Kotlin/Interoperability with Java" />
+            <option value="$PROJECT_DIR$/Topics/Introduction to Kotlin/The purpose of Kotlin" />
+            <option value="$PROJECT_DIR$/Topics/Introduction to Kotlin/Theory" />
+            <option value="$PROJECT_DIR$/Topics/Values and variables/Assigning variables in an educational app" />
+            <option value="$PROJECT_DIR$/Topics/Values and variables/Correct description about variables" />
+            <option value="$PROJECT_DIR$/Topics/Values and variables/Declarations" />
+            <option value="$PROJECT_DIR$/Topics/Values and variables/Fix the program" />
+            <option value="$PROJECT_DIR$/Topics/Values and variables/The assignment operator" />
+            <option value="$PROJECT_DIR$/Topics/Values and variables/The name of a variable" />
+            <option value="$PROJECT_DIR$/Topics/Values and variables/Theory" />
+            <option value="$PROJECT_DIR$/Topics/Values and variables/What can you say about variables in Kotlin" />
+            <option value="$PROJECT_DIR$/Topics/Writing first program/Application" />
+            <option value="$PROJECT_DIR$/Topics/Writing first program/Elements of a program" />
+            <option value="$PROJECT_DIR$/Topics/Writing first program/Identifier" />
+            <option value="$PROJECT_DIR$/Topics/Writing first program/The eternal truth" />
+            <option value="$PROJECT_DIR$/Topics/Writing first program/Theory" />
+            <option value="$PROJECT_DIR$/Topics/Writing first program/Your name" />
+            <option value="$PROJECT_DIR$/util" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

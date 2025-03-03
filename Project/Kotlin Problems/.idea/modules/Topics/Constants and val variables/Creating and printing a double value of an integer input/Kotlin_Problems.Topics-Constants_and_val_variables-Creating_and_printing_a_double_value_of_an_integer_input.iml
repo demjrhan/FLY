@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id=":Topics-Constants_and_val_variables-Creating_and_printing_a_double_value_of_an_integer_input" external.linked.project.path="$MODULE_DIR$/../../../../../Topics/Constants and val variables/Creating and printing a double value of an integer input" external.root.project.path="$MODULE_DIR$/../../../../.." external.system.id="GRADLE" external.system.module.group="Kotlin Problems" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../../../Topics/Constants and val variables/Creating and printing a double value of an integer input">
+      <excludeFolder url="file://$MODULE_DIR$/../../../../../Topics/Constants and val variables/Creating and printing a double value of an integer input/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../../../Topics/Constants and val variables/Creating and printing a double value of an integer input/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../../../Topics/Constants and val variables/Creating and printing a double value of an integer input/out" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

@@ -1,0 +1,16 @@
+type: choice
+is_multiple_choice: true
+options:
+  - text: A variable has a name (an identifier)
+  - text: The value of a variable declared with the keyword <b>var</b> can be changed
+      only once
+  - text: The name of a variable can be changed
+  - text: A variable can store a value
+files:
+  - name: src/Main.kt
+    visible: true
+    learner_created: false
+feedback_link: https://hyperskill.org/learn/step/4387#comment
+status: Solved
+record: -1
+local_check: false

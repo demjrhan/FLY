@@ -1,0 +1,89 @@
+<div class="step-text">
+<p>Sometimes, you need to use a variable that should not be modified during the program execution. Such variables are known as <strong>constants</strong>, or <strong><a class="theory-lookup not-relevant" href="/learn/step/17408" rel="noopener noreferrer nofollow" target="_blank" title="In Kotlin, a `val` variable is a read-only property or a constant variable, which cannot be changed after it has been initialized. | It is used for variables that are known at compile-time, and the name of a variable declared with `val` cannot start with a digit and should be meaningful and readable to make the code easy to understand. The `val` keyword indicates that the property is immutable and can only be assigned a value once during initialization, which helps ensure the integrity of the data and prevent unintended modification.">val variables</a></strong> in Kotlin, where they are declared with the <code class="language-kotlin">val</code> <a class="theory-lookup not-relevant" href="/learn/step/17408" rel="noopener noreferrer nofollow" target="_blank" title="In Kotlin, a keyword is a word that has a special meaning in the language and cannot be changed by the programmer. | It is used to define the structure and behavior of the code. Examples of keywords in Kotlin include `fun` (used to define a function), `var` (used to define a variable), and `if` (used to define a conditional statement). Keywords are reserved words in Kotlin and cannot be used as identifiers.">keyword</a>. The difference between a <code class="language-kotlin">var</code> variable and a <code class="language-kotlin">val</code> variable is that we cannot modify the value of a <code class="language-kotlin">val</code> variable once assigned.</p>
+<h5 id="val-variables">Val variables</h5>
+<p>The following code introduces two <code class="language-kotlin">val</code> variables: <code class="language-kotlin">pi</code>, which represents a well-known mathematical constant, and <code class="language-kotlin">helloMsg</code>, which represents a string text.</p>
+<pre><code class="language-kotlin">val pi = 3.1415
+val helloMsg = "Hello"
+
+println(pi)       // 3.1415
+println(helloMsg) // Hello</code></pre>
+<p>Both variables cannot be modified, but they can be accessed as many times as we need.</p>
+<p>The compiler will produce an error if we try modifying the value of a <code class="language-kotlin">val</code> variable, so an attempt to compile the code below will result in an error: <code class="language-kotlin">Val cannot be reassigned</code>.</p>
+<pre><code class="language-kotlin">val pi = 3.1415
+pi = 3.1416 // error line</code></pre>
+<p>If a <code class="language-kotlin">val</code> variable is used before it is assigned a value, the compiler will also produce an error:</p>
+<pre><code class="language-kotlin">val boolFalse: Boolean
+println(boolFalse) // error line</code></pre>
+<p>With the code above, you will get the error <code class="language-kotlin">Variable 'boolFalse' must be initialized</code>. To fix it, assign a value before accessing the variable:</p>
+<pre><code class="language-kotlin">val boolFalse: Boolean // not initialized
+boolFalse = false      // initialized
+println(boolFalse)     // no errors here</code></pre>
+<p>Notice that the value of a <code class="language-kotlin">val</code> variable can be reassigned to a <code class="language-kotlin">var</code> variable without any restrictions and the value of a regular variable can be changed as many times as needed:</p>
+<pre><code class="language-kotlin">val count = 10
+var cnt = count
+cnt = 20 // no errors here, cnt is not a constant</code></pre>
+<h5 id="val-variables-and-mutability">Val variables and mutability</h5>
+<p>It is important to note that <code class="language-kotlin">val</code> is not a synonym of <a class="theory-lookup not-relevant" href="/learn/step/17408" rel="noopener noreferrer nofollow" target="_blank" title="In Kotlin, an immutable is a type of object or variable that, once initialized, cannot be changed. | This helps ensure the integrity of data and prevents unintended modifications. For example, a list of pages in a book may be an immutable collection, where the content cannot be altered over time. In contrast, a mutable collection allows for changes to be made, such as adding, removing, or updating stored items. Immutable variables, declared using the `val` keyword, are particularly useful for exposing internal state in a safe and controlled manner, as they cannot be modified by external code.">immutable</a>. In the following example, we will use a MutableList, which is an ordered set of elements of the same type. If you want to get ahead and learn more about MutableList, you can learn a <a href="https://hyperskill.org/learn/topic/1041" rel="noopener noreferrer nofollow" target="_blank">topic about MutableList</a>, but it is not a necessity right now.</p>
+<pre><code class="language-kotlin">// list creation
+val myMutableList = mutableListOf(1, 2, 3, 4, 5)
+// trying to update the list
+myMutableList = mutableListOf(1, 2, 3, 4, 5, 6) // error line</code></pre>
+<p>The second line won't compile, since we are trying to reassign a <code class="language-kotlin">val</code> variable. However, there is one essential point to remember.</p>
+<p></p>
+<p></p>
+<div class="alert alert-warning"><p>It is always possible to change the internal state of a <code class="language-kotlin">val</code> variable: while it is prohibited to reassign the variable, its content can be modified in some other ways.</p></div>
+<p></p>
+<p>So, the following code is correct:</p>
+<pre><code class="language-kotlin">// list creation
+val myMutableList = mutableListOf(1, 2, 3, 4, 5)
+// adding a new element
+myMutableList.add(6)   // it works
+// printing the list
+println(myMutableList) // [1, 2, 3, 4, 5, 6]</code></pre>
+<p>As you can see, this code changed the internal state of the <code class="language-kotlin">myMutableList</code> by adding another integer number. When we invoked the <code class="language-kotlin">add()</code> function, we changed not the variable itself but the list it represents.</p>
+<p></p>
+<p></p>
+<div class="alert alert-warning"><p>If you are familiar with the Java programming language, it may be easier for you to think about Kotlin <code class="language-kotlin">val</code> variables as Java <code class="language-kotlin">final</code> variables. They are quite similar: both prohibit reassigning a value to the variable but allow changing the internal state of the object.</p></div>
+<p></p>
+<h5 id="const-variables">Const variables</h5>
+<p>In Kotlin, there is also a <code class="language-kotlin">const</code> modifier, which is used before the <code class="language-kotlin">val</code> keyword to declare a <a class="theory-lookup not-relevant" href="/learn/step/17408" rel="noopener noreferrer nofollow" target="_blank" title="In Kotlin, a compile-time constant is a read-only property that is known at compile time and its value cannot be changed during runtime. | To be considered a compile-time constant, it must be initialized with a value of a basic type, such as a number or a string, and it cannot be initialized with a custom getter. Compile-time constants should be named using screaming\_snake\_case and can be declared with the `const` keyword. Additionally, compile-time top-level constants can be declared with the `const val` modifier.">compile-time constant</a>. The value of a <code class="language-kotlin">const</code> variable is known at compile time and won't be changed at runtime:</p>
+<pre><code class="language-kotlin">const val MY_STRING = "This is a constant string"</code></pre>
+<p>The following code will give you an error, since the value is unknown before the program execution and it is not a constant:</p>
+<pre><code class="language-kotlin">const val MY_STRING = readln() // not a constant String!!!</code></pre>
+<p>There are some restrictions on when the <code class="language-kotlin">const</code> modifier can be applied. First, it can only be used with a <code class="language-kotlin">String</code> or a primitive type variable:</p>
+<pre><code class="language-kotlin">const val CONST_INT = 127
+const val CONST_DOUBLE = 3.14
+const val CONST_CHAR = 'c'
+const val CONST_STRING = "I am constant"
+const val CONST_ARRAY = arrayOf(1, 2, 3) // error: only primitives and strings are allowed</code></pre>
+<p>Besides, <code class="language-kotlin">const</code> variables need to be declared on top level, outside of any functions:</p>
+<pre><code class="language-kotlin">const val MY_INT_1 = 1024 // correct line
+
+fun main() {
+    const val MY_INT_2 = 2048 // error: Modifier 'const' is not applicable to 'local variable'
+}</code></pre>
+<h5 id="when-to-use-val-variables">When to use val variables</h5>
+<p>We hope you now understand how the <code class="language-kotlin">val</code> keyword works for variables. It's about time to figure out when to use it.</p>
+<p>A good practice is to use <code class="language-kotlin">val</code> variables by default. Then, when it appears to be necessary for the code, change them to <code class="language-kotlin">var</code> variables:</p>
+<pre><code class="language-kotlin">var a = 1024
+val b = 256
+val c = 128
+a += b * c</code></pre>
+<p>This approach allows you to write programs with the minimum number of <a class="theory-lookup not-relevant" href="/learn/step/17408" rel="noopener noreferrer nofollow" target="_blank" title="In Kotlin, a mutable variable is a variable that can be changed or modified after it has been declared and initialized. | It is declared using the `var` keyword, which allows for reassignment of a new value to the variable. This is in contrast to an immutable variable, which is declared using the `val` keyword and cannot be changed once it has been initialized. It is important to note that mutable does not mean the same as immutable. For example, the content of a mutable variable can be changed many times if needed, but it is not possible to reassign the variable itself. However, it is always possible to change the internal state of a mutable variable.">mutable variables</a>, which leads to fewer errors.</p>
+<h5 id="naming-conventions">Naming conventions</h5>
+<p>When declaring <code class="language-kotlin">val</code> and <code class="language-kotlin">const</code> variables in Kotlin, it's the best practice to follow Kotlin's naming conventions to ensure your code is easily readable and maintainable.</p>
+<p>For <code class="language-kotlin">val</code> variables use the <strong><a class="theory-lookup not-relevant" href="/learn/step/17408" rel="noopener noreferrer nofollow" target="_blank" title="In Kotlin, camelcase is a naming convention for variables and functions. | It starts with a lowercase letter and capitalizes the first letter of each subsequent word. For example, a camelcase variable could be named firstVariable or myFunction. This naming convention makes the code easier to read and maintain. It is a best practice to follow Kotlin's naming conventions when declaring variables and functions in Kotlin.">camelCase</a></strong> format. Start with a lowercase letter and capitalize the first letter of each subsequent word. Here are some examples:</p>
+<pre><code class="language-kotlin">val numberOfWheels: Int
+
+val isConnectionAvailable: Boolean
+
+val userFirstName: String</code></pre>
+<p><code class="language-kotlin">const</code> variables are compile-time constants. Since they represent static, unchangeable values, their names should be in uppercase letters, with underscores separating words. This convention makes them easily distinguishable as constants within the code. Here's how you should name <a class="theory-lookup not-relevant" href="/learn/step/17408" rel="noopener noreferrer nofollow" target="_blank" title="In Kotlin, a const variable is a read-only variable whose value is known at compile time. | It is declared with the `const` keyword and must be initialized with a value of a basic type or a type alias for a basic type. Const variables cannot be custom getters or have their value reassigned after initialization. Naming convention for const variables is screaming snake case. Constants are useful when you have a read-only property that belongs to an object and will never change.">const variables</a>:</p>
+<pre><code class="language-kotlin">const val MAX_USER_COUNT = 50
+
+const val COMPANY_NAME = "TechCorp"
+
+const val VERSION_CODE = 3</code></pre>
+<h5 id="conclusion">Conclusion</h5>
+<ul><li><p>In Kotlin, constant variables are declared with the <code class="language-kotlin">val</code> keyword.</p></li><li><p>You can treat <code class="language-kotlin">val</code> variables just as regular variables, except for value reassignment.</p></li><li><p>The <code class="language-kotlin">val</code> keyword forbids changing the variable value, but you can change the internal state of what the variable represents.</p></li><li><p>For compile-time top-level constants, you can use the <code class="language-kotlin">const</code> modifier.</p></li><li><p>Using <code class="language-kotlin">val</code> variables whenever you can is a good practice that will allow you to avoid errors.</p></li></ul>
+</div>

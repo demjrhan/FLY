@@ -1,0 +1,26 @@
+type: matching
+captions:
+  - keyword
+  - name
+  - statement
+  - comment
+options:
+  - is a word that has a special meaning in the programming language
+  - is a single action
+  - is a word written by a programmer that identifies an entity in a program
+  - is a special text ignored by Kotlin
+files:
+  - name: src/Main.kt
+    visible: true
+    learner_created: false
+feedback_link: https://hyperskill.org/learn/step/4365#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: "Tue, 25 Feb 2025 13:59:41 UTC"
+record: -1
+ordering:
+  - 0
+  - 2
+  - 1
+  - 3

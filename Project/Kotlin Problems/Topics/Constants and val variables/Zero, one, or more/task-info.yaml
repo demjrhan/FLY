@@ -1,0 +1,20 @@
+type: choice
+is_multiple_choice: false
+options:
+  - text: from zero to one
+  - text: zero or more times
+  - text: exactly one
+  - text: one or more times
+files:
+  - name: src/Main.kt
+    visible: true
+    learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17412#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: "Tue, 25 Feb 2025 14:16:02 UTC"
+record: -1
+selected_options:
+  - 2
+local_check: false

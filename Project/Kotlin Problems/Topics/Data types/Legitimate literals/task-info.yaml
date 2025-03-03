@@ -1,0 +1,26 @@
+type: choice
+is_multiple_choice: true
+options:
+  - text: '"-12"'
+  - text: -1
+  - text: 42
+  - text: 1.5
+  - text: -6875309
+  - text: 10.0
+  - text: 2.3
+  - text: '''7'''
+files:
+  - name: src/Main.kt
+    visible: true
+    learner_created: false
+feedback_link: https://hyperskill.org/learn/step/16078#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: "Tue, 25 Feb 2025 14:23:44 UTC"
+record: -1
+selected_options:
+  - 1
+  - 2
+  - 4
+local_check: false

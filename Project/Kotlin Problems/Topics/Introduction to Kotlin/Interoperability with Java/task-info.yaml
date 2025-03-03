@@ -1,0 +1,14 @@
+type: choice
+is_multiple_choice: false
+options:
+  - text: Kotlin works great with all existing Java code and libraries.
+  - text: Kotlin isn't compatible with Java.
+  - text: Kotlin and Java have limited compatibility.
+files:
+  - name: src/Main.kt
+    visible: true
+    learner_created: false
+feedback_link: https://hyperskill.org/learn/step/4354#comment
+status: Solved
+record: -1
+local_check: false

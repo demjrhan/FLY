@@ -1,6 +1,16 @@
 # FLY
 Feel Like Yourself
 
+## Screenshots from website
+
+<p align="center">
+    <img src="https://github.com/demjrhan/TIN_PRO/blob/main/Images/Welcome.png" alt="Welcome Page" width="500"/>
+</p>
+<p align="center">
+    <img src="https://github.com/demjrhan/TIN_PRO/blob/main/Images/AddPost.png" alt="Add Photo" width="500"/>
+</p>
+
+## Vertabelo Table
 <p align="center">
     <img src="https://github.com/demjrhan/TIN_PRO/blob/main/Images/FLY.png" alt="FLY VERTABELO PNG" width="500"/>
 </p>

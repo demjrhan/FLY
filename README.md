@@ -2,7 +2,7 @@
 Feel Like Yourself
 
 <p align="center">
-    <img src="https://github.com/demjrhan/FLY/blob/main/Images/FLY.png" alt="FLY VERTABELO PNG" width="500"/>
+    <img src="https://github.com/demjrhan/TIN_PRO/blob/main/Images/FLY.png" alt="FLY VERTABELO PNG" width="500"/>
 </p>
 
 ## 🔑 Authentication Details

@@ -4,15 +4,15 @@ Feel Like Yourself
 ## Screenshots from website
 
 <p align="center">
-    <img src="https://github.com/demjrhan/TIN_PRO/blob/main/Images/Welcome.png" alt="Welcome Page" width="500"/>
+    <img src="https://github.com/demjrhan/FLY/blob/main/Images/Welcome.png" alt="Welcome Page" width="500"/>
 </p>
 <p align="center">
-    <img src="https://github.com/demjrhan/TIN_PRO/blob/main/Images/AddPost.png" alt="Add Photo" width="500"/>
+    <img src="https://github.com/demjrhan/FLY/blob/main/Images/AddPost.png" alt="Add Photo" width="500"/>
 </p>
 
 ## Vertabelo Table
 <p align="center">
-    <img src="https://github.com/demjrhan/TIN_PRO/blob/main/Images/FLY.png" alt="FLY VERTABELO PNG" width="500"/>
+    <img src="https://github.com/demjrhan/FLY/blob/main/Images/FLY.png" alt="FLY VERTABELO PNG" width="500"/>
 </p>
 
 ## 🔑 Authentication Details
@@ -35,7 +35,7 @@ Configurations: `Data/UserConfiguration.cs`, `Data/PostConfiguration.cs`, `Data/
 ## 🚀 Build and Run Instructions
 
 ## Navigate to the backend directory  
-- cd TIN_PRO/Project/backend
+- cd FLY/Project/backend
 - mkdir Migrations
 - dotnet restore  
 - dotnet build  
@@ -44,7 +44,7 @@ Configurations: `Data/UserConfiguration.cs`, `Data/PostConfiguration.cs`, `Data/
 - dotnet run  
 
 ## Navigate to the frontend directory  
-- cd TIN_PRO/Project/frontend   
+- cd FLY/Project/frontend   
 - npm install    
 - npm start  
 

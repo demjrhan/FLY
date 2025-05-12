@@ -19,12 +19,6 @@ Feel Like Yourself
 Admin Login: Nickname: `a`, Password: `b`  
 Normal User Login: Nickname: `b`, Password: `b`
   
-## 📋 Features and Queries
-- **Users**: `SELECT * FROM Users;`  
-- **Posts**: `SELECT * FROM Posts;`  
-- **Likes**: `SELECT * FROM Likes;`  
-- **Pagination**: Available in the Admin Panel. Click on the top of post likes to see details.
-
 ## 📂 Database Details
 Sample Data: `backend/Context/SampleData.cs`  
 Database Script: `MasterContext.cs`  

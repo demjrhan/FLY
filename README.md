@@ -10,6 +10,10 @@ Feel Like Yourself
     <img src="https://github.com/demjrhan/FLY/blob/main/Images/AddPost.png" alt="Add Photo" width="500"/>
 </p>
 
+<p align="center">
+    <img src="https://github.com/demjrhan/FLY/blob/main/Images/Admin_Welcome.png" alt="Admin Welcome Page" width="500"/>
+</p>
+
 ## Vertabelo Table
 <p align="center">
     <img src="https://github.com/demjrhan/FLY/blob/main/Images/FLY.png" alt="FLY VERTABELO PNG" width="500"/>

@@ -20,7 +20,7 @@ Feel Like Yourself
 </p>
 
 ## 🔑 Authentication Details
-Admin Login: Nickname: `a`, Password: `b`  
+Admin Login: Nickname: `a`, Password: `a`  
 Normal User Login: Nickname: `b`, Password: `b`
   
 ## 📂 Database Details

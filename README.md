@@ -6,21 +6,21 @@ Feel Like Yourself (FLY) is a social media website that allows users to share po
 
 ## Screenshots from website
 
-<p align="center">
+<a href="https://github.com/demjrhan/FLY" target="_blank">
     <img src="https://github.com/demjrhan/FLY/blob/main/Images/Welcome.png" alt="Welcome Page" width="1000"/>
-</p>
-<p align="center">
+</a>
+<a href="https://github.com/demjrhan/FLY" target="_blank">
     <img src="https://github.com/demjrhan/FLY/blob/main/Images/AddPost.png" alt="Add Photo" width="1000"/>
-</p>
+</a>
 
-<p align="center">
+<a href="https://github.com/demjrhan/FLY" target="_blank">
     <img src="https://github.com/demjrhan/FLY/blob/main/Images/Admin_Welcome.png" alt="Admin Welcome Page" width="1000"/>
-</p>
+</a>
 
 ## Vertabelo Table
-<p align="center">
+<a href="https://github.com/demjrhan/FLY" target="_blank">
     <img src="https://github.com/demjrhan/FLY/blob/main/Images/FLY.png" alt="FLY VERTABELO PNG" width="1000"/>
-</p>
+</a>
 
 ##  Authentication Details
 Admin Login: Nickname: `a`, Password: `a`  
